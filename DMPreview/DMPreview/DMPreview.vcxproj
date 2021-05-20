@@ -1,0 +1,412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_EG|x64">
+      <Configuration>Debug_EG</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_EG|x64">
+      <Configuration>Release_EG</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FB7A26B5-74DD-4BCF-B3AC-82307D24E29B}</ProjectGuid>
+    <RootNamespace>DMPreview</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(WindowsTargetPlatformVersion)'==''">
+    <!-- Default the installed latest Win10 SDK -->
+    <WindowsSdkInstallFolder_10 Condition="'$(WindowsSdkInstallFolder_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0@InstallationFolder)</WindowsSdkInstallFolder_10>
+    <WindowsSdkInstallFolder_10 Condition="'$(WindowsSdkInstallFolder_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0@InstallationFolder)</WindowsSdkInstallFolder_10>
+    <WindowsTargetPlatformVersion_10 Condition="'$(WindowsTargetPlatformVersion_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0@ProductVersion)</WindowsTargetPlatformVersion_10>
+    <WindowsTargetPlatformVersion_10 Condition="'$(WindowsTargetPlatformVersion_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0@ProductVersion)</WindowsTargetPlatformVersion_10>
+    <!-- Sometimes the version in the registry has to .0 suffix, and sometimes it doesn't. Check and add it -->
+    <WindowsTargetPlatformVersion_10 Condition="'$(WindowsTargetPlatformVersion_10)' != '' and !$(WindowsTargetPlatformVersion_10.EndsWith('.0'))">$(WindowsTargetPlatformVersion_10).0</WindowsTargetPlatformVersion_10>
+    <WindowsTargetPlatformVersion>$(WindowsTargetPlatformVersion_10)</WindowsTargetPlatformVersion>
+    <!-- Default back to 10.0.10240.0 if the ARM version of the Win10 SDK is not installed -->
+    <WindowsTargetPlatformVersion Condition="'$(Platform)'=='ARM' and !Exists('$(WindowsSdkInstallFolder_10)\Include\$(WindowsTargetPlatformVersion_10)\shared\ksarm.h')">10.0.10240.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_EG|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_EG|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+    <UseOfMfc>Static</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_EG|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_EG|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>15.0.26419.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>DMPreview</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_EG|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>EtronDI_EG</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>DMPreview</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>DMPreview</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_EG|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>EtronDI_EG</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\DM\include;$(SolutionDir)utility\PointCloudViewer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName);$(SolutionDir)GL\glfw\bin\;$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        rmdir /s /q $(SolutionDir)..\bin
+        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
+        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
+        xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_EG|x64'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\EG\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;ESPDI_EG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_EG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\EG\$(PlatformName);$(SolutionDir)GL\glfw\bin\$(PlatformName)\lib-vc2015\;$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)utility\PointCloudViewer;$(SolutionDir)..\eSPDI\DM\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName);$(SolutionDir)GL\glfw\bin\;$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences />
+      <EnableCOMDATFolding />
+      <LinkTimeCodeGeneration />
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+        rmdir /s /q $(SolutionDir)..\bin
+        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
+        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
+        xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_EG|x64'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\EG\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;ESPDI_EG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0404</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_EG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\EG\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);$(SolutionDir)GL\glfw\bin\$(PlatformName)\lib-vc2015\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) $(SolutionDir)..\bin\EtronDI_EG_Test\$(Platform)\</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\utility\audioCapture.cpp" />
+    <ClCompile Include="..\utility\CIMUViewer.cpp" />
+    <ClCompile Include="..\utility\DepthFusionHelper.cpp" />
+    <ClCompile Include="..\utility\EtronDIUtility.cpp" />
+    <ClCompile Include="..\utility\FrameGrabber.cpp" />
+    <ClCompile Include="..\utility\FrameProcess\PlyFilter.cpp" />
+    <ClCompile Include="..\utility\hidapi\hid.c" />
+    <ClCompile Include="..\utility\IMUData.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\3DModel.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\ArcBall.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\ArcBallMatrix.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\BoundingBox.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\GLSLProgram.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\PointCloudViewer.cpp" />
+    <ClCompile Include="..\utility\PointCloudViewer\rply.c" />
+    <ClCompile Include="..\utility\ResizableDlg.cpp" />
+    <ClCompile Include="..\utility\WindowsMfcUtility.cpp" />
+    <ClCompile Include="AEAWB_PropertyDlg.cpp" />
+    <ClCompile Include="AudioDlg.cpp" />
+    <ClCompile Include="AutoModuelSyncDlg.cpp" />
+    <ClCompile Include="AutoModuleSyncManager.cpp" />
+    <ClCompile Include="ColorDlg.cpp" />
+    <ClCompile Include="DepthDlg.cpp" />
+    <ClCompile Include="ColorPaletteGenerator.cpp" />
+    <ClCompile Include="DepthFilterDlg.cpp" />
+    <ClCompile Include="DistanceAccuracyDlg.cpp" />
+    <ClCompile Include="FrameSyncManager.cpp" />
+    <ClCompile Include="IMUTestDlg.cpp" />
+    <ClCompile Include="MeasureDistanceDlg.cpp" />
+    <ClCompile Include="EtronDI_Test.cpp" />
+    <ClCompile Include="EtronDI_TestDlg.cpp" />
+    <ClCompile Include="ModeConfig.cpp" />
+    <ClCompile Include="PlyWriter.cpp" />
+    <ClCompile Include="PreviewImageDlg.cpp" />
+    <ClCompile Include="Quaternion1.c" />
+    <ClCompile Include="RegisterAccessDlg.cpp" />
+    <ClCompile Include="RegisterSettings.cpp" />
+    <ClCompile Include="sqlite3\shell.c" />
+    <ClCompile Include="sqlite3\sqlite3.c" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_EG|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_EG|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="VideoDeviceDlg.cpp" />
+    <ClCompile Include="WaitDlg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\utility\audioCapture.h" />
+    <ClInclude Include="..\utility\CIMUViewer.h" />
+    <ClInclude Include="..\utility\DepthFusionHelper.h" />
+    <ClInclude Include="..\utility\EtronDIUtility.h" />
+    <ClInclude Include="..\utility\FrameGrabber.h" />
+    <ClInclude Include="..\utility\FrameProcess\PlyFilter.h" />
+    <ClInclude Include="..\utility\hidapi\hidapi.h" />
+    <ClInclude Include="..\utility\IMUData.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\3DModel.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\ArcBall.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\ArcBallMatrix.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\BoundingBox.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\GLSLProgram.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\OGLBasic.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\PointCloudViewer.h" />
+    <ClInclude Include="..\utility\PointCloudViewer\rply.h" />
+    <ClInclude Include="..\utility\ResizableDlg.h" />
+    <ClInclude Include="..\utility\WindowsMfcUtility.h" />
+    <ClInclude Include="AEAWB_PropertyDlg.h" />
+    <ClInclude Include="AudioDlg.h" />
+    <ClInclude Include="AutoModuelSyncDlg.h" />
+    <ClInclude Include="AutoModuleSyncManager.h" />
+    <ClInclude Include="ColorDlg.h" />
+    <ClInclude Include="DepthDlg.h" />
+    <ClInclude Include="ColorPaletteGenerator.h" />
+    <ClInclude Include="DepthFilterDlg.h" />
+    <ClInclude Include="DistanceAccuracyDlg.h" />
+    <ClInclude Include="FrameSyncManager.h" />
+    <ClInclude Include="IMUTestDlg.h" />
+    <ClInclude Include="MeasureDistanceDlg.h" />
+    <ClInclude Include="EtronDI_Test.h" />
+    <ClInclude Include="EtronDI_TestDlg.h" />
+    <ClInclude Include="ModeConfig.h" />
+    <ClInclude Include="PlyWriter.h" />
+    <ClInclude Include="PreviewImageDlg.h" />
+    <ClInclude Include="Quaternion1.h" />
+    <ClInclude Include="RegisterAccessDlg.h" />
+    <ClInclude Include="RegisterSettings.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="sqlite3\sqlite3.h" />
+    <ClInclude Include="sqlite3\sqlite3ext.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="VideoDeviceDlg.h" />
+    <ClInclude Include="WaitDlg.h" />
+    <ClInclude Include="WmMsgDef.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\DMPreview.ico" />
+    <None Include="res\DMPreview.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DMPreview.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\eSPDI\eSPDI.vcxproj">
+      <Project>{347a3d6f-de33-47ff-8a1f-07cf0ef90cdb}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\ivan.huang\Desktop\colorBar.bmp" />
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\colorBar.bmp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="DMPreview.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
