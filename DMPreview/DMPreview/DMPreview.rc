@@ -87,11 +87,11 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
-IDD_ETRONDI_TEST_DIALOG DIALOGEX 0, 0, 298, 51
+IDD_APC_TEST_DIALOG DIALOGEX 0, 0, 298, 51
 STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "DMPreview"
-CLASS "EtronDITestDlg"
+CLASS "ApcDITestDlg"
 FONT 11, "Consolas", 700, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "Open",ID_OPEN_DEVICE,122,32,40,12
@@ -427,7 +427,7 @@ BEGIN
     RTEXT           "Left Fx",IDC_STATIC,234,62,24,8
     CTEXT           "0",IDC_STATIC,234,44,12,8
     CTEXT           "-10",IDC_STATIC,336,44,12,8
-    PUSHBUTTON      "Apply",IDC_BUTTON1,354,40,50,14
+    PUSHBUTTON      "Apply",IDC_BUTTON_ADJUST_FOCAL_LENGTH,354,40,50,14
     EDITTEXT        IDC_ED_LEFT_FX,271,60,60,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
     RTEXT           "Left Fy",IDC_STATIC,234,84,24,8
     EDITTEXT        IDC_ED_LEFT_FY,271,82,60,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
@@ -436,6 +436,7 @@ BEGIN
     RTEXT           "Right Fy",IDC_STATIC,234,129,28,8
     EDITTEXT        IDC_ED_RIGHT_FY,271,127,60,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
     CONTROL         "",IDC_SLIDER_PIXEL_UNIT,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,248,43,85,12
+    EDITTEXT        IDC_ED_GROUNDTRUTH,90,38,60,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
 END
 
 IDD_DLG_DEPTHFILTER DIALOGEX 0, 0, 421, 238
@@ -504,8 +505,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,4,8,1
- PRODUCTVERSION 1,4,8,1
+ FILEVERSION 1,5,0,0
+ PRODUCTVERSION 1,5,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -522,12 +523,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "eYs3D Microelectronics"
             VALUE "FileDescription", "DMPreview program"
-            VALUE "FileVersion", "1.4.8.1"
+            VALUE "FileVersion", "1.5.0.0"
             VALUE "InternalName", "DMPreview.exe"
             VALUE "LegalCopyright", " (c) eYs3D.  All rights reserved."
             VALUE "OriginalFilename", "DMPreview.exe"
             VALUE "ProductName", "eSPDI SDK for Windows"
-            VALUE "ProductVersion", "1.4.8.1"
+            VALUE "ProductVersion", "1.5.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -553,7 +554,7 @@ BEGIN
         BOTTOMMARGIN, 55
     END
 
-    IDD_ETRONDI_TEST_DIALOG, DIALOG
+    IDD_APC_TEST_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 291
@@ -740,7 +741,7 @@ BEGIN
     0
 END
 
-IDD_ETRONDI_TEST_DIALOG AFX_DIALOG_LAYOUT
+IDD_APC_TEST_DIALOG AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
@@ -814,7 +815,7 @@ BEGIN
     IDS_ABOUTBOX            "? DMPreview (About)"
     IDS_APP_TITLE           "DMPreview"
     ID_INDICATOR_FPS        "30"
-    IDS_ERTON_DI_CLASS_NAME "EtronDITestDlg"
+    IDS_ERTON_DI_CLASS_NAME "ApcDITestDlg"
 END
 
 #endif    // Chinese (Traditional, Taiwan) resources

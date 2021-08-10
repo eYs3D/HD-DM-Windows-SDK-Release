@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "PreviewImageDlg.h"
 #include "ColorDlg.h"
 #include "DepthDlg.h"
@@ -52,9 +52,9 @@ typedef struct plyThreadData
     BOOL bUseFilter;
 } THREAD_PARAM, *LPTHREAD_PARAM;
 
-CPreviewImageDlg::CPreviewImageDlg(void*& hEtronDI, DEVSELINFO& devSelInfo, const USHORT& devType, const USB_PORT_TYPE eUSB_Port_Type)
+CPreviewImageDlg::CPreviewImageDlg(void*& hApcDI, DEVSELINFO& devSelInfo, const USHORT& devType, const USB_PORT_TYPE eUSB_Port_Type)
 	: CDialog(CPreviewImageDlg::IDD, NULL), 
-    m_hEtronDI(hEtronDI), m_DevSelInfo(devSelInfo), m_DevType(devType), m_eUSB_Port_Type( eUSB_Port_Type ),
+    m_hApcDI(hApcDI), m_DevSelInfo(devSelInfo), m_DevType(devType), m_eUSB_Port_Type( eUSB_Port_Type ),
     m_colorStreamOptionCount(0), m_depthStreamOptionCount(0), m_kcolorStreamOptionCount( 0 ), m_tcolorStreamOptionCount( 0 ), m_iInterLeaveModeFPS( EOF ),
     m_pWaitDlg( new WaitDlg() ),
     m_isPreviewed( FALSE ),
@@ -72,11 +72,11 @@ CPreviewImageDlg::CPreviewImageDlg(void*& hEtronDI, DEVSELINFO& devSelInfo, cons
     m_depthFusionHelper = nullptr;
 
 	m_frameGrabber = nullptr;
-    memset(m_pStreamColorInfo, 0, sizeof(ETRONDI_STREAM_INFO) * ETronDI_MAX_STREAM_COUNT);
-    memset(m_pStreamDepthInfo, 0, sizeof(ETRONDI_STREAM_INFO) * ETronDI_MAX_STREAM_COUNT);
+    memset(m_pStreamColorInfo, 0, sizeof(APC_STREAM_INFO) * APC_MAX_STREAM_COUNT);
+    memset(m_pStreamDepthInfo, 0, sizeof(APC_STREAM_INFO) * APC_MAX_STREAM_COUNT);
 	m_previewParams.m_pointCloudViewer = nullptr;
 #endif
-    EtronDI_GetDeviceInfoEx( m_hEtronDI, &m_DevSelInfo , &m_devinfoEx );
+    APC_GetDeviceInfoEx( m_hApcDI, &m_DevSelInfo , &m_devinfoEx );
 }
 
 CPreviewImageDlg::~CPreviewImageDlg()
@@ -84,9 +84,9 @@ CPreviewImageDlg::~CPreviewImageDlg()
     if ( m_previewParams.m_rectifyLogDataSlave ) free( m_previewParams.m_rectifyLogDataSlave );
 }
 
-//bool CPreviewImageDlg::usePlyFilter(EtronDIImageType::Value depthImageType)
+//bool CPreviewImageDlg::usePlyFilter(ApcDIImageType::Value depthImageType)
 //{
-//	return (/*depthImageType == EtronDIImageType::DEPTH_11BITS) && (*/ ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->GetCheck() == BST_CHECKED );
+//	return (/*depthImageType == ApcDIImageType::DEPTH_11BITS) && (*/ ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->GetCheck() == BST_CHECKED );
 //}
 
 void CPreviewImageDlg::DoDataExchange(CDataExchange* pDX)
@@ -112,14 +112,14 @@ int CPreviewImageDlg::getRectifyLogData(eSPCtrl_RectLogData* rectifyData,int ind
 
 #ifndef ESPDI_EG
 	//Set index by resolution	
-	nRet = EtronDI_GetRectifyMatLogData(m_hEtronDI, &m_DevSelInfo, rectifyData, index);
+	nRet = APC_GetRectifyMatLogData(m_hApcDI, &m_DevSelInfo, rectifyData, index);
 
-	if (nRet == ETronDI_OK)
+	if (nRet == APC_OK)
 	{		
 		/*Modify Reprojection matrix according to rotation and resizing*/
-        if ( IsDevicePid( ETronDI_PID_8040S ) || IsDevicePid( ETronDI_PID_8054 ) )
+        if ( IsDevicePid( APC_PID_8040S ) || IsDevicePid( APC_PID_8054 ) )
 		{
-            if ( rectifyData->OutImgWidth == 2176 && rectifyData->OutImgHeight == 1920 ) // ETronDI_PID_8040S L+D special-case
+            if ( rectifyData->OutImgWidth == 2176 && rectifyData->OutImgHeight == 1920 ) // APC_PID_8040S L+D special-case
 			{
 				//rectifyData->OutImgHeight and rectLogData->OutImgHeight are error, and current EX8040S only support mode 4
 				rectifyData->OutImgWidth  = 1080;
@@ -137,7 +137,7 @@ int CPreviewImageDlg::getRectifyLogData(eSPCtrl_RectLogData* rectifyData,int ind
 		}
 	}
 #else
-	nRet = ETronDI_DEVICE_NOT_SUPPORT;
+	nRet = APC_DEVICE_NOT_SUPPORT;
 #endif
 
 	return nRet;
@@ -149,9 +149,9 @@ int CPreviewImageDlg::getRectifyLogDataSlave(eSPCtrl_RectLogData* rectifyData, i
 
 #ifndef ESPDI_EG
 	//Set index by resolution	
-	nRet = EtronDI_GetRectifyMatLogDataSlave(m_hEtronDI, &m_DevSelInfo, rectifyData, index);
+	nRet = APC_GetRectifyMatLogDataSlave(m_hApcDI, &m_DevSelInfo, rectifyData, index);
 
-	if ( IsDevicePid( ETronDI_PID_8054 ) && nRet == ETronDI_OK)
+	if ( IsDevicePid( APC_PID_8054 ) && nRet == APC_OK)
 	{
 		/*Modify Reprojection matrix according to rotation and resizing*/
 		{
@@ -167,7 +167,7 @@ int CPreviewImageDlg::getRectifyLogDataSlave(eSPCtrl_RectLogData* rectifyData, i
 		}
 	}
 #else
-	nRet = ETronDI_DEVICE_NOT_SUPPORT;
+	nRet = APC_DEVICE_NOT_SUPPORT;
 #endif
 
 	return nRet;
@@ -178,7 +178,7 @@ CPoint CPreviewImageDlg::CurTrackImgRes()
 	CAutoLock lock(m_previewParams.m_mutex);
 	if (m_previewParams.m_tcolorOption >= 0)
 	{
-		const ETRONDI_STREAM_INFO& streamTColorInfo = m_pStreamTColorInfo[m_previewParams.m_tcolorOption];
+		const APC_STREAM_INFO& streamTColorInfo = m_pStreamTColorInfo[m_previewParams.m_tcolorOption];
 		return CPoint(streamTColorInfo.nWidth, streamTColorInfo.nHeight);
 	}
 
@@ -190,7 +190,7 @@ CPoint CPreviewImageDlg::CurKColorImgRes()
 	CAutoLock lock(m_previewParams.m_mutex);
 	if (m_previewParams.m_kcolorOption >= 0)
 	{
-		const ETRONDI_STREAM_INFO& streamKColorInfo = m_pStreamKColorInfo[m_previewParams.m_kcolorOption];
+		const APC_STREAM_INFO& streamKColorInfo = m_pStreamKColorInfo[m_previewParams.m_kcolorOption];
 		return CPoint(streamKColorInfo.nWidth, streamKColorInfo.nHeight);
 	}
 
@@ -202,7 +202,7 @@ CPoint CPreviewImageDlg::CurColorImgRes()
     CAutoLock lock(m_previewParams.m_mutex);
     if (m_previewParams.m_colorOption >= 0)
     {
-        const ETRONDI_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[m_previewParams.m_colorOption];
+        const APC_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[m_previewParams.m_colorOption];
         return CPoint(streamColorInfo.nWidth, streamColorInfo.nHeight);
     }
 
@@ -217,11 +217,11 @@ CPoint CPreviewImageDlg::CurDepthImgRes()
 
     if ( m_previewParams.m_depthOption >= 0 )
     {
-        const ETRONDI_STREAM_INFO& streamDepthInfo = m_pStreamDepthInfo[ m_previewParams.m_depthOption ];
+        const APC_STREAM_INFO& streamDepthInfo = m_pStreamDepthInfo[ m_previewParams.m_depthOption ];
 
         res.SetPoint( streamDepthInfo.nWidth, streamDepthInfo.nHeight );
 
-		if ( EtronDIImageType::DEPTH_8BITS == EtronDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+		if ( ApcDIImageType::DEPTH_8BITS == ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
 		{
             res.SetPoint( streamDepthInfo.nWidth * 2, streamDepthInfo.nHeight );
 		}
@@ -241,7 +241,7 @@ int CPreviewImageDlg::GetDepthStreamIndex(int depthIndex) const
 
 int CPreviewImageDlg::GetDepthStreamIndex(CPoint depthRes) const
 {
-    const BOOL bIs8bits = EtronDIImageType::DEPTH_8BITS == EtronDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType );
+    const BOOL bIs8bits = ApcDIImageType::DEPTH_8BITS == ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType );
 
     int iWidth = NULL;
 
@@ -261,7 +261,7 @@ int CPreviewImageDlg::GetColorStreamIndex(CPoint colorRes, bool IsMJPG) const
 {
 	for (int i = 0; i < m_colorStreamOptionCount; ++i)
 	{
-		const ETRONDI_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[i];
+		const APC_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[i];
 		if (streamColorInfo.nWidth == colorRes.x && streamColorInfo.nHeight == colorRes.y &&
 			streamColorInfo.bFormatMJPG == IsMJPG)
 		{
@@ -280,7 +280,7 @@ BOOL CPreviewImageDlg::IsColorStreamMJPEG()
     CAutoLock lock(m_previewParams.m_mutex);
     if (m_previewParams.m_colorOption >= 0)
     {
-        const ETRONDI_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[m_previewParams.m_colorOption];
+        const APC_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[m_previewParams.m_colorOption];
         return streamColorInfo.bFormatMJPG;
     }
 
@@ -292,7 +292,7 @@ BOOL CPreviewImageDlg::IsStream0ColorPlusDepth()
 #ifdef ESPDI_EG
     return false;
 #else
-    if ( !IsDevicePid( ETronDI_PID_8040S ) && !IsDevicePid( ETronDI_PID_8054 ) && !IsDevicePid( ETronDI_PID_8038 ) ) return FALSE;
+    if ( !IsDevicePid( APC_PID_8040S ) && !IsDevicePid( APC_PID_8054 ) && !IsDevicePid( APC_PID_8038 ) ) return FALSE;
 
     const int colorStreamIndex = ((CComboBox*)GetDlgItem(IDC_COMBO_COLOR_STREAM))->GetCurSel();
 
@@ -337,7 +337,7 @@ void CPreviewImageDlg::UpdateKcolorStreamUI(int selectIndex)
 	pKcolorComboBox->ResetContent();
 	for (int i = 0; i < m_kcolorStreamOptionCount; ++i)
 	{
-		const ETRONDI_STREAM_INFO& streamKcolorInfo = m_pStreamKColorInfo[i];
+		const APC_STREAM_INFO& streamKcolorInfo = m_pStreamKColorInfo[i];
 		std::ostringstream kcolorOption;
 		kcolorOption << "[ " << std::setfill(' ') << std::setw(4) << streamKcolorInfo.nWidth << " x "
 			<< std::setfill(' ') << std::setw(4) << streamKcolorInfo.nHeight << " ] "
@@ -365,7 +365,7 @@ void CPreviewImageDlg::UpdateTrackStreamUI(int selectIndex)
 	pTrackComboBox->ResetContent();
 	for (int i = 0; i < m_tcolorStreamOptionCount; ++i)
 	{
-		const ETRONDI_STREAM_INFO& streamTrackInfo = m_pStreamTColorInfo[i];
+		const APC_STREAM_INFO& streamTrackInfo = m_pStreamTColorInfo[i];
 		std::ostringstream trackOption;
 		trackOption << "[ " << std::setfill(' ') << std::setw(4) << streamTrackInfo.nWidth << " x "
 			<< std::setfill(' ') << std::setw(4) << streamTrackInfo.nHeight << " ] "
@@ -393,7 +393,7 @@ void CPreviewImageDlg::UpdateColorStreamUI(int selectIndex)
 	pColorComboBox->ResetContent();
 	for (int i = 0; i < m_colorStreamOptionCount; ++i)
 	{
-		const ETRONDI_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[i];
+		const APC_STREAM_INFO& streamColorInfo = m_pStreamColorInfo[i];
 		std::ostringstream colorOption;
 		colorOption << "[ " << std::setfill(' ') << std::setw(4) << streamColorInfo.nWidth << " x "
 			<< std::setfill(' ') << std::setw(4) << streamColorInfo.nHeight << " ] "
@@ -421,7 +421,7 @@ void CPreviewImageDlg::UpdateDepthStreamUI(int selectIndex)
 	pDepthComboBox->ResetContent();
 	for (int i = 0; i < m_depthStreamOptionCount; ++i)
 	{
-		const ETRONDI_STREAM_INFO& streamDepthInfo = m_pStreamDepthInfo[i];
+		const APC_STREAM_INFO& streamDepthInfo = m_pStreamDepthInfo[i];
 		std::ostringstream depthOption;
 		depthOption << "[ " << std::setfill(' ') << std::setw(4) << streamDepthInfo.nWidth << " x "
 			<< std::setfill(' ') << std::setw(4) << streamDepthInfo.nHeight << " ] "
@@ -448,12 +448,12 @@ void CPreviewImageDlg::UpdateUI()
 	UpdateDepthStreamUI(0);	
 	UpdateKcolorStreamUI(1);
 	UpdateTrackStreamUI(2);
-	GetDlgItem(IDC_COMBO_K_COLOR_STREAM)->EnableWindow( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) );
+	GetDlgItem(IDC_COMBO_K_COLOR_STREAM)->EnableWindow( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) );
 	GetDlgItem(IDC_COMBO_T_COLOR_STREAM)->EnableWindow(FALSE);
 
     GetDlgItem(IDC_CHECK_DEPTH0)->EnableWindow(FALSE);
 
-    bool support360 = EtronDI_Is360Device(m_hEtronDI, &m_DevSelInfo);
+    bool support360 = APC_Is360Device(m_hApcDI, &m_DevSelInfo);
     CButton* button360 = (CButton*)GetDlgItem(IDC_CHECK_360MODE);
     button360->EnableWindow(support360);
     button360->SetCheck((support360 ? BST_CHECKED : BST_UNCHECKED));
@@ -462,7 +462,7 @@ void CPreviewImageDlg::UpdateUI()
     GetDlgItem(IDC_CHECK_DEPTH2)->EnableWindow(FALSE);
 #else
     //depth2
-    if ( IsDevicePid( ETronDI_PID_8038 ) )
+    if ( IsDevicePid( APC_PID_8038 ) )
     {
         GetDlgItem(IDC_CHECK_DEPTH2)->EnableWindow(TRUE);
     }
@@ -488,7 +488,7 @@ void CPreviewImageDlg::UpdateUI()
     ((CButton*)GetDlgItem(IDC_RADIO_DEPTH_MAPPING_ZDTABLE))->SetCheck(BST_CHECKED);
     OnBnClickedRadioDepthMappingZdtable();
 #ifndef ESPDI_EG
-    if ( IsDevicePid( ETronDI_PID_8038 ) )
+    if ( IsDevicePid( APC_PID_8038 ) )
     {
         SetDlgItemText(IDC_EDIT_CAM_FOCUS, L"800");
         SetDlgItemText(IDC_EDIT_BLDIST0, L"30");
@@ -524,24 +524,24 @@ void CPreviewImageDlg::UpdateUI()
             GetDlgItem(IDC_STATIC_DEPTH_BIT_SEL)->ShowWindow(SW_SHOW);
             pDepthBitCbx->ShowWindow(SW_SHOW);
 
-            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"8 bits" ), ETronDI_DEPTH_DATA_8_BITS );
-            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString(L"8 bits + 0x80"), ETronDI_DEPTH_DATA_8_BITS_x80 );
-            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString(L"11 bits"), ETronDI_DEPTH_DATA_11_BITS );
-            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString(L"14 bits"), ETronDI_DEPTH_DATA_14_BITS );
+            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"8 bits" ), APC_DEPTH_DATA_8_BITS );
+            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString(L"8 bits + 0x80"), APC_DEPTH_DATA_8_BITS_x80 );
+            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString(L"11 bits"), APC_DEPTH_DATA_11_BITS );
+            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString(L"14 bits"), APC_DEPTH_DATA_14_BITS );
 
             WORD wType = 0;
             int depthComboIndex = NULL;
 
-            if ( EtronDI_GetDepthDataType(m_hEtronDI, &m_DevSelInfo, &wType) != ETronDI_OK )
+            if ( APC_GetDepthDataType(m_hApcDI, &m_DevSelInfo, &wType) != APC_OK )
             {
-                AfxMessageBox(_T("EtronDI_GetDepthDataType failed !!"));
+                AfxMessageBox(_T("APC_GetDepthDataType failed !!"));
             }
             switch ( wType )
             {
-            case ETronDI_DEPTH_DATA_8_BITS:     pDepthBitCbx->SetCurSel( 0 ); break;
-            case ETronDI_DEPTH_DATA_8_BITS_x80: pDepthBitCbx->SetCurSel( 1 ); break;
-            case ETronDI_DEPTH_DATA_11_BITS:    pDepthBitCbx->SetCurSel( 2 ); break;
-            case ETronDI_DEPTH_DATA_14_BITS:    pDepthBitCbx->SetCurSel( 3 ); break;
+            case APC_DEPTH_DATA_8_BITS:     pDepthBitCbx->SetCurSel( 0 ); break;
+            case APC_DEPTH_DATA_8_BITS_x80: pDepthBitCbx->SetCurSel( 1 ); break;
+            case APC_DEPTH_DATA_11_BITS:    pDepthBitCbx->SetCurSel( 2 ); break;
+            case APC_DEPTH_DATA_14_BITS:    pDepthBitCbx->SetCurSel( 3 ); break;
             default:                            pDepthBitCbx->SetCurSel( 0 ); break;
             }
             // data mode
@@ -552,7 +552,7 @@ void CPreviewImageDlg::UpdateUI()
     default:
         {
             GetDlgItem(IDC_STATIC_DEPTH_BIT_SEL)->ShowWindow(SW_HIDE);
-            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"8 bits" ), ETronDI_DEPTH_DATA_8_BITS );//AXES1 only 1 opion
+            pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"8 bits" ), APC_DEPTH_DATA_8_BITS );//AXES1 only 1 opion
             pDepthBitCbx->SetCurSel(0);
             pDepthBitCbx->ShowWindow(SW_HIDE);
 
@@ -595,7 +595,7 @@ void CPreviewImageDlg::UpdateUI()
     pCbxD->SetCurSel( 7 );
 
 #ifndef ESPDI_EG
-	if ( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) )
+	if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) )
 	{
 		GetDlgItem(IDC_CHECK_ROTATE_IMG)->EnableWindow(TRUE);
 	}
@@ -609,12 +609,14 @@ void CPreviewImageDlg::UpdateUI()
 
 	//Z Far
 #ifndef ESPDI_EG
-    SetDlgItemInt( IDC_EDIT_ZFAR, IsDevicePid( ETronDI_PID_8038 ) ? 2000 : 1000 );
+    SetDlgItemInt( IDC_EDIT_ZFAR, IsDevicePid( APC_PID_8038 ) ? 2000 : 1000 );
     SetDlgItemInt( IDC_EDIT_ZNEAR, 0 );
 #endif
 
 	//update DM color mape mode
 	OnCbnSelchangeComboDepthOutputCtrl();
+
+	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062));
 
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_SNAPSHOT_BTN)->EnableWindow(FALSE);
@@ -628,34 +630,34 @@ bool CPreviewImageDlg::IsSupportHwPostProc() const
 
 bool CPreviewImageDlg::UpdateStreamInfo()
 {
-    auto GetResolution = [ & ]( ETRONDI_STREAM_INFO* pStreamRes0, int* pStreamResCount0, ETRONDI_STREAM_INFO* pStreamRes1, int* pStreamResCount1, int PID )
+    auto GetResolution = [ & ]( APC_STREAM_INFO* pStreamRes0, int* pStreamResCount0, APC_STREAM_INFO* pStreamRes1, int* pStreamResCount1, int PID )
     {
-        memset( pStreamRes0, NULL, sizeof( ETRONDI_STREAM_INFO ) * ETronDI_MAX_STREAM_COUNT );
-        memset( pStreamRes1, NULL, sizeof( ETRONDI_STREAM_INFO ) * ETronDI_MAX_STREAM_COUNT );
+        memset( pStreamRes0, NULL, sizeof( APC_STREAM_INFO ) * APC_MAX_STREAM_COUNT );
+        memset( pStreamRes1, NULL, sizeof( APC_STREAM_INFO ) * APC_MAX_STREAM_COUNT );
 
-        int ret = ( EOF == PID ) ? EtronDI_GetDeviceResolutionList( m_hEtronDI, &m_DevSelInfo,
-                                                                    ETronDI_MAX_STREAM_COUNT, pStreamRes0,
-                                                                    ETronDI_MAX_STREAM_COUNT, pStreamRes1 ) :
-                                   EtronDI_GetDeviceResolutionListEx( m_hEtronDI, &m_DevSelInfo,
-                                                                      ETronDI_MAX_STREAM_COUNT, pStreamRes0,
-                                                                      ETronDI_MAX_STREAM_COUNT, pStreamRes1, PID );
+        int ret = ( EOF == PID ) ? APC_GetDeviceResolutionList( m_hApcDI, &m_DevSelInfo,
+                                                                    APC_MAX_STREAM_COUNT, pStreamRes0,
+                                                                    APC_MAX_STREAM_COUNT, pStreamRes1 ) :
+                                   APC_GetDeviceResolutionListEx( m_hApcDI, &m_DevSelInfo,
+                                                                      APC_MAX_STREAM_COUNT, pStreamRes0,
+                                                                      APC_MAX_STREAM_COUNT, pStreamRes1, PID );
         *pStreamResCount0 = (int)((BYTE*)(&ret))[1];
         *pStreamResCount1 = (int)((BYTE*)(&ret))[0];
     };
     GetResolution( m_pStreamColorInfo, &m_colorStreamOptionCount, m_pStreamDepthInfo, &m_depthStreamOptionCount, EOF );
 
-    if ( IsDevicePid( ETronDI_PID_8054 ) )
+    if ( IsDevicePid( APC_PID_8054 ) )
     {
-        GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, ETronDI_PID_8054_K );
+        GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8054_K );
     }
-    if ( IsDevicePid( ETronDI_PID_8040S ) )
+    if ( IsDevicePid( APC_PID_8040S ) )
     {
-        GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, ETronDI_PID_8040S_K );
+        GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8040S_K );
     }
-	else if ( IsDevicePid( ETronDI_PID_8060 ) )
+	else if ( IsDevicePid( APC_PID_8060 ) )
 	{
-		GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, ETronDI_PID_8060_K );
-        GetResolution( m_pStreamTColorInfo, &m_tcolorStreamOptionCount, m_pStreamTDepthInfo, &m_tdepthStreamOptionCount, ETronDI_PID_8060_T );
+		GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8060_K );
+        GetResolution( m_pStreamTColorInfo, &m_tcolorStreamOptionCount, m_pStreamTDepthInfo, &m_tdepthStreamOptionCount, APC_PID_8060_T );
 	}
 	
     return false;
@@ -663,12 +665,12 @@ bool CPreviewImageDlg::UpdateStreamInfo()
 
 void CPreviewImageDlg::UpdateIRConfig()
 {
-    EtronDI_GetIRMinValue(m_hEtronDI, &m_DevSelInfo, &m_irRange.first);
-    EtronDI_GetIRMaxValue(m_hEtronDI, &m_DevSelInfo, &m_irRange.second);
+    APC_GetIRMinValue(m_hApcDI, &m_DevSelInfo, &m_irRange.first);
+    APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_irRange.second);
 
-	if ( IsDevicePid( ETronDI_PID_Hypatia  ) ) m_irRange.second = MAX_IR_HYPATIA;
-    if ( IsDevicePid( ETronDI_PID_8060  ) ) m_irRange.second = 5;
-    if ( IsDevicePid( ETronDI_PID_8040S ) ) m_irRange.second = 4;
+	if ( IsDevicePid( APC_PID_Hypatia  ) ) m_irRange.second = MAX_IR_HYPATIA;
+    if ( IsDevicePid( APC_PID_8060  ) ) m_irRange.second = 5;
+    if ( IsDevicePid( APC_PID_8040S ) ) m_irRange.second = 4;
 }
 
 BOOL CPreviewImageDlg::OnInitDialog()
@@ -726,9 +728,9 @@ BOOL CPreviewImageDlg::CheckDepthImageReady()
 
     UINT iDepthCount = NULL;
 
-    if ( m_previewParams.m_depthSwitch & EtronDIDepthSwitch::Depth0 ) iDepthCount++;
-    if ( m_previewParams.m_depthSwitch & EtronDIDepthSwitch::Depth1 ) iDepthCount++;
-    if ( m_previewParams.m_depthSwitch & EtronDIDepthSwitch::Depth2 ) iDepthCount++;
+    if ( m_previewParams.m_depthSwitch & ApcDIDepthSwitch::Depth0 ) iDepthCount++;
+    if ( m_previewParams.m_depthSwitch & ApcDIDepthSwitch::Depth1 ) iDepthCount++;
+    if ( m_previewParams.m_depthSwitch & ApcDIDepthSwitch::Depth2 ) iDepthCount++;
 
     return ( m_mapDepthStreamTimeStamp.size() == iDepthCount );
 }
@@ -755,8 +757,8 @@ void CPreviewImageDlg::OnTimer(UINT_PTR nIDEvent)
 
             int iReopenTime = 800;
 
-            if ( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) ) iReopenTime = CHECK_IMAGE_CALLBACK_FIRSTTIME_INTERVAL;
-            else if ( IsDevicePid( ETronDI_PID_8038 ) )                                iReopenTime = 5000;
+            if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) ) iReopenTime = CHECK_IMAGE_CALLBACK_FIRSTTIME_INTERVAL;
+            else if ( IsDevicePid( APC_PID_8038 ) )                                iReopenTime = 5000;
 
             SetTimer(CHECK_REOPEN_TIMER, iReopenTime, nullptr);
         }
@@ -765,29 +767,29 @@ void CPreviewImageDlg::OnTimer(UINT_PTR nIDEvent)
         {
             KillTimer( CHECK_REOPEN_TIMER );
 
-            EtronDI_CloseDevice(m_hEtronDI, &m_DevSelInfo);
-			EtronDI_Release(&m_hEtronDI);
-			EtronDI_Init(&m_hEtronDI, false);
-			//m_pdlgVideoDeviceDlg->IMU_Device_Reopen(m_hEtronDI, m_DevSelInfo);
+            APC_CloseDevice(m_hApcDI, &m_DevSelInfo);
+			APC_Release(&m_hApcDI);
+			APC_Init(&m_hApcDI, false);
+			//m_pdlgVideoDeviceDlg->IMU_Device_Reopen(m_hApcDI, m_DevSelInfo);
 
-            if ( m_previewParams.m_colorPreview.m_previewDlg  ) ( ( CColorDlg* )m_previewParams.m_colorPreview.m_previewDlg  )->SetHandle( m_hEtronDI, m_DevSelInfo );
-            if ( m_previewParams.m_kcolorPreview.m_previewDlg ) ( ( CColorDlg* )m_previewParams.m_kcolorPreview.m_previewDlg )->SetHandle( m_hEtronDI, m_DevSelInfo );
-            if ( m_previewParams.m_trackPreview.m_previewDlg  ) ( ( CColorDlg* )m_previewParams.m_trackPreview.m_previewDlg  )->SetHandle( m_hEtronDI, m_DevSelInfo );
+            if ( m_previewParams.m_colorPreview.m_previewDlg  ) ( ( CColorDlg* )m_previewParams.m_colorPreview.m_previewDlg  )->SetHandle( m_hApcDI, m_DevSelInfo );
+            if ( m_previewParams.m_kcolorPreview.m_previewDlg ) ( ( CColorDlg* )m_previewParams.m_kcolorPreview.m_previewDlg )->SetHandle( m_hApcDI, m_DevSelInfo );
+            if ( m_previewParams.m_trackPreview.m_previewDlg  ) ( ( CColorDlg* )m_previewParams.m_trackPreview.m_previewDlg  )->SetHandle( m_hApcDI, m_DevSelInfo );
 
-            for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)
+            for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
 			{
 				if (m_previewParams.m_depthPreview[i].m_previewDlg != nullptr)
 				{
-					((CDepthDlg*)m_previewParams.m_depthPreview[i].m_previewDlg)->SetHandle(m_hEtronDI, m_DevSelInfo);
+					((CDepthDlg*)m_previewParams.m_depthPreview[i].m_previewDlg)->SetHandle(m_hApcDI, m_DevSelInfo);
 				}
 			}
             if (m_previewParams.m_depthFusionPreview.m_previewDlg != nullptr)
 			{
-				((CDepthDlg*)m_previewParams.m_depthFusionPreview.m_previewDlg)->SetHandle(m_hEtronDI, m_DevSelInfo);
+				((CDepthDlg*)m_previewParams.m_depthFusionPreview.m_previewDlg)->SetHandle(m_hApcDI, m_DevSelInfo);
 			}
 			if (m_depthFusionHelper != nullptr)
 			{
-				m_depthFusionHelper->SetSDKHandle(m_hEtronDI, &m_DevSelInfo);
+				m_depthFusionHelper->SetSDKHandle(m_hApcDI, &m_DevSelInfo);
 			}
             ::CreateThread( NULL, NULL, Thread_Preview, this, NULL, NULL );
 			ReOpen_MappingIMU();
@@ -884,7 +886,7 @@ LRESULT CPreviewImageDlg::OnUpdateMousePos(WPARAM wParam, LPARAM lParam)
 {
     const CPoint cpDepth( LOWORD( wParam ), HIWORD( wParam ) );
 
-    for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)
+    for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
     {
         if ( m_previewParams.m_depthPreview[i].m_previewDlg != nullptr )
         {
@@ -898,9 +900,9 @@ LRESULT CPreviewImageDlg::OnUpdateMousePos(WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-void CPreviewImageDlg::SaveDepthYuv(std::vector<unsigned char> bufDepth, EtronDIImageType::Value depthImageType,int widthDepth, int heightDepth, const char* pFileName)
+void CPreviewImageDlg::SaveDepthYuv(std::vector<unsigned char> bufDepth, ApcDIImageType::Value depthImageType,int widthDepth, int heightDepth, const char* pFileName)
 {
-	unsigned char DepthmapBits = (depthImageType == EtronDIImageType::DEPTH_8BITS) ? 1 : 2;
+	unsigned char DepthmapBits = (depthImageType == ApcDIImageType::DEPTH_8BITS) ? 1 : 2;
 	SaveYuv(bufDepth, DepthmapBits, widthDepth, heightDepth, pFileName);
 }
 
@@ -921,7 +923,7 @@ void CPreviewImageDlg::SaveDepthColorBmp(int DepthNum, const char* pFileName)
 	SaveImage2(&bufferDepthToColor[0], bmiDepth, pFileName, Gdiplus::ImageFormatBMP);
 }
 
-void CPreviewImageDlg::DepthFusionBmp(EtronDIImageType::Value depthImageType)
+void CPreviewImageDlg::DepthFusionBmp(ApcDIImageType::Value depthImageType)
 {
 	std::vector<unsigned char> bufDepth;
 	bufDepth.clear();
@@ -934,7 +936,7 @@ void CPreviewImageDlg::DepthFusionBmp(EtronDIImageType::Value depthImageType)
 			bufDepth, depthImageType, widthDepth, heightDepth, snDepth))
 	{
 		int imgWidth = widthDepth;
-		if (depthImageType == EtronDIImageType::DEPTH_8BITS)
+		if (depthImageType == ApcDIImageType::DEPTH_8BITS)
 		{// divide 16bits data into 8bits x 2
 			imgWidth = widthDepth * 2;
 		}
@@ -956,27 +958,27 @@ void CPreviewImageDlg::DepthFusionBmp(EtronDIImageType::Value depthImageType)
 void CPreviewImageDlg::InitIR()
 {
 	UpdateIRConfig();
-	if (IsDevicePid(ETronDI_PID_Hypatia)) {
-		EtronDI_SetIRMaxValue(m_hEtronDI, &m_DevSelInfo, MAX_IR_HYPATIA);
+	if (IsDevicePid(APC_PID_Hypatia)) {
+		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
-    else if ( !IsDevicePid( ETronDI_PID_SALLY ) &&
-			  !IsDevicePid( ETronDI_PID_8040S ) )
+    else if ( !IsDevicePid( APC_PID_SALLY ) &&
+			  !IsDevicePid( APC_PID_8040S ) )
     {
         WORD wTestMaxIR = NULL;
 
-        EtronDI_SetIRMaxValue( m_hEtronDI, &m_DevSelInfo, 7 );
-        EtronDI_GetIRMaxValue(m_hEtronDI, &m_DevSelInfo, &wTestMaxIR);
+        APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, 7 );
+        APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &wTestMaxIR);
 
         GetDlgItem( IDC_CHK_IRMAX_EXT )->EnableWindow( 7 == wTestMaxIR && m_irRange.second > 5 );
         ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->SetCheck( m_irRange.second == MAX_IR_MAXIMUM );
 
-        EtronDI_SetIRMaxValue( m_hEtronDI, &m_DevSelInfo, m_irRange.second );
+        APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, m_irRange.second );
     }
 	CSliderCtrl* irSliderCtrl = (CSliderCtrl*)GetDlgItem(IDC_SLIDER_IR);
 	irSliderCtrl->SetRange(m_irRange.first, m_irRange.second);
 
-	m_irValue = IsDevicePid(ETronDI_PID_Hypatia) ? m_irRange.second / 2 : m_irRange.first + 3;	//Default IR value.
+	m_irValue = IsDevicePid(APC_PID_Hypatia) ? m_irRange.second / 2 : m_irRange.first + 3;	//Default IR value.
 	m_previewParams.m_IrPreState = m_irValue; // set initial value as IrState, and this value only change on OnHScroll();
 
 	irSliderCtrl->SetPos(m_irValue);
@@ -1002,7 +1004,7 @@ void CPreviewImageDlg::InitModeConfig()
     CString csModeName;
     USB_PORT_TYPE eUSB_Port_Type = m_eUSB_Port_Type;
 
-    if ( IsDevicePid( ETronDI_PID_8029 ) ) // EtronDI_GetDevicePortType not support in 8029
+    if ( IsDevicePid( APC_PID_8029 ) ) // APC_GetDevicePortType not support in 8029
     {
         eUSB_Port_Type = USB_PORT_TYPE_3_0;
 
@@ -1036,7 +1038,29 @@ void CPreviewImageDlg::InitModeConfig()
         GetDlgItem( IDC_RADIO_RECTIFY_DATA   )->EnableWindow( FALSE );
         GetDlgItem( IDC_RADIO_RAW_DATA       )->EnableWindow( FALSE );
 
-        pCbx->SetCurSel( 0 );
+        // Special Path for Sandra.
+        // Set the default video mode to 5 when using USB3.0
+        if (IsDevicePid(APC_PID_SANDRA) && (eUSB_Port_Type == USB_PORT_TYPE_3_0))
+        {
+            int specifyDefaultMode = 5;
+            int modeNumber  = pCbx->GetCount();
+            for (int loop = 0 ; loop < modeNumber; loop ++)
+            {
+                if (pCbx->GetItemData(loop) == specifyDefaultMode)
+                {
+                    pCbx->SetCurSel(loop);
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+        else // Normal Path
+        {
+            pCbx->SetCurSel(0);
+        }
         pCbx->EnableWindow( TRUE );
 
         OnCbnSelchangeComboModeConfig();
@@ -1128,11 +1152,11 @@ return 0;
 	};
 	std::vector<depth_data> depthDatas;
 
-	EtronDIImageType::Value depthImageType = EtronDIImageType::DEPTH_11BITS;
+	ApcDIImageType::Value depthImageType = ApcDIImageType::DEPTH_11BITS;
 
 	{
 		CAutoLock lock(pThis->m_previewParams.m_mutex);
-		for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)
+		for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
 		{
 			std::vector<unsigned char> bufDepth;
 			bufDepth.clear();
@@ -1152,7 +1176,7 @@ return 0;
 
 						int bufSize = resampleWidthDepth * resampleHeightDepth * 2;
 						std::vector<unsigned char> dArrayResized(bufSize);
-                        if ( depthImageType == EtronDIImageType::DEPTH_8BITS ) PlyWriter::MonoBilinearFineScaler( &bufDepth[0], &dArrayResized[0], widthDepth, heightDepth, resampleWidthDepth, resampleHeightDepth, 1);
+                        if ( depthImageType == ApcDIImageType::DEPTH_8BITS ) PlyWriter::MonoBilinearFineScaler( &bufDepth[0], &dArrayResized[0], widthDepth, heightDepth, resampleWidthDepth, resampleHeightDepth, 1);
                         else PlyWriter::MonoBilinearFineScaler_short( (USHORT*)&bufDepth[0], (USHORT*)&dArrayResized[0], widthDepth, heightDepth, resampleWidthDepth, resampleHeightDepth, 1 );
 						bufDepth.resize(bufSize);
 						bufDepth.assign(dArrayResized.begin(), dArrayResized.end());
@@ -1210,14 +1234,14 @@ return 0;
 				}
 			}
 		}
-        //if ( pThis->IsDevicePid( ETronDI_PID_8029 ) )
+        //if ( pThis->IsDevicePid( APC_PID_8029 ) )
         //{
-        //    EtronDI_FlyingDepthCancellation_D8( pThis->m_hEtronDI, &pThis->m_DevSelInfo, bufDepth.data(), widthDepth, heightDepth );
+        //    APC_FlyingDepthCancellation_D8( pThis->m_hApcDI, &pThis->m_DevSelInfo, bufDepth.data(), widthDepth, heightDepth );
         //}
 		if (bUseFilter && bufColorRGB.empty() == false)
 		{
 			//PlyFilter::CF_FILTER(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
-            if (depthImageType == EtronDIImageType::DEPTH_8BITS)
+            if (depthImageType == ApcDIImageType::DEPTH_8BITS)
 			{
 				//D8 TO D11 IMAGE +
 				std::vector< BYTE > bufDepthTmpout;
@@ -1232,11 +1256,11 @@ return 0;
 				//D8 TO D11 IMAGE -
 				PlyFilter::CF_FILTER(bufDepthTmpout, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 			}
-			else if (depthImageType == EtronDIImageType::DEPTH_11BITS)
+			else if (depthImageType == ApcDIImageType::DEPTH_11BITS)
 			{
 				PlyFilter::UnavailableDisparityCancellation(bufDepth, widthDepth, heightDepth, 16383);
 
-				//if (pThis->IsDevicePid(ETronDI_PID_8054))
+				//if (pThis->IsDevicePid(APC_PID_8054))
 				//{
 				//	PlyFilter::CF_FILTER_8M(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 				//}
@@ -1245,7 +1269,7 @@ return 0;
 					PlyFilter::CF_FILTER(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 				}
 			}
-			else if (depthImageType == EtronDIImageType::DEPTH_14BITS)
+			else if (depthImageType == ApcDIImageType::DEPTH_14BITS)
 			{
 				PlyFilter::CF_FILTER_Z14(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 			}
@@ -1295,7 +1319,7 @@ return 0;
 			
 			std::vector<CloudPoint> pointCloud; //dst for PlyWriter::etronFrameTo3D                   
 
-            if ( pThis->IsDevicePid( ETronDI_PID_8054 ) && pThis->m_previewParams.m_kcolorOption > EOF ) {
+            if ( pThis->IsDevicePid( APC_PID_8054 ) && pThis->m_previewParams.m_kcolorOption > EOF ) {
 		        //int degreeOfRectifyLogK = 90; // default rotate once
 		        //if (pThis->RotateImage()) {
 		        //	degreeOfRectifyLogK = 180;
@@ -1307,7 +1331,7 @@ return 0;
 					PlyWriter::etronFrameTo3DMultiSensor(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], pThis->m_previewParams.m_rectifyLogDataSlave, depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f, 90);
 				}
 	        }
-            else if ( pThis->IsDevicePid( ETronDI_PID_8040S ) )
+            else if ( pThis->IsDevicePid( APC_PID_8040S ) )
             { // not support CF_FILTER current
                 if ( pThis->m_previewParams.m_kcolorOption > EOF )
                     PlyWriter::etronFrameTo3DCylinder(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], pThis->m_previewParams.m_rectifyLogDataSlave, depthImageType, pointCloud, true, zNear, zFar, false, 1.0f);
@@ -1316,7 +1340,7 @@ return 0;
 			else if (bUseFilter) {
 				PlyWriter::etronFrameTo3D_PlyFilterFloat(widthDepth, heightDepth, imgFloatBufOut, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
 			}
-            else if ( pThis->IsDevicePid( ETronDI_PID_8029 ) )
+            else if ( pThis->IsDevicePid( APC_PID_8029 ) )
             {
                 PlyWriter::etronFrameTo3D_8029(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
             }
@@ -1416,8 +1440,8 @@ void CPreviewImageDlg::OnBnClickedCheck360mode()
 int CPreviewImageDlg::EnableDenoise(bool enable)
 {
     unsigned short value = 0; 
-    int ret = EtronDI_GetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xf101, &value, FG_Address_2Byte | FG_Value_1Byte);
-    if(ret != ETronDI_OK)
+    int ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, 0xf101, &value, FG_Address_2Byte | FG_Value_1Byte);
+    if(ret != APC_OK)
     {
         return ret;
     }
@@ -1431,19 +1455,19 @@ int CPreviewImageDlg::EnableDenoise(bool enable)
         BIT_SET(value, 2);
     }
 
-    return EtronDI_SetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xf101, value, FG_Address_2Byte | FG_Value_1Byte);
+    return APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, 0xf101, value, FG_Address_2Byte | FG_Value_1Byte);
 }
 
 int CPreviewImageDlg::InitEysov(LONG& outWidth, LONG& outHeight)
 {
 #ifdef ESPDI_EG
     PARALUT paraLut;
-    int ret = EtronDI_GetLutParam(m_hEtronDI, &m_DevSelInfo, CurColorOption(), &paraLut);
-    if (ret == ETronDI_OK)
+    int ret = APC_GetLutParam(m_hApcDI, &m_DevSelInfo, CurColorOption(), &paraLut);
+    if (ret == APC_OK)
     {
         //enable dewarp stitch
-        ret = EtronDI_GenerateLut(m_hEtronDI, &m_DevSelInfo, &paraLut);
-        if (ret == ETronDI_OK)
+        ret = APC_GenerateLut(m_hApcDI, &m_DevSelInfo, &paraLut);
+        if (ret == APC_OK)
         {
             outWidth = (LONG)paraLut.out_img_cols;
             outHeight = (LONG)paraLut.out_img_rows;
@@ -1452,7 +1476,7 @@ int CPreviewImageDlg::InitEysov(LONG& outWidth, LONG& outHeight)
 
     return ret;
 #else
-    return ETronDI_DEVICE_NOT_SUPPORT;
+    return APC_DEVICE_NOT_SUPPORT;
 #endif
 }
 
@@ -1505,7 +1529,7 @@ void CPreviewImageDlg::CPreviewParams::Reset(CDialog* pCallerDlg)
     CAutoLock lock(m_mutex);
 
     m_colorPreview.Reset(pCallerDlg);
-    for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)
+    for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
     {
         m_depthPreview[i].Reset(pCallerDlg);
     }
@@ -1521,11 +1545,11 @@ void CPreviewImageDlg::CPreviewParams::Reset(CDialog* pCallerDlg)
     m_IsDepthFusionOn = false;
     m_rectifyData = true;
     m_360ModeEnabled = false;
-    m_depthType = ETronDI_DEPTH_DATA_11_BITS;
+    m_depthType = APC_DEPTH_DATA_11_BITS;
     m_camFocus = 0.0;
-    m_baselineDist = std::vector<float>(ETronDI_MAX_DEPTH_STREAM_COUNT, 0.0);
+    m_baselineDist = std::vector<float>(APC_MAX_DEPTH_STREAM_COUNT, 0.0);
     m_showFusionSelectedDlg = false;
-    for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)
+    for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
     {
         if (m_rectifyLogData[i] != nullptr)
         {
@@ -1547,10 +1571,9 @@ void CPreviewImageDlg::PrepareRectifyLogData(eSPCtrl_RectLogData*& pRectifyLog, 
     }		
 
     nRet = getRectifyLogData(pRectifyLog, index);
-    if (nRet != ETronDI_OK)
+    if (nRet != APC_OK)
     {
-    	free(pRectifyLog);
-        pRectifyLog = nullptr;
+        memset(pRectifyLog, 0, sizeof(eSPCtrl_RectLogData));
         TRACE("Get 'the rectify log data' from flash failed !");
     }
 }
@@ -1588,7 +1611,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 	
     CPoint ptRes = m_previewParams.m_colorOption > EOF ? CurColorImgRes() : CurKColorImgRes();
 
-	if ( IsDevicePid( ETronDI_PID_8054 ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED ) {
+	if ( IsDevicePid( APC_PID_8054 ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED ) {
 		int nRet;
 		int index;
         if ( m_previewParams.m_rectifyLogDataSlave ) free( m_previewParams.m_rectifyLogDataSlave );
@@ -1601,7 +1624,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 			index = 0;
 
 		nRet = getRectifyLogDataSlave(m_previewParams.m_rectifyLogDataSlave, index);
-		if (nRet != ETronDI_OK)
+		if (nRet != APC_OK)
 		{
 			free(m_previewParams.m_rectifyLogDataSlave);
 			m_previewParams.m_rectifyLogDataSlave = nullptr;
@@ -1609,7 +1632,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 		}
 		m_previewParams.m_rectifyLogDataSlave->ReProjectMat[11] = m_previewParams.m_rectifyLogDataSlave->NewCamMat2[0];
 	}
-    if ( IsDevicePid( ETronDI_PID_8040S ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED )
+    if ( IsDevicePid( APC_PID_8040S ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED )
     {
         int index = EOF;
         const int iSelectK = ( ( CComboBox* )GetDlgItem( IDC_COMBO_K_COLOR_STREAM ) )->GetCurSel();
@@ -1626,7 +1649,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 
 		    m_previewParams.m_rectifyLogDataSlave = (eSPCtrl_RectLogData*)malloc(sizeof(eSPCtrl_RectLogData));
 
-		    if (getRectifyLogDataSlave(m_previewParams.m_rectifyLogDataSlave, index) != ETronDI_OK)
+		    if (getRectifyLogDataSlave(m_previewParams.m_rectifyLogDataSlave, index) != APC_OK)
 		    {
 			    free(m_previewParams.m_rectifyLogDataSlave);
 			    m_previewParams.m_rectifyLogDataSlave = nullptr;
@@ -1639,11 +1662,11 @@ void CPreviewImageDlg::UpdatePreviewParams()
     {
 		int index = 0;
 
-		m_previewParams.m_depthSwitch |= EtronDIDepthSwitch::Depth0;
+		m_previewParams.m_depthSwitch |= ApcDIDepthSwitch::Depth0;
 
-		if ( IsDevicePid( ETronDI_PID_8038 ) ) index = 0; // EX8038: D0 is for 3cm baseline
+		if ( IsDevicePid( APC_PID_8038 ) ) index = 0; // EX8038: D0 is for 3cm baseline
 
-        else if ( IsDevicePid( ETronDI_PID_8040S ) )
+        else if ( IsDevicePid( APC_PID_8040S ) )
         {
             index = ( ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED ) ? 1 : 0;
         }
@@ -1656,15 +1679,17 @@ void CPreviewImageDlg::UpdatePreviewParams()
     {
         int index;
 
-        m_previewParams.m_depthSwitch |= EtronDIDepthSwitch::Depth1;
-        if ( IsDevicePid( ETronDI_PID_8038 ) )
+        m_previewParams.m_depthSwitch |= ApcDIDepthSwitch::Depth1;
+        if ( IsDevicePid( APC_PID_8038 ) )
        	    index = 1; // EX8038: D1 is for 6cm baseline
-       	else if ( IsDevicePid( ETronDI_PID_8040S ) )
+       	else if ( IsDevicePid( APC_PID_8040S ) )
        	    index = 1;
-        else if ( IsDevicePid( ETronDI_PID_8054 ) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 3 )
+        else if ( IsDevicePid( APC_PID_8054 ) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 3 )
 			index = 2; // EX8054: D1 640*640 is from 1280*1280 scale down
-        else if ( ( IsDevicePid( ETronDI_PID_8051 ) || IsDevicePid( ETronDI_PID_8062 ) ) && USB_PORT_TYPE_2_0 == m_eUSB_Port_Type )
+        else if ( ( IsDevicePid( APC_PID_8051 ) || IsDevicePid( APC_PID_8062 ) ) && USB_PORT_TYPE_2_0 == m_eUSB_Port_Type )
        	    index = 0; // EX8051 & YX8062: U2 is Binning mode
+		else if (IsDevicePid(APC_PID_8036) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 1)
+			index = 0; // EX8036: D1 640*360 is from 1280*720 scale down
         else
             index = ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel();
 
@@ -1673,7 +1698,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 
     if (((CButton*)GetDlgItem(IDC_CHECK_DEPTH2))->GetCheck() == BST_CHECKED)
     {
-        m_previewParams.m_depthSwitch |= EtronDIDepthSwitch::Depth2; 
+        m_previewParams.m_depthSwitch |= ApcDIDepthSwitch::Depth2; 
         PrepareRectifyLogData(m_previewParams.m_rectifyLogData[2], 2); // EX8038: D2 is for 15cm baseline
     }
 
@@ -1691,7 +1716,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
     m_xPointCloudInfo.wDepthType = m_previewParams.m_depthType;
     SetFilterParam( *m_DfParam );
 
-    if ( IsDevicePid( ETronDI_PID_8040S ) )
+    if ( IsDevicePid( APC_PID_8040S ) )
     {
         if ( 2160 == ptRes.x && 1920 == ptRes.y )
         {
@@ -1708,7 +1733,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
     {
         if ( m_previewParams.m_rectifyLogData[ i ] )
         {
-            if ( IsDevicePid( ETronDI_PID_8040S ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_UNCHECKED )
+            if ( IsDevicePid( APC_PID_8040S ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_UNCHECKED )
             {
                 m_previewParams.m_rectifyLogData[ i ]->ReProjectMat[11] = (m_previewParams.m_rectifyLogData[i]->OutImgHeight / 2) / tan(72/2 * 3.1415926 / 180);
             }
@@ -1719,10 +1744,10 @@ void CPreviewImageDlg::UpdatePreviewParams()
 	        m_xPointCloudInfo.centerY       = -1.0f*m_previewParams.m_rectifyLogData[i]->ReProjectMat[7] * ratio_Mat;
 	        m_xPointCloudInfo.focalLength   = m_previewParams.m_rectifyLogData[i]->ReProjectMat[11] * ratio_Mat;
 
-            switch ( EtronDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+            switch ( ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
             {
-            case EtronDIImageType::DEPTH_14BITS: m_xPointCloudInfo.disparity_len = 0; break;
-            case EtronDIImageType::DEPTH_11BITS:
+            case ApcDIImageType::DEPTH_14BITS: m_xPointCloudInfo.disparity_len = 0; break;
+            case ApcDIImageType::DEPTH_11BITS:
                 {
                     m_xPointCloudInfo.disparity_len = 2048;
 
@@ -1736,7 +1761,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 
                     for (int i = 0; i < m_xPointCloudInfo.disparity_len; i++)
                     {
-                        m_xPointCloudInfo.disparityToW[i] = IsDevicePid( ETronDI_PID_8029 ) ? ( ( i * ratio_Mat ) / baseline + diff ) * 0.5f :
+                        m_xPointCloudInfo.disparityToW[i] = IsDevicePid( APC_PID_8029 ) ? ( ( i * ratio_Mat ) / baseline + diff ) * 0.5f :
                                                                                               ( i * ratio_Mat ) / baseline + diff;
                     }
                 }
@@ -1771,23 +1796,26 @@ void CPreviewImageDlg::UpdatePreviewParams()
 /// 影像 Callback Entry						 ///
 /// Jacky_Tag								 ///
 /// **************************************** ///
-void CPreviewImageDlg::ImgCallback(EtronDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+void CPreviewImageDlg::ImgCallback(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
     int width, int height, int serialNumber, void* pParam)
 {
     CPreviewImageDlg* pThis = (CPreviewImageDlg*)pParam;
+
+	std::vector<unsigned char> vecImgBuf(imgSize);
+	memcpy(&vecImgBuf[0], imgBuf, imgSize);
 	if (FrameSyncManager::GetInstance()->IsEnable())
 	{
-		FrameSyncManager::GetInstance()->SyncImageCallback(pThis->m_hEtronDI, pThis->m_DevSelInfo,
+		FrameSyncManager::GetInstance()->SyncImageCallback(pThis->m_hApcDI, pThis->m_DevSelInfo,
 														  imgType, imgId, serialNumber,
-													      std::bind(&CPreviewImageDlg::ProcessImgCallback, pThis, imgType, imgId, imgBuf, imgSize, width, height, serialNumber));
+													      std::bind(&CPreviewImageDlg::ProcessImgCallback, pThis, imgType, imgId, std::move(vecImgBuf), imgSize, width, height, serialNumber));
 	}
 	else
 	{
-		pThis->ProcessImgCallback(imgType, imgId, imgBuf, imgSize, width, height, serialNumber);
+		pThis->ProcessImgCallback(imgType, imgId, std::move(vecImgBuf), imgSize, width, height, serialNumber);
 	}
 }
 
-void CPreviewImageDlg::ProcessImgCallback(EtronDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+void CPreviewImageDlg::ProcessImgCallback(ApcDIImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
 	int width, int height, int serialNumber)
 {
 	CAutoLock lock(m_previewParams.m_mutex);
@@ -1804,7 +1832,7 @@ void CPreviewImageDlg::ProcessImgCallback(EtronDIImageType::Value imgType, int i
 		m_frameGrabber->UpdateFrameData(FrameGrabber::FRAME_POOL_INDEX_COLOR, snColor, &bufColor[0], bufColor.size());
 	};
 #endif
-	if (EtronDIImageType::IsImageColor(imgType))
+	if (ApcDIImageType::IsImageColor(imgType))
 	{
 		//debug log for serial-count-interval
 		//m_log.push_back( { CTime::GetTickCount().GetTime(),  serialNumber } );
@@ -1822,53 +1850,57 @@ void CPreviewImageDlg::ProcessImgCallback(EtronDIImageType::Value imgType, int i
 			}
 			LastIndex = serialNumber;
 		}
-		if (imgId == ETron_Stream_Color)
+		if (imgId == APC_Stream_Color)
 		{
 			m_imgSerialNumber = serialNumber;
 
 			CColorDlg* pDlg = (CColorDlg*)m_previewParams.m_colorPreview.m_previewDlg;
 			if (pDlg != nullptr)
 			{
-				pDlg->ApplyImage(imgBuf, &imgSize, imgType == EtronDIImageType::COLOR_RGB24, imgType == EtronDIImageType::COLOR_MJPG, serialNumber);
+				pDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == ApcDIImageType::COLOR_RGB24, imgType == ApcDIImageType::COLOR_MJPG, serialNumber);
 #ifndef ESPDI_EG
 				if (m_frameGrabber) PointCloud_ApplyImage(pDlg);
 
-				if (m_depthFusionHelper != nullptr && imgType == EtronDIImageType::COLOR_YUY2)
+				if (m_depthFusionHelper != nullptr && imgType == ApcDIImageType::COLOR_YUY2)
 				{
-					m_depthFusionHelper->UpdateColorData(serialNumber, imgBuf, imgSize);
+					m_depthFusionHelper->UpdateColorData(serialNumber, &imgBuf[0], imgSize);
 				}
 #endif
 			}
 		}
-		else if (imgId == ETron_Stream_Track)
+		else if (imgId == APC_Stream_Track)
 		{
 			CColorDlg* pTrackDlg = (CColorDlg*)m_previewParams.m_trackPreview.m_previewDlg;
 			if (pTrackDlg)
 			{
-				pTrackDlg->ApplyImage(imgBuf, &imgSize, imgType == EtronDIImageType::COLOR_RGB24, imgType == EtronDIImageType::COLOR_MJPG, serialNumber);
+				pTrackDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == ApcDIImageType::COLOR_RGB24, imgType == ApcDIImageType::COLOR_MJPG, serialNumber);
 			}
 		}
-		else if (imgId == ETron_Stream_Kolor)
+		else if (imgId == APC_Stream_Kolor)
 		{
 			CColorDlg* pKcolorDlg = (CColorDlg*)m_previewParams.m_kcolorPreview.m_previewDlg;
 			if (pKcolorDlg)
 			{
-				pKcolorDlg->ApplyImage(imgBuf, &imgSize, imgType == EtronDIImageType::COLOR_RGB24, imgType == EtronDIImageType::COLOR_MJPG, serialNumber);
+				pKcolorDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == ApcDIImageType::COLOR_RGB24, imgType == ApcDIImageType::COLOR_MJPG, serialNumber);
 #ifndef ESPDI_EG
 				if (m_frameGrabber) PointCloud_ApplyImage(pKcolorDlg);
 #endif
 			}
 		}
 	}
-	else if (EtronDIImageType::IsImageDepth(imgType))
+	else if (ApcDIImageType::IsImageDepth(imgType))
 	{
 		if (imgId == -1)// depth fusion
 		{
 			static CRect rtEmpty(0, 0, 0, 0);
 			CDepthDlg* pDlg = (CDepthDlg*)m_previewParams.m_depthFusionPreview.m_previewDlg;
+			if (!pDlg) return;
+
 			pDlg->UpdateFusionSelectedIndex(m_previewParams.m_depthFusionSelectedIndex);// need update selected index before apply image
 			CAutoLock lock(m_previewParams.m_mutex);
-			pDlg->ApplyImage(&imgBuf, imgSize, serialNumber, rtEmpty, *m_DfParam);
+
+			BYTE *pBuf = &imgBuf[0];
+			pDlg->ApplyImage(&pBuf, imgSize, serialNumber, rtEmpty, *m_DfParam);
 
 			//        if (m_previewParams.m_fusionSelectedTargetPreview.m_previewDlg != nullptr)
 			//        {
@@ -1900,43 +1932,44 @@ void CPreviewImageDlg::ProcessImgCallback(EtronDIImageType::Value imgType, int i
 			{
 				{
 					CAutoLock lock(m_previewParams.m_mutex);
-					if (IsDevicePid(ETronDI_PID_8038))
+					BYTE *pBuf = &imgBuf[0];
+					if (IsDevicePid(APC_PID_8038))
 					{
 						static CRect rtEmpty(0, 0, 0, 0);
-						((CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg)->ApplyImage(&imgBuf, imgSize, serialNumber, m_i8038DepthIndex == imgId ? m_pAccuracyDlg->GetAccuracyRegion() : rtEmpty, *m_DfParam);
+						((CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg)->ApplyImage(&pBuf, imgSize, serialNumber, m_i8038DepthIndex == imgId ? m_pAccuracyDlg->GetAccuracyRegion() : rtEmpty, *m_DfParam);
 					}
-					else ((CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg)->ApplyImage(&imgBuf, imgSize, serialNumber, m_pAccuracyDlg->GetAccuracyRegion(), *m_DfParam);
+					else ((CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg)->ApplyImage(&pBuf, imgSize, serialNumber, m_pAccuracyDlg->GetAccuracyRegion(), *m_DfParam);
 				}
 				if (m_pAccuracyDlg)
 				{
-					if (IsDevicePid(ETronDI_PID_8040S))
+					if (IsDevicePid(APC_PID_8040S))
 					{
 						width ^= height;
 						height ^= width;
 						width ^= height;
 					}
-					if (IsDevicePid(ETronDI_PID_8038))
+					if (IsDevicePid(APC_PID_8038))
 					{
 						if (m_i8038DepthIndex == imgId)
 						{
 							m_pAccuracyDlg->UpdateDepthMap(width, height, (CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg);
 						}
 					}
-					else m_pAccuracyDlg->UpdateDepthMap(imgType == EtronDIImageType::DEPTH_8BITS ? width * 2 : width, height, (CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg);
+					else m_pAccuracyDlg->UpdateDepthMap(imgType == ApcDIImageType::DEPTH_8BITS ? width * 2 : width, height, (CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg);
 				}
 			}
 			if (m_frameGrabber)
 			{
-				if (IsDevicePid(ETronDI_PID_8038)) {
-					if (imgId == 1) m_frameGrabber->UpdateFrameData(FrameGrabber::FRAME_POOL_INDEX_DEPTH, serialNumber, imgBuf, imgSize);
+				if (IsDevicePid(APC_PID_8038)) {
+					if (imgId == 1) m_frameGrabber->UpdateFrameData(FrameGrabber::FRAME_POOL_INDEX_DEPTH, serialNumber, &imgBuf[0], imgSize);
 				}
 				else {
-					m_frameGrabber->UpdateFrameData(FrameGrabber::FRAME_POOL_INDEX_DEPTH, serialNumber, imgBuf, imgSize);
+					m_frameGrabber->UpdateFrameData(FrameGrabber::FRAME_POOL_INDEX_DEPTH, serialNumber, &imgBuf[0], imgSize);
 				}
 			}
 			if (m_previewParams.m_IsDepthFusionOn)
 			{
-				m_depthFusionHelper->UpdateDepthData(imgId, serialNumber, imgBuf, imgSize);
+				m_depthFusionHelper->UpdateDepthData(imgId, serialNumber, &imgBuf[0], imgSize);
 			}
 #endif	
 		}
@@ -2005,7 +2038,7 @@ void CPreviewImageDlg::DepthFusionCallback(unsigned char* depthBuf, unsigned cha
         memcpy(&pThis->m_previewParams.m_fusionTargetRgbImgBuf[0], &fusionTargetImgBuf[0], pixelCount * 3);
     }
 
-    CPreviewImageDlg::ImgCallback(EtronDIImageType::DEPTH_11BITS, -1, depthBuf, depthSize, width, height, serialNumber, pParam);
+    CPreviewImageDlg::ImgCallback(ApcDIImageType::DEPTH_11BITS, -1, depthBuf, depthSize, width, height, serialNumber, pParam);
 }
 
 void CPreviewImageDlg::FrameGrabberCallback(std::vector<unsigned char>& bufDepth, int widthDepth, int heightDepth,
@@ -2036,7 +2069,7 @@ void CPreviewImageDlg::FrameGrabberCallback(std::vector<unsigned char>& bufDepth
     }
     else if ( pThis->m_bPCV_NoColorStream )
     {
-        for ( int i = NULL; i < ETronDI_MAX_DEPTH_STREAM_COUNT; i++ )
+        for ( int i = NULL; i < APC_MAX_DEPTH_STREAM_COUNT; i++ )
         {
             if ( !pThis->m_previewParams.m_depthPreview[ i ].m_previewDlg ) continue;
 
@@ -2081,7 +2114,7 @@ void CPreviewImageDlg::FrameGrabberCallback(std::vector<unsigned char>& bufDepth
             break;
         }
     }
-	EtronDIImageType::Value depthImageType = EtronDIImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType);
+	ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType);
 	/*Get RectLogData*/
 	eSPCtrl_RectLogData* rectifyLogData = NULL;
 
@@ -2108,27 +2141,27 @@ void CPreviewImageDlg::FrameGrabberCallback(std::vector<unsigned char>& bufDepth
     if ( pThis->m_pointCloudRGB.size() != widthColor * heightColor * 3 ) pThis->m_pointCloudRGB.resize( widthColor * heightColor * 3, 0 );
     else                                                                 std::fill( pThis->m_pointCloudRGB.begin(), pThis->m_pointCloudRGB.end(), 0 );
     
-    //if ( pThis->IsDevicePid( ETronDI_PID_8029 ) ) EtronDI_FlyingDepthCancellation_D8( pThis->m_hEtronDI, &pThis->m_DevSelInfo, bufDepth.data(), widthDepth, heightDepth );
+    //if ( pThis->IsDevicePid( APC_PID_8029 ) ) APC_FlyingDepthCancellation_D8( pThis->m_hApcDI, &pThis->m_DevSelInfo, bufDepth.data(), widthDepth, heightDepth );
 
 	/*Transform to 3D */
-	//if ( pThis->IsDevicePid( ETronDI_PID_8054 ) && pThis->m_previewParams.m_kcolorOption > EOF ) {
+	//if ( pThis->IsDevicePid( APC_PID_8054 ) && pThis->m_previewParams.m_kcolorOption > EOF ) {
 	//	//int degreeOfRectifyLogK = 90; // default rotate once
 	//	//if (pThis->RotateImage()) {
 	//	//	degreeOfRectifyLogK = 180;
 	//	//}
 	//	PlyWriter::etronFrameTo3DMultiSensor(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, pThis->m_previewParams.m_rectifyLogDataSlave, depthImageType, pointCloud, true, zNear, zFar, true, true, downsampleRatio, 90/*degreeOfRectifyLogK*/);
 	//}
-	//else if ( pThis->IsDevicePid( ETronDI_PID_8040S ) ) {
+	//else if ( pThis->IsDevicePid( APC_PID_8040S ) ) {
  //       if ( pThis->m_previewParams.m_kcolorOption > EOF )
  //           PlyWriter::etronFrameTo3DCylinder(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, pThis->m_previewParams.m_rectifyLogDataSlave, depthImageType, pointCloud, true, zNear, zFar, false, 1.0f);
 	//	else PlyWriter::etronFrameTo3DCylinder(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, depthImageType, pointCloud, true, zNear, zFar, false, 1.0f);
 	//}
-	//else if ( pThis->IsDevicePid( ETronDI_PID_8029 ) )
+	//else if ( pThis->IsDevicePid( APC_PID_8029 ) )
  //   {
  //       PlyWriter::etronFrameTo3D_8029(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, depthImageType, pointCloud, true, zNear, zFar, true, true, downsampleRatio);
  //   }
  //   else
-    if ( ( pThis->IsDevicePid( ETronDI_PID_8054 ) || pThis->IsDevicePid( ETronDI_PID_8040S ) ) && pThis->m_previewParams.m_kcolorOption > EOF && pThis->m_bPCV_NoColorStream )
+    if ( ( pThis->IsDevicePid( APC_PID_8054 ) || pThis->IsDevicePid( APC_PID_8040S ) ) && pThis->m_previewParams.m_kcolorOption > EOF && pThis->m_bPCV_NoColorStream )
     {
         static PointCloudInfo xPointCloudInfo;
 
@@ -2136,12 +2169,12 @@ void CPreviewImageDlg::FrameGrabberCallback(std::vector<unsigned char>& bufDepth
 
         xPointCloudInfo.focalLength_K = 0;
 
-        EtronDI_GetPointCloud( pThis->m_hEtronDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
+        APC_GetPointCloud( pThis->m_hApcDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
     }
     else
     {
 		//PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, depthImageType, pointCloud, true, zNear, zFar, true, true, downsampleRatio);
-        EtronDI_GetPointCloud( pThis->m_hEtronDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &pThis->m_xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
+        APC_GetPointCloud( pThis->m_hApcDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &pThis->m_xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
 	}
 	//PlyWriter::etronFrameTo3D(widthOutput, heightOutput, bufDepth, bufColor, rectifyLogData.ReProjectMat, depthImageType, pointCloud, clipping, zNear, zFar, removeINF);
 
@@ -2196,22 +2229,22 @@ void CPreviewImageDlg::PointcloudViewerMessageCallback(CPointCloudViewer::Messag
 	}
 }
 
-void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height, EtronDIImageType::Value DImgType)
+void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height, ApcDIImageType::Value DImgType)
 {
 	if (*pzdTblIdx == -1 && m_previewParams.m_depthSwitch % 2 == 1)	// if Setup Depth0
 	{
 		*pzdTblIdx = 0;
 	}
-    else if ( IsDevicePid( ETronDI_PID_8060 ) )
+    else if ( IsDevicePid( APC_PID_8060 ) )
 	{
         *pzdTblIdx = 0;
 	}
-    else if ( IsDevicePid( ETronDI_PID_AMBER ) )
+    else if ( IsDevicePid( APC_PID_AMBER ) )
     {
         *pzdTblIdx = 0;
     }
     // some modules need to adjust zdTableIndex for USB2
-    else if ( IsDevicePid( ETronDI_PID_8037 ) )
+    else if ( IsDevicePid( APC_PID_8037 ) )
     {	
         if (height == 720)
         {
@@ -2222,7 +2255,7 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
             *pzdTblIdx = 1;
         }
     }
-	else if ( IsDevicePid( ETronDI_PID_8054 ) )
+	else if ( IsDevicePid( APC_PID_8054 ) )
 	{
 		if (height == 640);
 		{
@@ -2230,7 +2263,7 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
 			*pzdTblIdx = GetDepthStreamIndex(resTmp);
 		}
 	}
-	else if ( IsDevicePid( ETronDI_PID_8040S ) )
+	else if ( IsDevicePid( APC_PID_8040S ) )
 	{
 		if ((m_pStreamDepthInfo[m_previewParams.m_depthOption].nWidth == 912) ||
 			(m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight == 912) ||
@@ -2241,11 +2274,11 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
 			*pzdTblIdx = 1;
 		}
 	}
-    else if ( IsDevicePid( ETronDI_PID_8051 ) )
+    else if ( IsDevicePid( APC_PID_8051 ) )
     {
         if (height == 360 ) *pzdTblIdx = 0;
     }
-	else if ( IsDevicePid(ETronDI_PID_8062) )
+	else if ( IsDevicePid(APC_PID_8062) )
 	{
 		/// **************************************** ///
 		/// PIF : special for Scallar Down			 ///
@@ -2254,12 +2287,42 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
 		if (USB_PORT_TYPE_2_0 == m_eUSB_Port_Type && height == 360)
 			*pzdTblIdx = 0;
 	}
-    else if ( height && ( IsDevicePid( ETronDI_PID_8052 ) || IsDevicePid( ETronDI_PID_8036 ) ) ) // U2 mode34, 35
+    else if ( height && ( IsDevicePid( APC_PID_8052 ) || IsDevicePid( APC_PID_8036 ) ) ) // U2 mode34, 35
 	{
-        if ( m_previewParams.m_colorPreview.m_imgRes.y && ( m_previewParams.m_colorPreview.m_imgRes.y % height != 0 ) )
+		if (IsDevicePid(APC_PID_8036) && height == 360)
+		{
+			*pzdTblIdx = 0;
+		}
+		else if ( m_previewParams.m_colorPreview.m_imgRes.y && ( m_previewParams.m_colorPreview.m_imgRes.y % height != 0 ) )
     	{
     		*pzdTblIdx = 2;
     	}
+
+        if (IsDevicePid(APC_PID_8052))
+        {
+            // For scallar down.
+            if ((width == 640) && (height == 360))
+            {
+                *pzdTblIdx = 0;
+            }
+        }
+    }
+    else if (IsDevicePid(APC_PID_SANDRA))
+    {
+        int colorWidth = m_pStreamColorInfo[m_previewParams.m_colorOption].nWidth;
+        int colorHeight = m_pStreamColorInfo[m_previewParams.m_colorOption].nHeight;
+
+        // Specially for Mode 11
+        if ((width == 640) && (height == 360) && (colorWidth == 1280) && (colorHeight == 360))
+        {
+            *pzdTblIdx = 1;
+        }
+
+        // Specially For Mode 9
+        if ((width == 1280) && (height == 720) && (colorWidth == 2560) && (colorHeight == 720))
+        {
+            *pzdTblIdx = 0;
+        }
     }
 }
 
@@ -2267,7 +2330,7 @@ void CPreviewImageDlg::AdjustColorResForDepth0(CPoint*colorRealRes)
 {
 #ifndef ESPDI_EG
 	/*Has Depth0*/
-	if ( IsDevicePid( ETronDI_PID_8040S ) )
+	if ( IsDevicePid( APC_PID_8040S ) )
 	{
 		if ((m_pStreamColorInfo[m_previewParams.m_colorOption].nWidth == 2160) && (m_pStreamColorInfo[m_previewParams.m_colorOption].nHeight == 1920))
 		{
@@ -2282,19 +2345,19 @@ void CPreviewImageDlg::AdjustColorResForDepth0(CPoint*colorRealRes)
 void CPreviewImageDlg::AdjustRegister()
 {
 #ifndef ESPDI_EG
-        if (IsDevicePid(ETronDI_PID_8029))
+        if (IsDevicePid(APC_PID_8029))
 		{
 			WORD wF05B = NULL;
 			wF05B = 0xF0;
-			EtronDI_SetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xF05B, wF05B, FG_Address_2Byte | FG_Value_1Byte);
+			APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, 0xF05B, wF05B, FG_Address_2Byte | FG_Value_1Byte);
 			wF05B = 0xF3;
-			EtronDI_SetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xF05B, wF05B, FG_Address_2Byte | FG_Value_1Byte);
+			APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, 0xF05B, wF05B, FG_Address_2Byte | FG_Value_1Byte);
 		}
-		if ( IsDevicePid( ETronDI_PID_8053 ) )
+		if ( IsDevicePid( APC_PID_8053 ) )
 		{
-			EtronDIImageType::Value depthImageType = EtronDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
+			ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
 
-			if (depthImageType == EtronDIImageType::DEPTH_8BITS)
+			if (depthImageType == ApcDIImageType::DEPTH_8BITS)
 			{
 				if (m_previewParams.m_colorOption >= 0 && m_previewParams.m_depthOption >=0)
 				{
@@ -2302,7 +2365,7 @@ void CPreviewImageDlg::AdjustRegister()
 					CPoint colorRealRes = CurColorImgRes();
 					if (Depthres.x == 640 && Depthres.y == 360 && colorRealRes.x == 1280 && colorRealRes.y == 720)
 					{
-						m_registerSettings->ForEx8053Mode9(m_hEtronDI, &m_DevSelInfo);
+						m_registerSettings->ForEx8053Mode9(m_hApcDI, &m_DevSelInfo);
 					}
 				}
 			}
@@ -2310,20 +2373,20 @@ void CPreviewImageDlg::AdjustRegister()
 #endif
 
 #ifndef ESPDI_EG
-		if ( IsDevicePid( ETronDI_PID_8038 ) )
+		if ( IsDevicePid( APC_PID_8038 ) )
 		{
 			Sleep(1000);
-			m_registerSettings->DM_Quality_Register_Setting_For6cm(m_hEtronDI, &m_DevSelInfo);
-			m_registerSettings->DM_Quality_Register_Setting_Slave(m_hEtronDI, &m_DevSelInfo);
+			m_registerSettings->DM_Quality_Register_Setting_For6cm(m_hApcDI, &m_DevSelInfo);
+			m_registerSettings->DM_Quality_Register_Setting_Slave(m_hApcDI, &m_DevSelInfo);
 		}
-		m_registerSettings->DM_Quality_Register_Setting(m_hEtronDI, &m_DevSelInfo);
+		m_registerSettings->DM_Quality_Register_Setting(m_hApcDI, &m_DevSelInfo);
 #endif
 
 #ifndef ESPDI_EG
-		if (IsDevicePid(ETronDI_PID_8062))
+		if (IsDevicePid(APC_PID_8062))
 		{
 			CPoint Depthres = CurDepthImgRes();
-			EtronDI_AdjustFocalLengthFromFlash(m_hEtronDI, &m_DevSelInfo, Depthres.x, Depthres.y);
+			APC_AdjustFocalLengthFromFlash(m_hApcDI, &m_DevSelInfo, Depthres.x, Depthres.y);
 			m_pAccuracyDlg->UpdatePixelUnit();
 			m_pAccuracyDlg->UpdateFocalLength();
 		}
@@ -2341,35 +2404,35 @@ int CPreviewImageDlg::AdjDepthBitIndex( const int depthType )
 {
 	if ( m_previewParams.m_depthOption == EOF )
 	{
-        if ( IsDevicePid( ETronDI_PID_8060 ) ) return m_previewParams.m_rectifyData ? ETronDI_DEPTH_DATA_11_BITS : ETronDI_DEPTH_DATA_OFF_RAW;
+        if ( IsDevicePid( APC_PID_8060 ) ) return m_previewParams.m_rectifyData ? APC_DEPTH_DATA_11_BITS : APC_DEPTH_DATA_OFF_RAW;
 
-        return m_previewParams.m_rectifyData ? ETronDI_DEPTH_DATA_OFF_RECTIFY : ETronDI_DEPTH_DATA_OFF_RAW;
+        return m_previewParams.m_rectifyData ? APC_DEPTH_DATA_OFF_RECTIFY : APC_DEPTH_DATA_OFF_RAW;
 	}
-    else if (m_bIsInterLeaveMode)//( IsDevicePid( ETronDI_PID_8052 ) || IsDevicePid( ETronDI_PID_8059 ) || IsDevicePid(ETronDI_PID_8062) )
+    else if (m_bIsInterLeaveMode)//( IsDevicePid( APC_PID_8052 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid(APC_PID_8062) )
     {
         //if ( m_bIsInterLeaveMode )	//#6493;
         {
             switch ( depthType )
             {
-            case ETronDI_DEPTH_DATA_8_BITS:      return ETronDI_DEPTH_DATA_ILM_8_BITS;
-            case ETronDI_DEPTH_DATA_8_BITS_RAW:  return ETronDI_DEPTH_DATA_ILM_8_BITS_RAW;
-            case ETronDI_DEPTH_DATA_11_BITS:     return ETronDI_DEPTH_DATA_ILM_11_BITS;
-            case ETronDI_DEPTH_DATA_11_BITS_RAW: return ETronDI_DEPTH_DATA_ILM_11_BITS_RAW;
-            case ETronDI_DEPTH_DATA_14_BITS:     return ETronDI_DEPTH_DATA_ILM_14_BITS;
-            case ETronDI_DEPTH_DATA_14_BITS_RAW: return ETronDI_DEPTH_DATA_ILM_14_BITS_RAW;
+            case APC_DEPTH_DATA_8_BITS:      return APC_DEPTH_DATA_ILM_8_BITS;
+            case APC_DEPTH_DATA_8_BITS_RAW:  return APC_DEPTH_DATA_ILM_8_BITS_RAW;
+            case APC_DEPTH_DATA_11_BITS:     return APC_DEPTH_DATA_ILM_11_BITS;
+            case APC_DEPTH_DATA_11_BITS_RAW: return APC_DEPTH_DATA_ILM_11_BITS_RAW;
+            case APC_DEPTH_DATA_14_BITS:     return APC_DEPTH_DATA_ILM_14_BITS;
+            case APC_DEPTH_DATA_14_BITS_RAW: return APC_DEPTH_DATA_ILM_14_BITS_RAW;
             }
         }
     }
-    else if ( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) || IsDevicePid( ETronDI_PID_8038 ) )
+    else if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) || IsDevicePid( APC_PID_8038 ) )
     {
         if ( ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() != BST_CHECKED )
         {
             switch ( depthType )
             {
-            case ETronDI_DEPTH_DATA_11_BITS:
-            case ETronDI_DEPTH_DATA_11_BITS_RAW: return ETronDI_DEPTH_DATA_11_BITS_COMBINED_RECTIFY;
-            case ETronDI_DEPTH_DATA_14_BITS:
-            case ETronDI_DEPTH_DATA_14_BITS_RAW: return ETronDI_DEPTH_DATA_14_BITS_COMBINED_RECTIFY;
+            case APC_DEPTH_DATA_11_BITS:
+            case APC_DEPTH_DATA_11_BITS_RAW: return APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY;
+            case APC_DEPTH_DATA_14_BITS:
+            case APC_DEPTH_DATA_14_BITS_RAW: return APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY;
             }
         }
     }
@@ -2380,7 +2443,7 @@ void CPreviewImageDlg::AdjustNearFar( int& zFar, int& zNear, CDepthDlg* pDlg )
 {
     pDlg->GetDepthZValue( zFar, zNear );
 
-    if ( IsDevicePid( ETronDI_PID_8038 ) )
+    if ( IsDevicePid( APC_PID_8038 ) )
     {
         if ( zNear < EX8038_MIN_DEPTH_RANGE ) zNear = EX8038_MIN_DEPTH_RANGE;
     }
@@ -2414,7 +2477,7 @@ void CPreviewImageDlg::OpenKColorStream()
 		m_previewParams.m_kcolorPreview.m_imgRes = colorRealRes;
 
 		CColorDlg* pKcolorDlg = new CColorDlg(this);
-		pKcolorDlg->SetColorParams(m_hEtronDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, FALSE, CurDepthImgRes());
+		pKcolorDlg->SetColorParams(m_hApcDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, FALSE, CurDepthImgRes());
 		pKcolorDlg->SetDlgName("K color Dialog");
 		pKcolorDlg->Create(pKcolorDlg->IDD, this);
 
@@ -2436,7 +2499,7 @@ void CPreviewImageDlg::OpenTrackStream()
 		m_previewParams.m_trackPreview.m_imgRes = colorRealRes;
 
 		CColorDlg* pDlg = new CColorDlg(this);
-		pDlg->SetColorParams(m_hEtronDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, FALSE, CurDepthImgRes());
+		pDlg->SetColorParams(m_hApcDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, FALSE, CurDepthImgRes());
 		pDlg->SetDlgName("Track Dialog");
 		pDlg->Create(pDlg->IDD, this);
 		m_previewParams.m_trackPreview.SetPreviewDlg(pDlg);
@@ -2471,7 +2534,7 @@ void CPreviewImageDlg::OpenMainStream()
 
         m_depthFusionHelper = new CDepthFusionHelper(3, res.x, res.y, 
             m_previewParams.m_camFocus, m_previewParams.m_baselineDist, 1, CPreviewImageDlg::DepthFusionCallback, this);
-        m_depthFusionHelper->SetSDKHandle( m_hEtronDI, &m_DevSelInfo );
+        m_depthFusionHelper->SetSDKHandle( m_hApcDI, &m_DevSelInfo );
 
         if (((CButton*)GetDlgItem(IDC_CHECK_FUSION_SWPP))->GetCheck() == BST_CHECKED)
         {
@@ -2530,7 +2593,7 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
     }
     else return;
 
-    if ( EtronDIImageType::DEPTH_11BITS != EtronDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+    if ( ApcDIImageType::DEPTH_11BITS != ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
     {
         ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->SetCheck( BST_UNCHECKED );
     }
@@ -2549,7 +2612,7 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
 		CPoint resColor = ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED ? m_previewParams.m_kcolorPreview.m_imgRes :
                                                                                                               m_previewParams.m_colorPreview.m_imgRes;
 		CPoint resDepth;
-		for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)//depth
+		for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)//depth
 		{
 			if (m_previewParams.m_depthOption >= 0 && (m_previewParams.m_depthSwitch & (1 << i)) != 0)
 			{
@@ -2562,14 +2625,14 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
 		int maxPoolSize = 1;		
 		int bytesPerPixelColor = 3;
 		int bytesPerPixelDepth;
-		EtronDIImageType::Value depthImageType = EtronDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
-		if (depthImageType == EtronDIImageType::DEPTH_8BITS)  bytesPerPixelDepth = 1;
+		ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
+		if (depthImageType == ApcDIImageType::DEPTH_8BITS)  bytesPerPixelDepth = 1;
 		else bytesPerPixelDepth = 2;
 		
 		m_frameGrabber = new FrameGrabber(maxPoolSize, CPreviewImageDlg::FrameGrabberCallback, this);
 		m_frameGrabber->SetFrameFormat(FrameGrabber::FRAME_POOL_INDEX_COLOR, resColor.x, resColor.y, bytesPerPixelColor);
 		m_frameGrabber->SetFrameFormat(FrameGrabber::FRAME_POOL_INDEX_DEPTH, resDepth.x, resDepth.y, bytesPerPixelDepth);
-		//if ( IsDevicePid( ETronDI_PID_8054 ) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() > 1) {
+		//if ( IsDevicePid( APC_PID_8054 ) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() > 1) {
 		//	m_frameGrabber->SetDisableSerialSyn(true);
 		//}
 		m_previewParams.m_pointCloudViewer = new CPointCloudViewer(CPreviewImageDlg::PointcloudViewerMessageCallback, this);
@@ -2593,14 +2656,15 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 
 	if (FrameSyncManager::GetInstance()->IsEnable())
 	{
-		FrameSyncManager::GetInstance()->RegisterDevice(pThis->m_hEtronDI, pThis->m_DevSelInfo);
+		FrameSyncManager::GetInstance()->RegisterDevice(pThis->m_hApcDI, pThis->m_DevSelInfo);
+		FrameSyncManager::GetInstance()->SetIsInterleave(pThis->m_hApcDI, pThis->m_DevSelInfo, pThis->m_bIsInterLeaveMode);
 	}
 
-    if ( !pThis->IsDevicePid( ETronDI_PID_8029 ) ) pThis->EnableIR( TRUE ); // 8029 need enable IR after open-device
+    if ( !pThis->IsDevicePid( APC_PID_8029 ) ) pThis->EnableIR( TRUE ); // 8029 need enable IR after open-device
 
     auto OpenDevice = [ = ]( const int colorOption, const int depthOption, const int iFPS, const int iPid )
     {
-        const int Ret = EtronDI_OpenDevice( pThis->m_hEtronDI,
+        const int Ret = APC_OpenDevice( pThis->m_hApcDI,
                                             &pThis->m_DevSelInfo,
 			                                colorOption,
                                             depthOption,
@@ -2609,11 +2673,11 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
                                             CPreviewImageDlg::ImgCallback,
                                             pThis,
                                             iPid );
-        if ( ETronDI_VIDEO_RENDER_FAIL == Ret )
+        if ( APC_VIDEO_RENDER_FAIL == Ret )
         {
             AfxMessageBox( _T( "Cannot Run Graph!" ) ); 
         }
-        return ( ETronDI_OK == Ret );
+        return ( APC_OK == Ret );
     };
     do
     {
@@ -2625,11 +2689,21 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 
             if ( pThis->m_previewParams.m_kcolorOption > EOF )
             {
-                if ( pThis->IsDevicePid( ETronDI_PID_8054 ) || pThis->IsDevicePid( ETronDI_PID_8040S ) ) depthOption = EOF;
+                if ( pThis->IsDevicePid( APC_PID_8054 ) || pThis->IsDevicePid( APC_PID_8040S ) ) depthOption = EOF;
 
                 iFPS = pThis->GetDlgItemInt( IDC_DEPTH_FRAME_RATE ); // D+K use Depth-Fps
             }
-            EtronDI_SetDepthDataType( pThis->m_hEtronDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType );
+
+			WORD depthDataTypeOffset = 0;
+			if ((pThis->IsDevicePid(APC_PID_8036) || pThis->IsDevicePid(APC_PID_8052)) && depthOption != EOF)
+			{
+				if (pThis->m_pStreamDepthInfo[depthOption].nWidth == 640 && pThis->m_pStreamDepthInfo[depthOption].nHeight == 360)
+				{
+					depthDataTypeOffset = APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET;
+				}
+			}
+
+            APC_SetDepthDataType( pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType + depthDataTypeOffset);
 
             if ( !OpenDevice( pThis->m_previewParams.m_colorOption,
                               depthOption,
@@ -2638,12 +2712,12 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
         }
         if ( pThis->m_previewParams.m_tcolorOption > EOF )
         {
-            EtronDI_SetDepthDataTypeEx( pThis->m_hEtronDI, &pThis->m_DevSelInfo, ETronDI_DEPTH_DATA_11_BITS, ETronDI_PID_8060_T );
+            APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, APC_DEPTH_DATA_11_BITS, APC_PID_8060_T );
 
             if ( !OpenDevice( pThis->m_previewParams.m_tcolorOption,
                               EOF,
                               pThis->GetDlgItemInt( IDC_COMBO_FRAME_RATE ),
-                              ETronDI_PID_8060_T ) ) break;
+                              APC_PID_8060_T ) ) break;
         }
         if ( pThis->m_previewParams.m_kcolorOption > EOF )
         {
@@ -2651,9 +2725,9 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 
             switch ( pThis->m_devinfoEx.wPID )
             {
-            case ETronDI_PID_8060:  iPid = ETronDI_PID_8060_K;  break;
-            case ETronDI_PID_8054:  iPid = ETronDI_PID_8054_K;  EtronDI_SetDepthDataTypeEx( pThis->m_hEtronDI, &pThis->m_DevSelInfo, 0x01, iPid  ); break;
-            case ETronDI_PID_8040S: iPid = ETronDI_PID_8040S_K; EtronDI_SetDepthDataTypeEx( pThis->m_hEtronDI, &pThis->m_DevSelInfo, 0x00, iPid  ); break;
+            case APC_PID_8060:  iPid = APC_PID_8060_K;  break;
+            case APC_PID_8054:  iPid = APC_PID_8054_K;  APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid  ); break;
+            case APC_PID_8040S: iPid = APC_PID_8040S_K; APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x00, iPid  ); break;
             }
             if ( !OpenDevice( pThis->m_previewParams.m_kcolorOption,
                               EOF,
@@ -2669,13 +2743,13 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
         if ( pThis->m_previewParams.m_colorOption  > EOF ||             pThis->m_previewParams.m_kcolorOption > EOF ) 
 			pThis->SetTimer(CHECK_SYNC_TIMER, CHECK_REGISTER_TIME_INTERVAL, nullptr);
 
-        if ( pThis->IsDevicePid( ETronDI_PID_8029 ) ) { pThis->EnableIR( FALSE ); Sleep( 50 ); pThis->EnableIR( TRUE ); }// 8029 need enable IR after open-device
+        if ( pThis->IsDevicePid( APC_PID_8029 ) ) { pThis->EnableIR( FALSE ); Sleep( 50 ); pThis->EnableIR( TRUE ); }// 8029 need enable IR after open-device
     
         return NULL;
     }while ( FALSE );
 
-    if ( pThis->m_previewParams.m_colorOption  > EOF ) pThis->m_mapColorStreamTimeStamp[ ETron_Stream_Color ] = time(NULL);
-    if ( pThis->m_previewParams.m_kcolorOption > EOF ) pThis->m_mapColorStreamTimeStamp[ ETron_Stream_Kolor ] = time(NULL);
+    if ( pThis->m_previewParams.m_colorOption  > EOF ) pThis->m_mapColorStreamTimeStamp[ APC_Stream_Color ] = time(NULL);
+    if ( pThis->m_previewParams.m_kcolorOption > EOF ) pThis->m_mapColorStreamTimeStamp[ APC_Stream_Kolor ] = time(NULL);
     if ( pThis->m_previewParams.m_depthOption  > EOF ) pThis->m_mapDepthStreamTimeStamp[ 0 ] = time(NULL);
 
     pThis->SetTimer(CHECK_REOPEN_TIMER, CHECK_IMAGE_CALLBACK_TIME_INTERVAL, nullptr);
@@ -2711,7 +2785,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
         }
 #endif
     }
-    EtronDIImageType::Value depthImageType = EtronDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
+    ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
 
     int zdTableIndex = GetDepthStreamIndex(cpDepthRes);
 	AdjustZDTableIndex(&zdTableIndex, cpDepthRes.x, cpDepthRes.y, depthImageType);
@@ -2721,7 +2795,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
     const int iDepthPeriod = ( GetDlgItemInt( IDC_DEPTH_FRAME_RATE ) ? GetDlgItemInt( IDC_DEPTH_FRAME_RATE ) : GetDlgItemInt( IDC_COMBO_FRAME_RATE ) ) / 3;
     const DEPTHMAP_TYPE depthMapType = ( ( CComboBox* )GetDlgItem(IDC_COMBO_DEPTH_OUTPUT_CTRL ) )->GetCurSel() ? TRANSFER_TO_GRAYRGB : TRANSFER_TO_COLORFULRGB;
 
-    for (int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)//depth
+    for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)//depth
     {
         if (m_previewParams.m_depthOption >= 0 && (m_previewParams.m_depthSwitch & (1 << i)) != 0)
         {
@@ -2732,7 +2806,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
 
 			std::vector<float> baselineDist;
             CDepthDlg* pDlg = new CDepthDlg(this);
-            pDlg->SetImageParams(m_hEtronDI, m_DevSelInfo, m_DevType, depthImageType,
+            pDlg->SetImageParams(m_hApcDI, m_DevSelInfo, m_DevType, depthImageType,
                 i, zdTableIndex, cpDepthRes.x, cpDepthRes.y, iDepthPeriod,
 				m_previewParams.m_camFocus, m_previewParams.m_baselineDist[i], baselineDist ); 
             pDlg->Create(pDlg->IDD, this);
@@ -2758,7 +2832,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
         m_previewParams.m_showFusionSelectedDlg = ((CButton*)GetDlgItem(IDC_CHECK_FUSION_SELECT_DLG))->GetCheck() == BST_CHECKED;
         std::vector<float> multiBaselineDist = m_previewParams.m_showFusionSelectedDlg ? std::vector<float>() : m_previewParams.m_baselineDist;
         CDepthDlg* pDlg = new CDepthDlg(this);
-        pDlg->SetImageParams(m_hEtronDI, m_DevSelInfo, m_DevType, depthImageType,
+        pDlg->SetImageParams(m_hApcDI, m_DevSelInfo, m_DevType, depthImageType,
             -1, zdTableIndex, cpDepthRes.x, cpDepthRes.y, iDepthPeriod, m_previewParams.m_camFocus, m_previewParams.m_baselineDist[0], 
             multiBaselineDist );// fusion using baseline0
         pDlg->Create(pDlg->IDD, this);
@@ -2770,7 +2844,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
         //{
         //    m_previewParams.m_fusionSelectedTargetPreview.m_imgRes = cpDepthRes;
         //    CColorDlg* pSelectedTargetDlg = new CColorDlg(this);
-        //    pSelectedTargetDlg->SetColorParams(m_hEtronDI, m_DevSelInfo, cpDepthRes.x, cpDepthRes.y, FALSE, cpDepthRes);
+        //    pSelectedTargetDlg->SetColorParams(m_hApcDI, m_DevSelInfo, cpDepthRes.x, cpDepthRes.y, FALSE, cpDepthRes);
         //    pSelectedTargetDlg->SetDlgName("Fusion Selected Target Dialog");
         //    pSelectedTargetDlg->Create(pDlg->IDD, this);
         //    m_previewParams.m_fusionSelectedTargetPreview.SetPreviewDlg(pSelectedTargetDlg);
@@ -2783,11 +2857,11 @@ void CPreviewImageDlg::PreparePreviewDlg()
 			EnableDenoise(true);
 			InitEysov(colorRealRes.x, colorRealRes.y);
 		}
-        const BOOL bIsLRD_Mode = ( ( IsDevicePid( ETronDI_PID_8036 ) || IsDevicePid( ETronDI_PID_8037 ) || IsDevicePid( ETronDI_PID_8052 )  || IsDevicePid( ETronDI_PID_8029 ) ) && 
+        const BOOL bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) && 
                                  ( ( 2560 == colorRealRes.x && 1280 == cpDepthRes.x ) || ( 2560 == colorRealRes.x && 640 == cpDepthRes.x )  || ( 1280 == colorRealRes.x && 640 == cpDepthRes.x ) ||
                                    ( 640 == colorRealRes.x && 320 == cpDepthRes.x ) ) );
         CColorDlg* pDlg = new CColorDlg(this);
-        pDlg->SetColorParams(m_hEtronDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, bIsLRD_Mode, cpDepthRes);
+        pDlg->SetColorParams(m_hApcDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, bIsLRD_Mode, cpDepthRes);
         pDlg->Create(pDlg->IDD, this);
         m_previewParams.m_colorPreview.SetPreviewDlg(pDlg);
     }
@@ -2974,7 +3048,7 @@ void CPreviewImageDlg::InitPreviewDlgPos()
             std::pair<CPoint, CDialog*>(m_previewParams.m_depthFusionPreview.m_imgRes, m_previewParams.m_depthFusionPreview.m_previewDlg));
     }
     
-    for (int i = 0;i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i)
+    for (int i = 0;i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
     {
         if (m_previewParams.m_depthPreview[i].m_previewDlg != nullptr)
         {
@@ -3038,21 +3112,21 @@ void CPreviewImageDlg::CloseDeviceAndStopPreview(CDialog* pCallerDlg)
 
 	if (FrameSyncManager::GetInstance()->IsEnable())
 	{
-		FrameSyncManager::GetInstance()->RegisterDevice(m_hEtronDI, m_DevSelInfo);
+		FrameSyncManager::GetInstance()->UnregisterDevice(m_hApcDI, m_DevSelInfo);
 	}
 
     ((CButton*)GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC))->SetCheck(IsSupportHwPostProc() ? BST_CHECKED : BST_UNCHECKED);
 
     GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC)->EnableWindow(FALSE);
 #ifndef ESPDI_EG
-    EtronDI_EnableInterleave( m_hEtronDI, &m_DevSelInfo, FALSE );
+    APC_EnableInterleave( m_hApcDI, &m_DevSelInfo, FALSE );
 	if (m_bIsInterLeaveMode)
 	{
 		m_pPropertyDlg->LowLightEnable(true);
 		m_pPropertyDlg->SetLowLight(m_bPrevLowLigh);	
 	}
 #endif
-	EtronDI_CloseDevice(m_hEtronDI, &m_DevSelInfo);
+	APC_CloseDevice(m_hApcDI, &m_DevSelInfo);
 #ifndef ESPDI_EG
     if (m_previewParams.m_IsDepthFusionOn)
     {
@@ -3098,6 +3172,7 @@ void CPreviewImageDlg::CloseDeviceAndStopPreview(CDialog* pCallerDlg)
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_CHK_PCV_NOCOLOR)->EnableWindow(TRUE);
 	GetDlgItem(IDC_CHK_PCV_SINGLE)->EnableWindow(TRUE);
+	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062));
 
     OnCbnSelchangeComboFrameRate();
 }
@@ -3109,7 +3184,7 @@ void CPreviewImageDlg::OnCbnSelchangeComboTColorStream()
 
 void CPreviewImageDlg::OnCbnSelchangeComboColorStream()
 {
-    if ( IsDevicePid( ETronDI_PID_8060 ) )
+    if ( IsDevicePid( APC_PID_8060 ) )
     {
         GetDlgItem( IDC_COMBO_COLOR_STREAM )->EnableWindow( FALSE );
         return;
@@ -3120,7 +3195,7 @@ void CPreviewImageDlg::OnCbnSelchangeComboColorStream()
     {
         GetDlgItem(IDC_CHECK_DEPTH0)->EnableWindow( bModeConfigLock );
 #ifndef ESPDI_EG
-        if ( IsDevicePid( ETronDI_PID_8038 ) )
+        if ( IsDevicePid( APC_PID_8038 ) )
         {
             GetDlgItem(IDC_CHECK_DEPTH_FUSION)->EnableWindow(bModeConfigLock);
             GetDlgItem(IDC_CHECK_FUSION_SELECT_DLG)->EnableWindow(TRUE);
@@ -3192,7 +3267,7 @@ void CPreviewImageDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar
 
             SetDlgItemInt( IDC_ST_DEPTH_ROI, DEPTH_ROI_VALUE[ iValue ] );
 
-            for ( int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i )
+            for ( int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i )
             {
                 if ( m_previewParams.m_depthPreview[ i ].m_previewDlg )
                 {
@@ -3235,9 +3310,9 @@ void CPreviewImageDlg::ChangeIRValue(WORD value)
 {
 	if (value != m_irRange.first)
 	{
-        EtronDI_SetIRMode(m_hEtronDI, &m_DevSelInfo, 0x3f);// 6 bits on for opening 6 ir
+        APC_SetIRMode(m_hApcDI, &m_DevSelInfo, 0x3f);// 6 bits on for opening 6 ir
 	}
-    EtronDI_SetCurrentIRValue(m_hEtronDI, &m_DevSelInfo, value);
+    APC_SetCurrentIRValue(m_hApcDI, &m_DevSelInfo, value);
 }
 
 void CPreviewImageDlg::OnBnClickedCheckDepthFusion()
@@ -3271,7 +3346,7 @@ void CPreviewImageDlg::OnBnClickedCheckDepthFusion()
 #ifdef ESPDI_EG
         GetDlgItem(IDC_CHECK_DEPTH2)->EnableWindow(FALSE);
 #else
-        if ( IsDevicePid( ETronDI_PID_8038 ) )
+        if ( IsDevicePid( APC_PID_8038 ) )
         {
             GetDlgItem(IDC_CHECK_DEPTH2)->EnableWindow( bModeConfigLock );
         }
@@ -3306,7 +3381,7 @@ void CPreviewImageDlg::OnCbnSelchangeComboDepthOutputCtrl()
 {
     const DEPTHMAP_TYPE eDepthMapType = ( ( CComboBox* )GetDlgItem(IDC_COMBO_DEPTH_OUTPUT_CTRL ) )->GetCurSel() ? TRANSFER_TO_GRAYRGB : TRANSFER_TO_COLORFULRGB;
 
-    for ( int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; i++ )
+    for ( int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; i++ )
 	{
 		if (m_previewParams.m_depthOption >= 0 && (m_previewParams.m_depthSwitch & (1 << i)) != 0)
 		{
@@ -3325,7 +3400,7 @@ void CPreviewImageDlg::OnBnClickedBtZSet()
 
     if ( zFar == 0 ) zFar = MAX_DEPTH_DISTANCE;
 
-	for ( int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; i++ )
+	for ( int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; i++ )
 	{
 		if (m_previewParams.m_depthOption >= 0 && (m_previewParams.m_depthSwitch & (1 << i)) != 0)
 		{
@@ -3345,7 +3420,7 @@ void CPreviewImageDlg::OnBnClickedBtZSet()
 
 void CPreviewImageDlg::OnBnClickedBtZReset()
 {
-    SetDlgItemInt( IDC_EDIT_ZFAR, IsDevicePid( ETronDI_PID_8038 ) ? 2000 : 1000 );
+    SetDlgItemInt( IDC_EDIT_ZFAR, IsDevicePid( APC_PID_8038 ) ? 2000 : 1000 );
     SetDlgItemInt( IDC_EDIT_ZNEAR, 0 );
 
     OnBnClickedBtZSet();
@@ -3354,7 +3429,7 @@ void CPreviewImageDlg::OnBnClickedBtZReset()
 void CPreviewImageDlg::OnBnClickedCheckPumaPostproc()
 {
 #ifndef ESPDI_EG
-    EtronDI_SetHWPostProcess(m_hEtronDI, &m_DevSelInfo, ((CButton*)GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC))->GetCheck() == BST_CHECKED);
+    APC_SetHWPostProcess(m_hApcDI, &m_DevSelInfo, ((CButton*)GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC))->GetCheck() == BST_CHECKED);
 #endif
 }
 
@@ -3376,7 +3451,7 @@ void CPreviewImageDlg::OnBnClickedCheckFusionSwpp()
 void CPreviewImageDlg::OnBnClickedCheckInterleaveMode()
 {
 #ifndef ESPDI_EG
-    if ( !IsDevicePid( ETronDI_PID_8040S ) && !IsDevicePid( ETronDI_PID_8054 ) )
+    if ( !IsDevicePid( APC_PID_8040S ) && !IsDevicePid( APC_PID_8054 ) )
     {
 		if (m_bIsInterLeaveMode) 
 		{
@@ -3385,7 +3460,7 @@ void CPreviewImageDlg::OnBnClickedCheckInterleaveMode()
 			m_pPropertyDlg->LowLightEnable(false);
 		}		
 
-        EtronDI_EnableInterleave( m_hEtronDI, &m_DevSelInfo, m_bIsInterLeaveMode );
+        APC_EnableInterleave( m_hApcDI, &m_DevSelInfo, m_bIsInterLeaveMode );
     }
 #endif
 }
@@ -3397,7 +3472,7 @@ void CPreviewImageDlg::OnCbnSelchangeComboFrameRate()
 
         USB_PORT_TYPE eUSB_Port_Type = USB_PORT_TYPE_UNKNOW;
 
-        EtronDI_GetDevicePortType( m_hEtronDI, &m_DevSelInfo, &eUSB_Port_Type );
+        APC_GetDevicePortType( m_hApcDI, &m_DevSelInfo, &eUSB_Port_Type );
 
         if ( bIsInterLeaveModeFPS )
         {
@@ -3423,6 +3498,57 @@ void CPreviewImageDlg::OnCbnSelchangeComboFrameRate()
 
 void CPreviewImageDlg::OnBnClickedSnapshotBtn()
 {
+#if 0 // test APC_GetColorImage & APC_GetDepthImage
+	
+	std::vector<BYTE> colorBuffer;
+	int nColorWidth = m_pStreamDepthInfo[m_previewParams.m_colorOption].nWidth;
+	int nColorHeight = m_pStreamDepthInfo[m_previewParams.m_colorOption].nHeight;
+	colorBuffer.resize(nColorWidth * nColorHeight * 2);
+
+	int nColorSerialNumber;
+	unsigned long int nColorImageSize;
+	if (APC_OK == APC_GetColorImage(m_hApcDI, &m_DevSelInfo, &colorBuffer[0], &nColorImageSize, &nColorSerialNumber))
+	{
+		
+		std::vector<BYTE> m_vecRGBImageBuf(nColorWidth * nColorHeight * 3, 0);
+
+		if (APC_OK != APC_ColorFormat_to_RGB24(m_hApcDI, &m_DevSelInfo,
+			&m_vecRGBImageBuf[NULL],
+			&colorBuffer[NULL],
+			colorBuffer.size(),
+			nColorWidth,
+			nColorHeight,
+			ApcDIImageType::COLOR_YUY2))
+		{
+			TRACE("APC_ColorFormat_to_RGB24 fail\n");
+		}
+		
+		std::ostringstream FileName_Colorbmp;
+		FileName_Colorbmp << GetCurrentModuleFolder().c_str() << "\\Color_TEST.bmp";
+		if (colorBuffer.empty() == false && nColorWidth > 0 && nColorHeight)
+		{
+			SaveImage(m_vecRGBImageBuf, nColorWidth, nColorHeight, 24, FileName_Colorbmp.str().c_str(), false, Gdiplus::ImageFormatBMP);
+		}
+	}
+
+	std::vector<BYTE> depthBuffer;
+	int nDepthWidth = m_pStreamDepthInfo[m_previewParams.m_depthOption].nWidth;
+	int nDepthHeight = m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight;
+	depthBuffer.resize(nDepthWidth * nDepthHeight * 2);
+
+	int nDepthSerialNumber;
+	unsigned long int nDepthImageSize;
+	if (APC_OK == APC_GetDepthImage(m_hApcDI, &m_DevSelInfo, &depthBuffer[0], &nDepthImageSize, &nDepthSerialNumber))
+	{
+		std::ostringstream FileName_Depth;
+		FileName_Depth << GetCurrentModuleFolder().c_str() << "\\Depth_TEST.yuv";
+		if (depthBuffer.empty() == false && nDepthWidth > 0 && nDepthHeight > 0)
+		{
+			SaveDepthYuv(depthBuffer, ApcDIImageType::DEPTH_11BITS, nDepthWidth, nDepthHeight, FileName_Depth.str().c_str());
+		}
+	}
+#endif
+
 #ifndef ESPDI_EG
 	PostMessage(WM_MSG_SNAPSHOT, (WPARAM)this);
 #endif
@@ -3430,7 +3556,7 @@ void CPreviewImageDlg::OnBnClickedSnapshotBtn()
 
 BOOL CPreviewImageDlg::IsDevicePid( const int pid )
 {
-	return ( m_devinfoEx.wPID == pid && m_devinfoEx.wVID == ETronDI_VID_0x1E4E );
+	return ( m_devinfoEx.wPID == pid && m_devinfoEx.wVID == APC_VID_0x1E4E );
 }
 #ifndef ESPDI_EG
 void CPreviewImageDlg::GetDepthIndexFromColorStream()
@@ -3439,7 +3565,7 @@ void CPreviewImageDlg::GetDepthIndexFromColorStream()
 
     if ( m_previewParams.m_depthOption == EOF || m_previewParams.m_depthOption >= m_depthStreamOptionCount ) return;
 
-    if ( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) ) // For 8054 and 8040S D+K mode
+    if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) ) // For 8054 and 8040S D+K mode
 	{
         for ( int i = NULL; i < m_colorStreamOptionCount; i++ )
         {
@@ -3464,7 +3590,7 @@ void CPreviewImageDlg::OnBnClickedCheckRotateImg()
     if ( m_previewParams.m_colorPreview.m_previewDlg  ) ( ( CColorDlg* )m_previewParams.m_colorPreview.m_previewDlg )->EnableRotate( bRotate );
     if ( m_previewParams.m_kcolorPreview.m_previewDlg ) ( ( CColorDlg* )m_previewParams.m_kcolorPreview.m_previewDlg )->EnableRotate( bRotate );
 
-    for ( int i = 0; i < ETronDI_MAX_DEPTH_STREAM_COUNT; ++i )
+    for ( int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i )
 	{
 		if ( m_previewParams.m_depthPreview[ i ].m_previewDlg ) ( ( CDepthDlg* )m_previewParams.m_depthPreview[ i ].m_previewDlg )->EnableRotate( bRotate );
 	}
@@ -3473,7 +3599,7 @@ void CPreviewImageDlg::OnBnClickedCheckRotateImg()
 void CPreviewImageDlg::OnBnClickedCheckPointcloudViewer()
 {
 #ifndef ESPDI_EG
-	if ( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) || IsDevicePid( ETronDI_PID_8053 ) || IsDevicePid( ETronDI_PID_8036 ) )
+	if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) || IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8036 ) )
 	{
 		((CButton*)GetDlgItem(IDC_RADIO_RECTIFY_DATA))->SetCheck(BST_CHECKED);
 		OnBnClickedRadioRectifyAndRawData();
@@ -3484,15 +3610,15 @@ void CPreviewImageDlg::OnBnClickedCheckPointcloudViewer()
 void CPreviewImageDlg::OnBnClickedFrameSync()
 {
 #ifndef ESPDI_EG
-    if( IsDevicePid( ETronDI_PID_8054 ) || IsDevicePid( ETronDI_PID_8040S ) )
+    if( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) )
 	{
 	    int CurDepthSel = ( ( CComboBox* )GetDlgItem( IDC_COMBO_DEPTH_STREAM ) )->GetCurSel();
 
-        const ETRONDI_STREAM_INFO& xStreamInfo = ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED ? 
+        const APC_STREAM_INFO& xStreamInfo = ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_CHECKED ? 
                                                     m_pStreamKColorInfo[ ( ( CComboBox* )GetDlgItem( IDC_COMBO_K_COLOR_STREAM ) )->GetCurSel() ] :
                                                     m_pStreamColorInfo[ ( ( CComboBox* )GetDlgItem( IDC_COMBO_COLOR_STREAM ) )->GetCurSel() ];
 	
-        m_registerSettings->Framesync( m_hEtronDI, &m_DevSelInfo, m_pStreamDepthInfo[CurDepthSel].nWidth, m_pStreamDepthInfo[CurDepthSel].nHeight,
+        m_registerSettings->Framesync( m_hApcDI, &m_DevSelInfo, m_pStreamDepthInfo[CurDepthSel].nWidth, m_pStreamDepthInfo[CurDepthSel].nHeight,
 				                       xStreamInfo.nWidth, xStreamInfo.nHeight,
 				                       xStreamInfo.bFormatMJPG, GetDlgItemInt( IDC_COMBO_FRAME_RATE ), m_devinfoEx.wPID );
 	}
@@ -3517,7 +3643,7 @@ void CPreviewImageDlg::OnCbnSelchangeComboModeConfig()
     };
     const ModeConfig::MODE_CONFIG& xModeConfig = GetCurModeConfig( pCbx->GetItemData( pCbx->GetCurSel() ) );
 
-    auto CheckSreamOption = [ & ]( const ETRONDI_STREAM_INFO* pStreamInfo,
+    auto CheckSreamOption = [ & ]( const APC_STREAM_INFO* pStreamInfo,
                                    const int iStreamCount,
                                    const ModeConfig::MODE_CONFIG::RESOLUTION& xResolution,
                                    const ModeConfig::MODE_CONFIG::DECODE_TYPE& eDecodeType )
@@ -3540,7 +3666,7 @@ void CPreviewImageDlg::OnCbnSelchangeComboModeConfig()
         }
         return EOF;
     };
-    auto UpdateUI = [ & ] ( const ETRONDI_STREAM_INFO* pStreamInfo,
+    auto UpdateUI = [ & ] ( const APC_STREAM_INFO* pStreamInfo,
                             const int iStreamCount,
                             const ModeConfig::MODE_CONFIG::RESOLUTION& xResolution,
                             const ModeConfig::MODE_CONFIG::DECODE_TYPE& eDecodeType,
@@ -3587,9 +3713,9 @@ void CPreviewImageDlg::OnCbnSelchangeComboModeConfig()
         {
             switch( DepthType )
             {
-            case 8:  pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"8 bits"  ), ETronDI_DEPTH_DATA_8_BITS  ); break;
-            case 11: pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"11 bits" ), ETronDI_DEPTH_DATA_11_BITS ); break;
-            case 14: pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"14 bits" ), ETronDI_DEPTH_DATA_14_BITS ); break;
+            case 8:  pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"8 bits"  ), APC_DEPTH_DATA_8_BITS  ); break;
+            case 11: pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"11 bits" ), APC_DEPTH_DATA_11_BITS ); break;
+            case 14: pDepthBitCbx->SetItemData( pDepthBitCbx->AddString( L"14 bits" ), APC_DEPTH_DATA_14_BITS ); break;
             }
         } 
         pDepthBitCbx->EnableWindow( xModeConfig.vecDepthType.size() > 1 );
@@ -3623,16 +3749,16 @@ void CPreviewImageDlg::OnBnClickedRadioRectifyAndRawData()
     {
         switch ( pDepthBitCbx->GetItemData( i ) )
         {
-        case ETronDI_DEPTH_DATA_8_BITS:
-        case ETronDI_DEPTH_DATA_8_BITS_RAW:     pDepthBitCbx->SetItemData( i, bRectify ? ETronDI_DEPTH_DATA_8_BITS      : ETronDI_DEPTH_DATA_8_BITS_RAW     ); break;
-        case ETronDI_DEPTH_DATA_8_BITS_x80:
-        case ETronDI_DEPTH_DATA_8_BITS_x80_RAW: pDepthBitCbx->SetItemData( i, bRectify ? ETronDI_DEPTH_DATA_8_BITS_x80  : ETronDI_DEPTH_DATA_8_BITS_x80_RAW ); break;
-        case ETronDI_DEPTH_DATA_11_BITS:
-        case ETronDI_DEPTH_DATA_11_BITS_RAW:    pDepthBitCbx->SetItemData( i, bRectify ? ETronDI_DEPTH_DATA_11_BITS     : ETronDI_DEPTH_DATA_11_BITS_RAW    ); break;
-        case ETronDI_DEPTH_DATA_14_BITS:
-        case ETronDI_DEPTH_DATA_14_BITS_RAW:    pDepthBitCbx->SetItemData( i, bRectify ? ETronDI_DEPTH_DATA_14_BITS     : ETronDI_DEPTH_DATA_14_BITS_RAW    ); break;
-        case ETronDI_DEPTH_DATA_OFF_RAW:
-        case ETronDI_DEPTH_DATA_OFF_RECTIFY:    pDepthBitCbx->SetItemData( i, bRectify ? ETronDI_DEPTH_DATA_OFF_RECTIFY : ETronDI_DEPTH_DATA_OFF_RAW        ); break;
+        case APC_DEPTH_DATA_8_BITS:
+        case APC_DEPTH_DATA_8_BITS_RAW:     pDepthBitCbx->SetItemData( i, bRectify ? APC_DEPTH_DATA_8_BITS      : APC_DEPTH_DATA_8_BITS_RAW     ); break;
+        case APC_DEPTH_DATA_8_BITS_x80:
+        case APC_DEPTH_DATA_8_BITS_x80_RAW: pDepthBitCbx->SetItemData( i, bRectify ? APC_DEPTH_DATA_8_BITS_x80  : APC_DEPTH_DATA_8_BITS_x80_RAW ); break;
+        case APC_DEPTH_DATA_11_BITS:
+        case APC_DEPTH_DATA_11_BITS_RAW:    pDepthBitCbx->SetItemData( i, bRectify ? APC_DEPTH_DATA_11_BITS     : APC_DEPTH_DATA_11_BITS_RAW    ); break;
+        case APC_DEPTH_DATA_14_BITS:
+        case APC_DEPTH_DATA_14_BITS_RAW:    pDepthBitCbx->SetItemData( i, bRectify ? APC_DEPTH_DATA_14_BITS     : APC_DEPTH_DATA_14_BITS_RAW    ); break;
+        case APC_DEPTH_DATA_OFF_RAW:
+        case APC_DEPTH_DATA_OFF_RECTIFY:    pDepthBitCbx->SetItemData( i, bRectify ? APC_DEPTH_DATA_OFF_RECTIFY : APC_DEPTH_DATA_OFF_RAW        ); break;
         }
     }
 }
@@ -3645,11 +3771,11 @@ void CPreviewImageDlg::OnBnClickedRadioRectifyAndRawData()
 void CPreviewImageDlg::DoSerialNumCommand()
 {
 #ifndef ESPDI_EG
-    if ( IsDevicePid( ETronDI_PID_8053 ) || IsDevicePid( ETronDI_PID_8059 ) || IsDevicePid( ETronDI_PID_8062 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) )
     {
-        EtronDI_EnableSerialCount( m_hEtronDI, &m_DevSelInfo, ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) );
+        APC_EnableSerialCount( m_hApcDI, &m_DevSelInfo, ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) );
     }
-    else if ( IsDevicePid( ETronDI_PID_8038 ) ) EtronDI_EnableSerialCount( m_hEtronDI, &m_DevSelInfo, FALSE );
+    else if ( IsDevicePid( APC_PID_8038 ) ) APC_EnableSerialCount( m_hApcDI, &m_DevSelInfo, FALSE );
 #endif
 }
 
@@ -3661,11 +3787,11 @@ void CPreviewImageDlg::DoSerialNumCommand()
 void CPreviewImageDlg::DoMultiModuleSynCommand()
 {
 #ifndef ESPDI_EG
-    if ( IsDevicePid( ETronDI_PID_8053 ) || IsDevicePid( ETronDI_PID_8059 ) || IsDevicePid( ETronDI_PID_8062 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) )
     {
         if ( ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) )
         {
-            m_registerSettings->FrameSync8053_8059_Clock( m_hEtronDI, &m_DevSelInfo );
+            m_registerSettings->FrameSync8053_8059_Clock( m_hApcDI, &m_DevSelInfo );
         }
     }
 
@@ -3679,7 +3805,7 @@ void CPreviewImageDlg::DoMultiModuleSynCommand()
 void CPreviewImageDlg::DoMultiModuleSynReset()
 {
 #ifndef ESPDI_EG
-    m_registerSettings->FrameSync8053_8059_Reset( m_hEtronDI, &m_DevSelInfo );
+    m_registerSettings->FrameSync8053_8059_Reset( m_hApcDI, &m_DevSelInfo );
 #endif
 }
 
@@ -3690,7 +3816,7 @@ void CPreviewImageDlg::DoMultiModuleSynReset()
 /// **************************************** ///
 void CPreviewImageDlg::OnBnClickedChkMaster()
 {
-    if ( IsDevicePid( ETronDI_PID_8053 ) || IsDevicePid( ETronDI_PID_8059 ) || IsDevicePid( ETronDI_PID_8062 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) )
     {
         if ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MASTER ) )->GetCheck() )
         {
@@ -3704,9 +3830,9 @@ void CPreviewImageDlg::OnBnClickedChkMaster()
 
 void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
 {
-    if ( !IsDevicePid( ETronDI_PID_SALLY ) && !IsDevicePid( ETronDI_PID_8040S ) && !IsDevicePid(ETronDI_PID_Hypatia))
+    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_Hypatia))
     {
-        EtronDI_SetIRMaxValue( m_hEtronDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
+        APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
     }
     UpdateIRConfig();
 
@@ -3775,20 +3901,20 @@ void CPreviewImageDlg::SetFilterParam( DepthfilterParam& xDfParam )
 {
     xDfParam.bytesPerPixel = 2;
 
-    switch( EtronDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+    switch( ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
     {
-    case EtronDIImageType::DEPTH_8BITS:
+    case ApcDIImageType::DEPTH_8BITS:
         {
             xDfParam.type = 1;
             xDfParam.bytesPerPixel = 1;
         }
         break;
-    case EtronDIImageType::DEPTH_11BITS:
+    case ApcDIImageType::DEPTH_11BITS:
         {
             xDfParam.type = 2;
         }
         break;
-    case EtronDIImageType::DEPTH_14BITS:
+    case ApcDIImageType::DEPTH_14BITS:
         {
             xDfParam.type = 3;
         }
@@ -3824,7 +3950,7 @@ void CPreviewImageDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 
 int CPreviewImageDlg::ReOpen_MappingIMU()
 {
-	int nRet = ETronDI_OK;
+	int nRet = APC_OK;
 	bool reopen = true;
 	nRet = MappingIMU(reopen);
 	return nRet;
@@ -3832,13 +3958,13 @@ int CPreviewImageDlg::ReOpen_MappingIMU()
 
 int CPreviewImageDlg::MappingIMU(bool reopen)
 {
-	int nRet = ETronDI_OK;
+	int nRet = APC_OK;
 	//return nRet;
 
 	int nIndex = m_pdlgVideoDeviceDlg->IMU_Device_Mapping();//
 	unsigned short value = 0;
-	nRet = EtronDI_GetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xf306, &value, FG_Address_2Byte | FG_Value_1Byte);
-	if (nRet != ETronDI_OK)
+	nRet = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, 0xf306, &value, FG_Address_2Byte | FG_Value_1Byte);
+	if (nRet != APC_OK)
 		return nRet;
 	if (value == nIndex + IMU_ID_INDEX_START)
 	{
@@ -3847,12 +3973,12 @@ int CPreviewImageDlg::MappingIMU(bool reopen)
 	}
 
 	value = nIndex + IMU_ID_INDEX_START;
-	nRet = EtronDI_SetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xf306, value, FG_Address_2Byte | FG_Value_1Byte);;
-	if (nRet != ETronDI_OK)
+	nRet = APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, 0xf306, value, FG_Address_2Byte | FG_Value_1Byte);;
+	if (nRet != APC_OK)
 		return nRet;
 
 	if (reopen)
-		m_pdlgVideoDeviceDlg->IMU_Device_Reopen(m_hEtronDI, m_DevSelInfo);
+		m_pdlgVideoDeviceDlg->IMU_Device_Reopen(m_hApcDI, m_DevSelInfo);
 	m_pdlgVideoDeviceDlg->Update_IMU_Device_Mapping();
 	return nRet;
 }

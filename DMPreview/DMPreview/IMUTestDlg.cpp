@@ -2,13 +2,14 @@
 //
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "IMUTestDlg.h"
 #include "afxdialogex.h"
 #include "utility\IMUData.h"
 #include "utility\WindowsMfcUtility.h"
 #include "PlyWriter.h"
 #include "FrameSyncManager.h"
+#include "PreviewImageDlg.h"
 
 // Shifan: Another Quaternion to Euler
 extern "C" {
@@ -31,8 +32,8 @@ USHORT current_imu_pid;	// Rem 0910
 #define IMU_9AXIS_8062     0x0163
 
 /* IMU Etron VID */
-#define IMU_ETronDI_VID_0x1E4E 0x1E4E	//9 Axis;//8062 / 8060;
-#define IMU_ETronDI_VID_0x0483 0x0483	//6 Axis;//8040;
+#define IMU_APC_VID_0x1E4E 0x1E4E	//9 Axis;//8062 / 8060;
+#define IMU_APC_VID_0x0483 0x0483	//6 Axis;//8040;
 
 IMPLEMENT_DYNAMIC(IMUTestDlg, CDialog)
 BEGIN_MESSAGE_MAP(IMUTestDlg, CDialog)
@@ -56,8 +57,8 @@ BEGIN_MESSAGE_MAP(IMUTestDlg, CDialog)
 END_MESSAGE_MAP()
 
 //IMUTestDlg::IMUTestDlg( const wchar_t* SN, const BOOL bIs9Axis, CWnd* pParent )
-IMUTestDlg::IMUTestDlg(const wchar_t* SN, void*& hEtronDI, DEVSELINFO& devSelInfo, ModeConfig::IMU_TYPE imu_type, CWnd* pParent)
-	: CDialog(IDD_DIALOG_IMU, pParent), m_hEtronDI(hEtronDI), m_DevSelInfo(devSelInfo), m_IMU_TYPE(imu_type), m_bIsSyncIMU(FALSE)
+IMUTestDlg::IMUTestDlg(const wchar_t* SN, void*& hApcDI, DEVSELINFO& devSelInfo, ModeConfig::IMU_TYPE imu_type, CWnd* pParent, CPreviewImageDlg* pPreviewDlg)
+	: CDialog(IDD_DIALOG_IMU, pParent), m_hApcDI(hApcDI), m_DevSelInfo(devSelInfo), m_IMU_TYPE(imu_type), m_bIsSyncIMU(FALSE), m_pPreviewDlg(pPreviewDlg)
 {
 	m_bIs9axis = (imu_type == ModeConfig::IMU_TYPE::IMU_9Axis);
 	m_nIMU_ID_INDEX = -1;
@@ -145,7 +146,7 @@ void IMUTestDlg::InitIMU()
 
 		while ( cur_dev )
         {
-		    if ( (IMU_ETronDI_VID_0x0483 == cur_dev->vendor_id || IMU_ETronDI_VID_0x1E4E == cur_dev->vendor_id ) && setIMU_ID.find( cur_dev->product_id ) != setIMU_ID.end() )
+		    if ( (IMU_APC_VID_0x0483 == cur_dev->vendor_id || IMU_APC_VID_0x1E4E == cur_dev->vendor_id ) && setIMU_ID.find( cur_dev->product_id ) != setIMU_ID.end() )
             {
                 s_vecIMU.push_back( IMU_INFO() );
 
@@ -242,7 +243,7 @@ int IMUTestDlg::startGetImuData()
 
 	handle = s_vecIMU[m_nIndex_s_vecIMU].hIMU;
 	if (handle && !m_IMUThread[m_nIndex_s_vecIMU]) {
-		m_IMUThread[m_nIndex_s_vecIMU] = new std::thread(IMUTestDlg::IMUfunc, this, m_nIndex_s_vecIMU);
+		m_IMUThread[m_nIndex_s_vecIMU] = new std::thread(IMUTestDlg::IMUfunc, this);
 	}
 
 	return 0;
@@ -925,8 +926,10 @@ bool IMUTestDlg::Update_IMU_Device_Mapping(int nIMU_ID_INDEX)
 	}
 
 	m_nIMU_ID_INDEX = nIMU_ID_INDEX;
-	m_nIndex_s_vecIMU = nIndex;
-	handle = s_vecIMU[nIndex].hIMU;
+	if (-1 == m_nIndex_s_vecIMU) m_nIndex_s_vecIMU = nIndex;
+	
+	m_nIndex_s_vecIMU = (m_nIndex_s_vecIMU + 1) % s_vecIMU.size();
+	handle = s_vecIMU[m_nIndex_s_vecIMU].hIMU;
 	IMU_SetHWRegister();
 	startGetImuData();
 	return true;
@@ -934,12 +937,12 @@ bool IMUTestDlg::Update_IMU_Device_Mapping(int nIMU_ID_INDEX)
 
 int IMUTestDlg::IMU_SetHWRegister()
 {
-	int nRet = ETronDI_OK;
+	int nRet = APC_OK;
 	if (!m_bIs9axis)
 		return nRet;
 	unsigned short value = 0;
-	nRet = EtronDI_GetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xf306, &value, FG_Address_2Byte | FG_Value_1Byte);
-	if (nRet != ETronDI_OK)
+	nRet = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, 0xf306, &value, FG_Address_2Byte | FG_Value_1Byte);
+	if (nRet != APC_OK)
 	{
 		return nRet;
 	}
@@ -947,15 +950,15 @@ int IMUTestDlg::IMU_SetHWRegister()
 		return nRet;
 
 	value = m_nIMU_ID_INDEX;
-	nRet = EtronDI_SetHWRegister(m_hEtronDI, &m_DevSelInfo, 0xf306, value, FG_Address_2Byte | FG_Value_1Byte);;
-	if (nRet != ETronDI_OK)
+	nRet = APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, 0xf306, value, FG_Address_2Byte | FG_Value_1Byte);;
+	if (nRet != APC_OK)
 		return nRet;
 	return nRet;
 }
 
-void IMUTestDlg::IMU_Device_Reopen(void*& hEtronDI, DEVSELINFO& devSelInfo)
+void IMUTestDlg::IMU_Device_Reopen(void*& hApcDI, DEVSELINFO& devSelInfo)
 {
-	m_hEtronDI = hEtronDI;
+	m_hApcDI = hApcDI;
 	m_DevSelInfo = devSelInfo;
 	InitIMU();
 	if (m_nIMU_ID_INDEX >= IMU_ID_INDEX_START)
@@ -985,47 +988,17 @@ void IMUTestDlg::measureBeginQuaternion()
 	//m_quaternion_begin_inverse[1] = begin.v[0];
 	//m_quaternion_begin_inverse[2] = begin.v[1];
 	//m_quaternion_begin_inverse[3] = begin.v[2];
-
+	
 	return;
 }
 
-int IMUTestDlg::IMUfunc(IMUTestDlg * pThis, int nIndex_s_vecIMU)
+int IMUTestDlg::IMUfunc(IMUTestDlg * pThis)
 {
-	if (s_vecIMU.size() <= nIndex_s_vecIMU)
-		return 0;
-
 	CString strMsg;
 	//strMsg.Format(_T("【IMUfunc ENTER】nIndex_s_vecIMU:%d"), nIndex_s_vecIMU);
 	//AfxMessageBox(strMsg);
-	hid_device *handle_hid;
-
-	handle_hid = s_vecIMU[nIndex_s_vecIMU].hIMU;
 	int res = 0;
 	unsigned char buf[256] = {0};
-
-	//struct hid_device_info *devs, *cur_dev;
-
-	//if (hid_init())
-	//	return -1;
-
-	// Open the device using the VID, PID,
-	// and optionally the Serial number. 0483 ,5710
-	////handle_hid = hid_open(0x4d8, 0x3f, L"12345");
-
-	//handle_hid = pThis->handle_hid;
-	//if (!handle_hid) {
-	//	handle_hid = hid_open(0x0483, 0x5710, NULL);
-	//	if (!handle_hid) {
-	//		handle_hid = hid_open(0x0483, 0x5711, NULL);
-	//		if (!handle_hid) {
- //               pThis->m_text = "unable to open device\n";
- //               pThis->PostMessage( WM_UPDATE_TEXT_MSG, UPDATE_TEXT );
-	//			return 1;
-	//		}
-	//	}
-
-	//	pThis->handle_hid = handle_hid;
-	//}
 
 	while (res >= 0 && pThis->m_isRunning) {		
 		if (pThis->m_isPause) {
@@ -1033,7 +1006,7 @@ int IMUTestDlg::IMUfunc(IMUTestDlg * pThis, int nIndex_s_vecIMU)
 			continue;
 		}
 
-		if (handle_hid == nullptr)
+		if (pThis->handle == nullptr)
 		{
 			pThis->m_text = "Unable to read(handle == nullptr)";
 			pThis->PostMessage(WM_UPDATE_TEXT_MSG, UPDATE_TEXT);
@@ -1055,7 +1028,7 @@ int IMUTestDlg::IMUfunc(IMUTestDlg * pThis, int nIndex_s_vecIMU)
 
 		TRY
 		{
-			res = hid_read(handle_hid, buf, sizeof(buf));
+			res = hid_read(pThis->handle, buf, sizeof(buf));
 		}
 		CATCH(CException, e)
 		{
@@ -1113,7 +1086,7 @@ int IMUTestDlg::IMUfunc(IMUTestDlg * pThis, int nIndex_s_vecIMU)
 
 			if (FrameSyncManager::GetInstance()->IsEnable())
 			{
-				FrameSyncManager::GetInstance()->SyncIMUCallback(pThis->m_hEtronDI, pThis->m_DevSelInfo,
+				FrameSyncManager::GetInstance()->SyncIMUCallback(pThis->m_hApcDI, pThis->m_DevSelInfo,
 															     imu._frameCount,
 															     std::bind(&IMUTestDlg::IMUDataCallback, pThis, imu));
 			}
@@ -1132,7 +1105,7 @@ int IMUTestDlg::IMUfunc(IMUTestDlg * pThis, int nIndex_s_vecIMU)
 		if (!pThis->m_isRunning) {
 			break;
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 
 	pThis->m_isRunning = false;
@@ -1148,12 +1121,18 @@ void IMUTestDlg::IMUDataCallback(IMUData imu)
 
 	if (m_bIs9axis)
 	{
-		if (imu._module_id != m_nIMU_ID_INDEX)
+		if (!m_bIsDeviceMappingIMU)
 		{
-			m_text = "Mapping Unmatch!";
-			PostMessage(WM_UPDATE_TEXT_MSG, UPDATE_TEXT);
-			std::this_thread::sleep_for(std::chrono::milliseconds(20));
-			return;
+			if (imu._module_id != m_nIMU_ID_INDEX)
+			{
+				m_text = "Mapping Unmatch!";
+				PostMessage(WM_UPDATE_TEXT_MSG, UPDATE_TEXT);
+				Update_IMU_Device_Mapping(m_nIMU_ID_INDEX);
+				std::this_thread::sleep_for(std::chrono::milliseconds(20));
+				return;
+			}
+
+			m_bIsDeviceMappingIMU = true;
 		}
 
 		double Roll = 0;	//Angles.X
@@ -1262,4 +1241,13 @@ void IMUTestDlg::OnBnClickedCheckFrameSync()
 {
 	// TODO: Add your control notification handler code here
 	FrameSyncManager::GetInstance()->SetEnabled(((CButton*)GetDlgItem(IDC_CHECK_FRAME_SYNC))->GetCheck() == BST_CHECKED);
+	if (FrameSyncManager::GetInstance()->IsEnable())
+	{
+		FrameSyncManager::GetInstance()->RegisterDevice(m_hApcDI, m_DevSelInfo);
+		FrameSyncManager::GetInstance()->SetIsInterleave(m_hApcDI, m_DevSelInfo, m_pPreviewDlg->IsInterLeaveMode());
+	}
+	else
+	{
+		FrameSyncManager::GetInstance()->UnregisterDevice(m_hApcDI, m_DevSelInfo);
+	}
 }

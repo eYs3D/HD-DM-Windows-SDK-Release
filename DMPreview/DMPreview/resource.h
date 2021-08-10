@@ -5,7 +5,7 @@
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
-#define IDD_ETRONDI_TEST_DIALOG         102
+#define IDD_APC_TEST_DIALOG         102
 #define IDS_APP_TITLE                   102
 #define ID_INDICATOR_FPS                103
 #define IDS_ERTON_DI_CLASS_NAME         107
@@ -257,23 +257,19 @@
 #define IDC_CHK_MANUALEXP               1350
 #define IDC_CB_INTEREST                 1351
 #define IDC_CHK_GROUNDTRUTH             1352
-#define IDC_ED_GROUNDTRUTH              1353
 #define IDC_ED_PIXEL_UNIT               1353
 #define IDC_ED_DISTANCE                 1354
 #define IDC_ED_FILLRATE                 1355
 #define IDC_ED_ZACCURACY                1356
 #define IDC_CB_SUBSAMPLE_MODE           1357
-#define IDC_ED_GROUNDTRUTH2             1357
-#define IDC_ED_GROUNDTRUTH3             1358
+#define IDC_ED_PIXEL_UNIT2              1357
+#define IDC_ED_GROUNDTRUTH              1357
 #define IDC_ED_LEFT_FX                  1358
 #define IDC_CB_SUBSAMPLE_FACTOR         1359
-#define IDC_ED_GROUNDTRUTH4             1359
 #define IDC_ED_LEFT_FY                  1359
 #define IDC_CHK_SUBSAMPLE_ENABLE        1360
 #define IDC_CHK_HF_ENABLE               1361
-#define IDC_ED_GROUNDTRUTH5             1361
 #define IDC_ED_RIGHT_FX                 1361
-#define IDC_ED_GROUNDTRUTH6             1362
 #define IDC_ED_RIGHT_FY                 1362
 #define IDC_CHK_HF_HRZ_ENABLE           1363
 #define IDC_CHK_TF_ENABLE               1364
@@ -295,6 +291,7 @@
 #define IDC_ED_ANGLE_X                  1380
 #define IDC_BUTTON1                     1381
 #define IDC_IMU_3D_RESET                1381
+#define IDC_BUTTON_ADJUST_FOCAL_LENGTH  1381
 #define IDC_EDIT3                       1382
 #define IDC_ED_ANGLE_Y                  1382
 #define IDC_COMBO1                      1383
@@ -321,7 +318,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        1309
 #define _APS_NEXT_COMMAND_VALUE         1301
-#define _APS_NEXT_CONTROL_VALUE         1399
+#define _APS_NEXT_CONTROL_VALUE         1402
 #define _APS_NEXT_SYMED_VALUE           1304
 #endif
 #endif

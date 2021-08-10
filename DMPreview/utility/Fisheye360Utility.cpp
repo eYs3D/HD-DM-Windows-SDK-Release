@@ -61,14 +61,14 @@ int UpdateLutFile(const eys::fisheye360::ParaLUT& lutParam, const std::string& d
     if(lutParam.file_ID_header != 2230 || 
        lutParam.file_ID_version < 4)
     {
-        return ETronDI_INVALID_USERDATA;
+        return APC_INVALID_USERDATA;
     }
 
     std::string filename = directory + Lut_Filename;
 
     if (IsLutParamConsistent(lutParam, filename))
     {
-        return ETronDI_OK;
+        return APC_OK;
     }
 
     return GenerateLutFileFromParam((eys::fisheye360::ParaLUT&)lutParam, filename);
@@ -80,13 +80,13 @@ int GenerateLutFileFromParam(eys::fisheye360::ParaLUT& paraLut, std::string lutF
     if (eys::fisheye360::Map_LUT_CC(paraLut, lutFilePath.c_str(), nullptr, nullptr,
         eys::LUT_LXLYRXRY_16_3, true) != 1)
     {
-        return ETronDI_MAP_LUT_FAIL;
+        return APC_MAP_LUT_FAIL;
     }
 
     if (AppendToFileFront(lutFilePath.c_str(), (BYTE*)(&paraLut), sizeof(eys::fisheye360::ParaLUT)) != 0)
     {
-        return ETronDI_APPEND_TO_FILE_FRONT_FAIL;
+        return APC_APPEND_TO_FILE_FRONT_FAIL;
     }
 #endif
-    return ETronDI_OK;
+    return APC_OK;
 }

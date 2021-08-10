@@ -13,18 +13,18 @@ int exchange(int data)
 	return exchange_data;
 }
 
-//int RegisterSettings::FramesyncD0(void* hEtronDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps)
+//int RegisterSettings::FramesyncD0(void* hApcDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps)
 //{
 //	unsigned short value = 0;
 //
-//	if (EtronDI_SetPlumAR0330(hEtronDI, pDevSelInfo, true) != ETronDI_OK)
+//	if (APC_SetPlumAR0330(hApcDI, pDevSelInfo, true) != APC_OK)
 //	{
-//		TRACE("EtronDI_SetPlumAR0330 failed !!");
+//		TRACE("APC_SetPlumAR0330 failed !!");
 //	}
 //
-//	if (EtronDI_GetSensorRegister(hEtronDI, pDevSelInfo, 0x30, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+//	if (APC_GetSensorRegister(hApcDI, pDevSelInfo, 0x30, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 //	{
-//		TRACE("Read Register, from Sensor PID 141 VID1E4E ,AR0330,ETronDI_READ_Sensor_REG_0x30_FAIL");
+//		TRACE("Read Register, from Sensor PID 141 VID1E4E ,AR0330,APC_READ_Sensor_REG_0x30_FAIL");
 //	}
 //	else
 //	{
@@ -32,15 +32,15 @@ int exchange(int data)
 //		value = exchange(value);
 //		TRACE("0x30, 0x301a,value2=%x\n", value);	/*0x005c*/
 //		BIT_CLEAR(value, 2);
-//		if (EtronDI_SetSensorRegister(hEtronDI, pDevSelInfo, 0x30, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+//		if (APC_SetSensorRegister(hApcDI, pDevSelInfo, 0x30, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 //		{
-//			TRACE("ETronDI_WRITE_REG_FAIL");
+//			TRACE("APC_WRITE_REG_FAIL");
 //		}
 //		else
 //		{
-//			if (EtronDI_GetSensorRegister(hEtronDI, pDevSelInfo, 0x30, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+//			if (APC_GetSensorRegister(hApcDI, pDevSelInfo, 0x30, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 //			{
-//				TRACE("Read Register, from Sensor PID 141 VID1E4E ,AR0330,ETronDI_READ_Sensor_REG_0x30_FAIL");
+//				TRACE("Read Register, from Sensor PID 141 VID1E4E ,AR0330,APC_READ_Sensor_REG_0x30_FAIL");
 //			}
 //			else
 //			{
@@ -49,15 +49,15 @@ int exchange(int data)
 //			}
 //		}
 //		BIT_SET(value, 8);
-//		if (EtronDI_SetSensorRegister(hEtronDI, pDevSelInfo, 0x30, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+//		if (APC_SetSensorRegister(hApcDI, pDevSelInfo, 0x30, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 //		{
-//			TRACE("ETronDI_WRITE_REG_FAIL");
+//			TRACE("APC_WRITE_REG_FAIL");
 //		}
 //		else
 //		{
-//			if (EtronDI_GetSensorRegister(hEtronDI, pDevSelInfo, 0x30, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+//			if (APC_GetSensorRegister(hApcDI, pDevSelInfo, 0x30, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 //			{
-//				TRACE("Read Register, from Sensor PID 141 VID1E4E ,AR0330,ETronDI_READ_Sensor_REG_0x30_FAIL");
+//				TRACE("Read Register, from Sensor PID 141 VID1E4E ,AR0330,APC_READ_Sensor_REG_0x30_FAIL");
 //			}
 //			else
 //			{
@@ -67,20 +67,20 @@ int exchange(int data)
 //		}
 //	}
 //
-//	if (EtronDI_SetPlumAR0330(hEtronDI, pDevSelInfo, false) != ETronDI_OK)
+//	if (APC_SetPlumAR0330(hApcDI, pDevSelInfo, false) != APC_OK)
 //	{
-//		TRACE("EtronDI_SetPlumAR0330 failed !!");
+//		TRACE("APC_SetPlumAR0330 failed !!");
 //	}
 //
 //	return 0;
 //}
 
-int RegisterSettings::FrameSync8053_8059_Clock( void* hEtronDI, PDEVSELINFO pDevSelInfo )
+int RegisterSettings::FrameSync8053_8059_Clock( void* hApcDI, PDEVSELINFO pDevSelInfo )
 {
-    if ( EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF07A, 0x01, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-         EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF07B, 0x00, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-         EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF07C, 0x00, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-         EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF07D, 0x00, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK )
+    if ( APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF07A, 0x01, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+         APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF07B, 0x00, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+         APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF07C, 0x00, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+         APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF07D, 0x00, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK )
     {
         WORD wF01A = NULL;
         WORD wF041 = NULL;
@@ -88,11 +88,11 @@ int RegisterSettings::FrameSync8053_8059_Clock( void* hEtronDI, PDEVSELINFO pDev
         WORD wF0FE = NULL;
         //WORD wE079 = NULL;
 
-        if ( EtronDI_GetHWRegister( hEtronDI, pDevSelInfo, 0xF01A, &wF01A, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-             EtronDI_GetHWRegister( hEtronDI, pDevSelInfo, 0xF041, &wF041, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-             EtronDI_GetHWRegister( hEtronDI, pDevSelInfo, 0xF045, &wF045, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-             EtronDI_GetHWRegister( hEtronDI, pDevSelInfo, 0xF0FE, &wF0FE, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK /*&&
-             EtronDI_GetHWRegister( hEtronDI, pDevSelInfo, 0xF079, &wE079, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK*/ )
+        if ( APC_GetHWRegister( hApcDI, pDevSelInfo, 0xF01A, &wF01A, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+             APC_GetHWRegister( hApcDI, pDevSelInfo, 0xF041, &wF041, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+             APC_GetHWRegister( hApcDI, pDevSelInfo, 0xF045, &wF045, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+             APC_GetHWRegister( hApcDI, pDevSelInfo, 0xF0FE, &wF0FE, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK /*&&
+             APC_GetHWRegister( hApcDI, pDevSelInfo, 0xF079, &wE079, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK*/ )
         {
             wF01A &= 0xDF; // bit6 = 0
             wF041 |= 0x40; // bit6 = 1
@@ -100,48 +100,48 @@ int RegisterSettings::FrameSync8053_8059_Clock( void* hEtronDI, PDEVSELINFO pDev
             wF0FE &= 0xDF; // bit6 = 0
             //wE079 &= 0xFC; // bit0,1 = 0
 
-            if ( EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF01A, wF01A, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-                 EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF041, wF041, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-                 EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF045, wF045, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK &&
-                 EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF0FE, wF0FE, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK /*&&
-                 EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF079, wE079, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK*/ )
+            if ( APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF01A, wF01A, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+                 APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF041, wF041, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+                 APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF045, wF045, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK &&
+                 APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF0FE, wF0FE, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK /*&&
+                 APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF079, wE079, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK*/ )
             {
-                //if ( EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF079, wE079 + 1, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK )
+                //if ( APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF079, wE079 + 1, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK )
                 //{
-                //    return ETronDI_OK; /* enable mudule-sync-success */
+                //    return APC_OK; /* enable mudule-sync-success */
                 //}
             }
         }
     }
-    TRACE("ETronDI_WRITE_REG_FAIL");
-    return ETronDI_WRITE_REG_FAIL;
+    TRACE("APC_WRITE_REG_FAIL");
+    return APC_WRITE_REG_FAIL;
 }
 
-int RegisterSettings::FrameSync8053_8059_Reset( void* hEtronDI, PDEVSELINFO pDevSelInfo )
+int RegisterSettings::FrameSync8053_8059_Reset( void* hApcDI, PDEVSELINFO pDevSelInfo )
 {
     WORD wE079 = NULL;
 
-    if ( EtronDI_GetHWRegister( hEtronDI, pDevSelInfo, 0xF079, &wE079, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK )
+    if ( APC_GetHWRegister( hApcDI, pDevSelInfo, 0xF079, &wE079, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK )
     {
         wE079 &= 0xFC; // bit0,1 = 0
 
-        if ( EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF079, wE079, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK )
+        if ( APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF079, wE079, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK )
         {
-            if ( EtronDI_SetHWRegister( hEtronDI, pDevSelInfo, 0xF079, wE079 + 1, FG_Address_2Byte | FG_Value_1Byte ) == ETronDI_OK )
+            if ( APC_SetHWRegister( hApcDI, pDevSelInfo, 0xF079, wE079 + 1, FG_Address_2Byte | FG_Value_1Byte ) == APC_OK )
             {
-                return ETronDI_OK; /* enable mudule-sync-success */
+                return APC_OK; /* enable mudule-sync-success */
             }
         }
     }
-    return ETronDI_WRITE_REG_FAIL;
+    return APC_WRITE_REG_FAIL;
 }
 
-int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps, const int iPid )
+int RegisterSettings::Framesync( void* hApcDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps, const int iPid )
 {
     unsigned short value = 0;
-	if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+	if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 	{
-		TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+		TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 	}
 	else
 	{
@@ -149,15 +149,15 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 		value = exchange(value);
 		TRACE("0x6c, 0x301a,value2=%x\n", value);	/*0x021c*/
 		BIT_CLEAR(value, 2);
-		if (EtronDI_SetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+		if (APC_SetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 		{
-			TRACE("ETronDI_WRITE_REG_FAIL");
+			TRACE("APC_WRITE_REG_FAIL");
 		}
 		else
 		{
-			if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+			if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 			{
-				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 			}
 			else
 			{
@@ -167,15 +167,15 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 		}
         Sleep( 100 );
 		BIT_SET(value, 8);
-		if (EtronDI_SetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+		if (APC_SetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 		{
-			TRACE("ETronDI_WRITE_REG_FAIL");
+			TRACE("APC_WRITE_REG_FAIL");
 		}
 		else
 		{
-			if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+			if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 			{
-				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 			}
 			else
 			{
@@ -184,9 +184,9 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 			}
 		}
 		value = 0;
-		if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x3026, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+		if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x3026, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 		{
-			TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+			TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 		}
 		else
 		{
@@ -197,15 +197,15 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 			BIT_CLEAR(value, 9);
 			BIT_SET(value, 8);
             Sleep( 100 );
-			if (EtronDI_SetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x3026, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+			if (APC_SetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x3026, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 			{
-				TRACE("ETronDI_WRITE_REG_FAIL");
+				TRACE("APC_WRITE_REG_FAIL");
 			}
 			else
 			{
-				if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x3026, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+				if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x3026, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 				{
-					TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+					TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 				}
 				else
 				{
@@ -214,9 +214,9 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 				}
 			}
 			value = 0;
-			if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x315E, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+			if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x315E, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 			{
-				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 			}
 			else
 			{
@@ -224,15 +224,15 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 				TRACE("0x6c, 0x315E,value8=%x\n", value);	/*0x0*/
 				BIT_SET(value, 0);
                 Sleep( 100 );
-				if (EtronDI_SetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x315E, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+				if (APC_SetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x315E, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 				{
-					TRACE("ETronDI_WRITE_REG_FAIL");
+					TRACE("APC_WRITE_REG_FAIL");
 				}
 				else
 				{
-					if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x315E, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+					if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x315E, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 					{
-						TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+						TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 					}
 					else
 					{
@@ -242,9 +242,9 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 				}
 			}
 			value = 0;
-			if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+			if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 			{
-				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+				TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 			}
 			else
 			{
@@ -253,15 +253,15 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 				TRACE("0x6c, 0x301a,value10=%x\n", value);	/*0x0318*/
 				BIT_SET(value, 2);
                 Sleep( 100 );
-				if (EtronDI_SetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+				if (APC_SetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 				{
-					TRACE("ETronDI_WRITE_REG_FAIL");
+					TRACE("APC_WRITE_REG_FAIL");
 				}
 				else
 				{
-					if (EtronDI_GetSlaveSensorRegister(hEtronDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != ETronDI_OK)
+					if (APC_GetSlaveSensorRegister(hApcDI, pDevSelInfo, 0x6c, 0x301a, &value, FG_Address_2Byte | FG_Value_2Byte, 2) != APC_OK)
 					{
-						TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,ETronDI_READ_Sensor_REG_0x6c_FAIL");
+						TRACE("Read Register, from Sensor PID 143 VID1E4E ,AR1335,APC_READ_Sensor_REG_0x6c_FAIL");
 					}
 					else
 					{
@@ -272,21 +272,21 @@ int RegisterSettings::Framesync( void* hEtronDI, PDEVSELINFO pDevSelInfo, int De
 			}
 		}
 	}
-    if ( EtronDI_GetFWRegister(hEtronDI, pDevSelInfo, 0xf4, &value, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK ||
-         EtronDI_GetFWRegister(hEtronDI, pDevSelInfo, 0xf5, &value, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK )
+    if ( APC_GetFWRegister(hApcDI, pDevSelInfo, 0xf4, &value, FG_Address_1Byte | FG_Value_1Byte) != APC_OK ||
+         APC_GetFWRegister(hApcDI, pDevSelInfo, 0xf5, &value, FG_Address_1Byte | FG_Value_1Byte) != APC_OK )
 	{
-		TRACE("Read Register, from PUMA,ETronDI_WRITE_FW_REG_0xf4_FAIL");
+		TRACE("Read Register, from PUMA,APC_WRITE_FW_REG_0xf4_FAIL");
 		return -1;
 	}
 	switch ( iPid )
     {
-    case ETronDI_PID_8054:  return FramesyncFor8054( hEtronDI, pDevSelInfo, DepthWidth, DepthHeight, ColorWidth, ColorHeight, bFormatMJPG, Fps );
-    case ETronDI_PID_8040S: return FramesyncFor8040S( hEtronDI, pDevSelInfo, DepthWidth, DepthHeight, ColorWidth, ColorHeight, bFormatMJPG, Fps );
+    case APC_PID_8054:  return FramesyncFor8054( hApcDI, pDevSelInfo, DepthWidth, DepthHeight, ColorWidth, ColorHeight, bFormatMJPG, Fps );
+    case APC_PID_8040S: return FramesyncFor8040S( hApcDI, pDevSelInfo, DepthWidth, DepthHeight, ColorWidth, ColorHeight, bFormatMJPG, Fps );
     }
-    return ETronDI_NotSupport;
+    return APC_NotSupport;
 }
 
-int RegisterSettings::FramesyncFor8054(void* hEtronDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps)
+int RegisterSettings::FramesyncFor8054(void* hApcDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps)
 {
 	/*Check mode*/
 	int mode = 0;
@@ -327,64 +327,64 @@ int RegisterSettings::FramesyncFor8054(void* hEtronDI, PDEVSELINFO pDevSelInfo, 
 	/* TRIGGER */
 	if (mode == 5 || mode == 7)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x004e, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x004e, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 6 || mode == 8)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0075, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0075, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 9)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0014, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0014, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0014, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0014, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 10 || mode == 11)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0050, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0010, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0050, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0010, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 16)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x003e, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x003e, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 17)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x005e, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0002, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x005e, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0002, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 22)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0013, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x000c, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0013, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x000c, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 23)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0050, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0010, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0050, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0010, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
-    return ETronDI_OK;
+    return APC_OK;
 }
 
-int RegisterSettings::FramesyncFor8040S(void* hEtronDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps)
+int RegisterSettings::FramesyncFor8040S(void* hApcDI, PDEVSELINFO pDevSelInfo, int DepthWidth, int DepthHeight, int ColorWidth, int ColorHeight, bool bFormatMJPG, int Fps)
 {
 	int mode = 0;
 	if (DepthWidth == 1920 && DepthHeight == 912)
@@ -405,66 +405,66 @@ int RegisterSettings::FramesyncFor8040S(void* hEtronDI, PDEVSELINFO pDevSelInfo,
 	}TRACE("RegisterSettings::FramesyncFor8040S Mode: %d  set Frame-sync reg.", mode);
 	if (mode == 5)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x005a, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0005, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x005a, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0005, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 6)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x00b9, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0005, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x00b9, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0005, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 7)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0028, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x000A, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0028, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x000A, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 8)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x001e, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x001e, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0001, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
 	else if (mode == 9)
 	{
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf4, 0x0050, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
-		if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, 0xf5, 0x0014, FG_Address_1Byte | FG_Value_1Byte) != ETronDI_OK)
-			TRACE("ETronDI_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf4, 0x0050, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
+		if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, 0x0014, FG_Address_1Byte | FG_Value_1Byte) != APC_OK)
+			TRACE("APC_WRITE_REG_FAIL");
 	}
-	return ETronDI_OK;
+	return APC_OK;
 }
 
-int RegisterSettings::ForEx8053Mode9(void* hEtronDI, PDEVSELINFO pDevSelInfo)
+int RegisterSettings::ForEx8053Mode9(void* hApcDI, PDEVSELINFO pDevSelInfo)
 {
 	unsigned short value = 0x0;
 	unsigned short address = 0xf0;
-	if (EtronDI_GetFWRegister(hEtronDI, pDevSelInfo, address, &value, FG_Address_2Byte | FG_Value_1Byte) != ETronDI_OK)
+	if (APC_GetFWRegister(hApcDI, pDevSelInfo, address, &value, FG_Address_2Byte | FG_Value_1Byte) != APC_OK)
 	{
 		TRACE("Read Register, READ FW REG %x FAIL", address);
 		return -1;
 	}
 
 	value |= 0x0001;
-	if (EtronDI_SetFWRegister(hEtronDI, pDevSelInfo, address, value, FG_Address_2Byte | FG_Value_1Byte) != ETronDI_OK)
+	if (APC_SetFWRegister(hApcDI, pDevSelInfo, address, value, FG_Address_2Byte | FG_Value_1Byte) != APC_OK)
 	{
 		TRACE("SeT Register,  WRITE FW REG %x FAIL", address);
 		return -1;
 	}
-    return ETronDI_OK;
+    return APC_OK;
 }
 
-int RegisterSettings::DM_Quality_Register_Setting_Slave(void* hEtronDI, PDEVSELINFO pDevSelInfo)
+int RegisterSettings::DM_Quality_Register_Setting_Slave(void* hApcDI, PDEVSELINFO pDevSelInfo)
 {
 	DEVINFORMATIONEX devinfo;
-	int nRet = EtronDI_GetDeviceInfoEx(hEtronDI, pDevSelInfo, &devinfo);
-	if (nRet != ETronDI_OK)
+	int nRet = APC_GetDeviceInfoEx(hApcDI, pDevSelInfo, &devinfo);
+	if (nRet != APC_OK)
 	{
 		return nRet;
 	}
@@ -535,20 +535,20 @@ int RegisterSettings::DM_Quality_Register_Setting_Slave(void* hEtronDI, PDEVSELI
 			USHORT RegValue;
 			USHORT NotValidDataRange;
 
-			EtronDI_GetSlaveHWRegister(hEtronDI, pDevSelInfo, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
+			APC_GetSlaveHWRegister(hApcDI, pDevSelInfo, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
 
 			NotValidDataRange = ~ValidDataRange;
 			RegValue = RegValue & NotValidDataRange;
 			RegValue |= Data;
 
-			EtronDI_SetSlaveHWRegister(hEtronDI, pDevSelInfo, RegAddress, RegValue, FG_Address_2Byte | FG_Value_1Byte);
+			APC_SetSlaveHWRegister(hApcDI, pDevSelInfo, RegAddress, RegValue, FG_Address_2Byte | FG_Value_1Byte);
 
 			//Sleep(5); // delay time, need fine tune in the feature
 
 			////////////////////
 
 			USHORT RegValueCheck = 0;
-			EtronDI_GetSlaveHWRegister(hEtronDI, pDevSelInfo, RegAddress, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte);
+			APC_GetSlaveHWRegister(hApcDI, pDevSelInfo, RegAddress, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte);
 			if (RegValue != RegValueCheck)
 			{
 				AfxMessageBox(_T("Set config. to Register failed !!"));
@@ -569,11 +569,11 @@ int RegisterSettings::DM_Quality_Register_Setting_Slave(void* hEtronDI, PDEVSELI
 	return 0;
 }
 
-int RegisterSettings::DM_Quality_Register_Setting_For6cm(void* hEtronDI, PDEVSELINFO pDevSelInfo)
+int RegisterSettings::DM_Quality_Register_Setting_For6cm(void* hApcDI, PDEVSELINFO pDevSelInfo)
 {
 	DEVINFORMATIONEX devinfo;
-	int nRet = EtronDI_GetDeviceInfoEx(hEtronDI, pDevSelInfo, &devinfo);
-	if (nRet != ETronDI_OK)
+	int nRet = APC_GetDeviceInfoEx(hApcDI, pDevSelInfo, &devinfo);
+	if (nRet != APC_OK)
 	{
 		return nRet;
 	}
@@ -645,19 +645,19 @@ int RegisterSettings::DM_Quality_Register_Setting_For6cm(void* hEtronDI, PDEVSEL
 			USHORT RegValue;
 			USHORT NotValidDataRange;
 
-			EtronDI_GetSensorRegister(hEtronDI, pDevSelInfo, 0xC2, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte, EtronDI_SensorMode::Sensor1);
+			APC_GetSensorRegister(hApcDI, pDevSelInfo, 0xC2, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte, APC_SensorMode::Sensor1);
 
 			NotValidDataRange = ~ValidDataRange;
 			RegValue = RegValue & NotValidDataRange;
 			RegValue |= Data;
 
-			EtronDI_SetSensorRegister(hEtronDI, pDevSelInfo, 0xC2, RegAddress, RegValue, FG_Address_2Byte | FG_Value_1Byte, EtronDI_SensorMode::Sensor1);
+			APC_SetSensorRegister(hApcDI, pDevSelInfo, 0xC2, RegAddress, RegValue, FG_Address_2Byte | FG_Value_1Byte, APC_SensorMode::Sensor1);
 			//Sleep(5); // delay time, need fine tune in the feature
 
 			////////////////////
 
 			USHORT RegValueCheck = 0;
-			EtronDI_GetSensorRegister(hEtronDI, pDevSelInfo, 0xC2, RegAddress, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte, EtronDI_SensorMode::Sensor1);
+			APC_GetSensorRegister(hApcDI, pDevSelInfo, 0xC2, RegAddress, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte, APC_SensorMode::Sensor1);
 			if (RegValue != RegValueCheck)
 			{
 				AfxMessageBox(_T("Set config. to Register failed !!"));
@@ -678,11 +678,11 @@ int RegisterSettings::DM_Quality_Register_Setting_For6cm(void* hEtronDI, PDEVSEL
 	return 0;
 }
 
-int RegisterSettings::DM_Quality_Register_Setting(void* hEtronDI, PDEVSELINFO pDevSelInfo)
+int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDevSelInfo)
 {
 	DEVINFORMATIONEX devinfo;
-	int nRet = EtronDI_GetDeviceInfoEx(hEtronDI, pDevSelInfo, &devinfo);
-	if (nRet != ETronDI_OK)
+	int nRet = APC_GetDeviceInfoEx(hApcDI, pDevSelInfo, &devinfo);
+	if (nRet != APC_OK)
 	{
 		return nRet;
 	}
@@ -727,6 +727,14 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hEtronDI, PDEVSELINFO pD
 	{
 		modelName = L"YX8062";
 	}
+    else if (devinfo.wPID == 0x167) // SANDRA
+    {
+        modelName = L"SANDRA";
+    }
+    else if (devinfo.wPID == 0x0160) // HYPATIA
+    {
+        modelName = L"HYPATIA";
+    }
 	else
 	{
 		modelName = NULL;
@@ -800,20 +808,20 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hEtronDI, PDEVSELINFO pD
 			USHORT RegValue;
 			USHORT NotValidDataRange;
 			
-			EtronDI_GetHWRegister(hEtronDI, pDevSelInfo, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
+			APC_GetHWRegister(hApcDI, pDevSelInfo, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
 			
 			NotValidDataRange = ~ValidDataRange;
 			RegValue = RegValue & NotValidDataRange;
 			RegValue |= Data;
 
-			EtronDI_SetHWRegister(hEtronDI, pDevSelInfo, RegAddress, RegValue, FG_Address_2Byte | FG_Value_1Byte);
+			APC_SetHWRegister(hApcDI, pDevSelInfo, RegAddress, RegValue, FG_Address_2Byte | FG_Value_1Byte);
 
 			//Sleep(5); // delay time, need fine tune in the feature
 
 			////////////////////
 			
 			USHORT RegValueCheck = 0;
-			EtronDI_GetHWRegister(hEtronDI, pDevSelInfo, RegAddress, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte);
+			APC_GetHWRegister(hApcDI, pDevSelInfo, RegAddress, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte);
 			if ( ( RegValue & ValidDataRange ) != ( RegValueCheck & ValidDataRange ) )
 			{
 				AfxMessageBox(_T("Set config. to Register failed !!"));

@@ -57,6 +57,8 @@ private:
 	{
 		bool bRunning = true;
 
+		bool bIsInterleave = false;
+
 		std::mutex mutexObject;
 		SyncMask   syncConditionMask;
 
@@ -64,18 +66,22 @@ private:
 		std::map<FrameCount, SyncObject> mapSyncObject;
 
 		std::mutex mutexAccomplish;
-		std::vector<SyncObject> vectorAccomplishFrame;
+		std::list<SyncObject> vectorAccomplishFrame;
+
+		std::thread thread;
 	};
 
 public:
-	int RegisterDevice(void *hEtronDI, DEVSELINFO devSelInfo);
-	int UnregisterDevice(void *hEtronDI, DEVSELINFO devSelInfo);
+	int RegisterDevice(void *hApcDI, DEVSELINFO devSelInfo);
+	int UnregisterDevice(void *hApcDI, DEVSELINFO devSelInfo);
 
-	int SyncImageCallback(void *hEtronDI, DEVSELINFO devSelInfo,
-						  EtronDIImageType::Value imageType, int imageId,
+	int SyncImageCallback(void *hApcDI, DEVSELINFO devSelInfo,
+						  ApcDIImageType::Value imageType, int imageId,
 						  int serailNumber, std::function<void()> &&imageCallback);
-	int SyncIMUCallback(void *hEtronDI, DEVSELINFO devSelInfo,
+	int SyncIMUCallback(void *hApcDI, DEVSELINFO devSelInfo,
 						int serailNumber, std::function<void()> &&imuCallback);
+
+	int SetIsInterleave(void *hApcDI, DEVSELINFO devSelInfo, bool bIsInterleave);
 
 	void SetEnabled(bool bEnabled)
 	{
@@ -85,12 +91,12 @@ public:
 	bool IsEnable() { return m_bEnabled;  }
 
 private:
-	int DoFrameSync(void *hEtronDI, DEVSELINFO devSelInfo, FrameCount frameCount);
-	int AccomplishFrameCallback(void *hEtronDI, DEVSELINFO devSelInfo);
+	int DoFrameSync(void *hApcDI, DEVSELINFO devSelInfo, FrameCount frameCount);
+	int AccomplishFrameCallback(void *hApcDI, DEVSELINFO devSelInfo);
 
-	std::pair<void *, DEVSELINFO> GetKey(void *hEtronDI, DEVSELINFO devSelInfo)
+	std::pair<void *, DEVSELINFO> GetKey(void *hApcDI, DEVSELINFO devSelInfo)
 	{
-		return std::make_pair(hEtronDI, devSelInfo);
+		return std::make_pair(hApcDI, devSelInfo);
 	}
 
 private:

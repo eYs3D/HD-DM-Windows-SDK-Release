@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AutoModuleSyncManager.h"
-#include "utility/EtronDIUtility.h"
+#include "utility/APCUtility.h"
 
 #define CONFIG_FILE_NAME L"AutoModuleSync.cfg"
 
@@ -11,9 +11,9 @@ AutoModuleSyncManager::AutoModuleSyncManager()
 
 AutoModuleSyncManager::~AutoModuleSyncManager()
 {
-	for (auto hEtronDI : m_maphEtronDI)
+	for (auto hApcDI : m_maphApcDI)
 	{
-		EtronDI_Release(&hEtronDI.second);
+		APC_Release(&hApcDI.second);
 	}
 }
 
@@ -26,7 +26,7 @@ bool AutoModuleSyncManager::IsTureVisionFlagEnable()
 	CString strFolder = buff;
 	CString strPath_Application = strFolder.Left(strFolder.ReverseFind(_T('\\')) + 1);
 
-	CString profile_file = strPath_Application + _T("EtronDI_SdkConfig.ini");
+	CString profile_file = strPath_Application + _T("APC_SdkConfig.ini");
 
 	CString strAppName, strKeyName;
 	CString strData;
@@ -44,7 +44,7 @@ void AutoModuleSyncManager::Init()
 {
 	if (!IsTureVisionFlagEnable()) return;
 
-	if (!GetEtronDIDevice(m_vecDevInfo)) return;
+	if (!GetApcDIDevice(m_vecDevInfo)) return;
 	
 	if (!EnumerateModuleSyncDevice()) return;
 
@@ -115,7 +115,7 @@ void AutoModuleSyncManager::SetMasterDevice(DEVSELINFO devSelInfo)
 	
 	wchar_t szBuf[MAX_PATH] = { NULL };
 	int nActualSNLenByByte = 0;
-	if (ETronDI_OK == EtronDI_GetSerialNumber(m_maphEtronDI[devSelInfo.index], &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte))
+	if (APC_OK == APC_GetSerialNumber(m_maphApcDI[devSelInfo.index], &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte))
 	{
 		SetMasterDeviceSerialNumber(szBuf);
 	}
@@ -143,7 +143,7 @@ bool AutoModuleSyncManager::IsMasterDevice(DEVSELINFO devSelInfo)
 	
 	wchar_t szBuf[MAX_PATH] = { NULL };
 	int nActualSNLenByByte = 0;
-	if (ETronDI_OK == EtronDI_GetSerialNumber(m_maphEtronDI[devSelInfo.index], &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte))
+	if (APC_OK == APC_GetSerialNumber(m_maphApcDI[devSelInfo.index], &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte))
 	{
 		if (!wcscmp(szBuf, m_masterSerialNumber))
 		{
@@ -160,7 +160,7 @@ CString AutoModuleSyncManager::GetSerialNumber(DEVSELINFO devSelInfo)
 	
 	wchar_t szBuf[MAX_PATH] = { NULL };
 	int nActualSNLenByByte = 0;
-	if (ETronDI_OK == EtronDI_GetSerialNumber(m_maphEtronDI[devSelInfo.index], &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte))
+	if (APC_OK == APC_GetSerialNumber(m_maphApcDI[devSelInfo.index], &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte))
 	{
 		return CString(szBuf);
 	}
@@ -204,9 +204,9 @@ void AutoModuleSyncManager::FrameStop(DEVSELINFO devSelInfo)
 
 void AutoModuleSyncManager::DeviceCheck(DEVSELINFO devSelInfo)
 {
-	if (m_maphEtronDI.count(devSelInfo.index) != 0) return;
+	if (m_maphApcDI.count(devSelInfo.index) != 0) return;
 
-	EtronDI_Init2(&m_maphEtronDI[devSelInfo.index], false, false);
+	APC_Init2(&m_maphApcDI[devSelInfo.index], false, false);
 }
 
 void AutoModuleSyncManager::Sort()

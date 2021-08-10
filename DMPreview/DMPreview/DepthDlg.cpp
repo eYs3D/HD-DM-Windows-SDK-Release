@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "DepthDlg.h"
 #include "WmMsgDef.h"
 #include "ColorPaletteGenerator.h"
@@ -334,7 +334,7 @@ CDepthDlg::CDepthDlg(CWnd* pParent /*=NULL*/)
   
   m_DepthMapType = TRANSFER_TO_COLORFULRGB;
   m_DevType = PUMA;
-  m_depthImageType = EtronDIImageType::DEPTH_11BITS;
+  m_depthImageType = ApcDIImageType::DEPTH_11BITS;
 
   m_depthId = -1;
   m_depthSerialNumber = -1;
@@ -432,12 +432,12 @@ void CDepthDlg::GetDepthZValue( int& zFar, int& zNear )
     }
 }
 
-void CDepthDlg::SetImageParams(void* hEtronDI, DEVSELINFO devSelInfo, unsigned short devType,
-    EtronDIImageType::Value depthImageType,
+void CDepthDlg::SetImageParams(void* hApcDI, DEVSELINFO devSelInfo, unsigned short devType,
+    ApcDIImageType::Value depthImageType,
 	int depthId, int zdTableIndex, int depthWidth, int depthHeight, int iUpdateZ_period, 
 	float camFocus, float baselineDist, std::vector<float> multiBaselineDist )
 {
-    m_hEtronDI = hEtronDI;
+    m_hApcDI = hApcDI;
     m_DevSelInfo.index = devSelInfo.index;
     m_DevType = devType;
     m_depthImageType = depthImageType;
@@ -474,12 +474,12 @@ void CDepthDlg::SetImageParams(void* hEtronDI, DEVSELINFO devSelInfo, unsigned s
     m_bmiDepth.bmiHeader.biHeight = m_nDepthResHeight;
     m_bmiDepth.bmiHeader.biBitCount = 24;
     m_bmiDepth.bmiHeader.biPlanes = 1;
-    m_bmiDepth.bmiHeader.biSizeImage = m_nDepthResWidth * m_nDepthResHeight * ( EtronDIImageType::Value::DEPTH_8BITS == depthImageType ? 1 : 3 );
+    m_bmiDepth.bmiHeader.biSizeImage = m_nDepthResWidth * m_nDepthResHeight * ( ApcDIImageType::Value::DEPTH_8BITS == depthImageType ? 1 : 3 );
 }
 
-void CDepthDlg::SetHandle( void* hEtronDI, const DEVSELINFO& devSelInfo )
+void CDepthDlg::SetHandle( void* hApcDI, const DEVSELINFO& devSelInfo )
 {
-    m_hEtronDI = hEtronDI;
+    m_hApcDI = hApcDI;
     m_DevSelInfo.index = devSelInfo.index;
 }
 
@@ -496,8 +496,8 @@ BOOL CDepthDlg::OnInitDialog() {
 
   SetWindowText(L"DepthDlg");
 
-  int depthDataSizeOriginal = m_nDepthResWidth * m_nDepthResHeight * (m_depthImageType == EtronDIImageType::DEPTH_8BITS ? 1 : 2);
-  int depthDataSize = m_nDepthResWidth * m_nDepthResHeight * (m_depthImageType == EtronDIImageType::DEPTH_8BITS ? 1 : 2);
+  int depthDataSizeOriginal = m_nDepthResWidth * m_nDepthResHeight * (m_depthImageType == ApcDIImageType::DEPTH_8BITS ? 1 : 2);
+  int depthDataSize = m_nDepthResWidth * m_nDepthResHeight * (m_depthImageType == ApcDIImageType::DEPTH_8BITS ? 1 : 2);
 
   m_depthData.resize(depthDataSize, 0);
   m_pImageBuf = new BYTE[ m_nDepthResWidth * m_nDepthResHeight * 3 ];
@@ -521,19 +521,19 @@ void CDepthDlg::GetZDTable()
 
     ZDTABLEINFO zdTableInfo;
     {
-        zdTableInfo.nDataType = ETronDI_DEPTH_DATA_11_BITS;
+        zdTableInfo.nDataType = APC_DEPTH_DATA_11_BITS;
         zdTableInfo.nIndex = m_zdTableIndex;
     }
     do
     {
-        if ( ETronDI_OK == EtronDI_GetZDTable(m_hEtronDI, &m_DevSelInfo, NULL, NULL, &m_zdTableSize, &zdTableInfo ) )
+        if ( APC_OK == APC_GetZDTable(m_hApcDI, &m_DevSelInfo, NULL, NULL, &m_zdTableSize, &zdTableInfo ) )
         {
             if ( m_zdTable ) delete[] m_zdTable;
 
             m_zdTable = new BYTE[ m_zdTableSize ];
             memset( m_zdTable, NULL, m_zdTableSize );
 
-            if ( ETronDI_OK == EtronDI_GetZDTable( m_hEtronDI, &m_DevSelInfo, m_zdTable, m_zdTableSize, &actualLength, &zdTableInfo ) )
+            if ( APC_OK == APC_GetZDTable( m_hApcDI, &m_DevSelInfo, m_zdTable, m_zdTableSize, &actualLength, &zdTableInfo ) )
             {
                 for ( int i = 0; i < actualLength; i += 2 )
                 {
@@ -564,12 +564,12 @@ WORD CDepthDlg::GetDepthData(int x, int y)
     const int pixelIndex = y * m_nDepthResWidth + x;
     switch (m_depthImageType)
     {
-    case EtronDIImageType::DEPTH_8BITS_0x80:
+    case ApcDIImageType::DEPTH_8BITS_0x80:
         return (WORD)m_depthData[pixelIndex * sizeof(WORD)];
-    case EtronDIImageType::DEPTH_8BITS:
+    case ApcDIImageType::DEPTH_8BITS:
         return (WORD)m_depthData[pixelIndex];
-    case EtronDIImageType::DEPTH_11BITS:
-    case EtronDIImageType::DEPTH_14BITS:
+    case ApcDIImageType::DEPTH_11BITS:
+    case ApcDIImageType::DEPTH_14BITS:
         return *(WORD*)(&m_depthData[pixelIndex * sizeof(WORD)]);
     default:
         return 0;
@@ -584,13 +584,13 @@ WORD CDepthDlg::GetZValue(int x, int y)
     {
         switch (m_depthImageType)
         {
-        case EtronDIImageType::DEPTH_8BITS_0x80:
-        case EtronDIImageType::DEPTH_8BITS:
+        case ApcDIImageType::DEPTH_8BITS_0x80:
+        case ApcDIImageType::DEPTH_8BITS:
             return ( WORD )( m_camFocus * m_baselineDist / depthData );
-        case EtronDIImageType::DEPTH_11BITS:
+        case ApcDIImageType::DEPTH_11BITS:
             // need to transfer range of depth data from [0..2047] to [0.0..256.0]
             return ( WORD )( 8.0 * m_camFocus * m_baselineDist / depthData );
-        case EtronDIImageType::DEPTH_14BITS:
+        case ApcDIImageType::DEPTH_14BITS:
             return depthData;
         }
     }
@@ -598,11 +598,11 @@ WORD CDepthDlg::GetZValue(int x, int y)
     {
         switch ( m_depthImageType )
         {
-        case EtronDIImageType::DEPTH_11BITS:
-        case EtronDIImageType::DEPTH_8BITS_0x80:
-        case EtronDIImageType::DEPTH_8BITS:
+        case ApcDIImageType::DEPTH_11BITS:
+        case ApcDIImageType::DEPTH_8BITS_0x80:
+        case ApcDIImageType::DEPTH_8BITS:
             {
-                WORD zdIndex = ( EtronDIImageType::DEPTH_8BITS == m_depthImageType ? ( depthData << 3 ) : depthData );
+                WORD zdIndex = ( ApcDIImageType::DEPTH_8BITS == m_depthImageType ? ( depthData << 3 ) : depthData );
 
                 if ( m_DevType != PUMA )
                 {
@@ -615,7 +615,7 @@ WORD CDepthDlg::GetZValue(int x, int y)
                 if ( m_zdTable ) return ( ( WORD* )m_zdTable )[ zdIndex ];
             }
             break;
-        case EtronDIImageType::DEPTH_14BITS: break;
+        case ApcDIImageType::DEPTH_14BITS: break;
         }
         return depthData;
     }
@@ -632,7 +632,7 @@ WORD CDepthDlg::GetZValue(int x, int y, BYTE* pDepth)
 
     auto GetDepth = [ = ] ( WORD depthData )->WORD
     {
-        WORD Disparity = ( EtronDIImageType::DEPTH_8BITS == m_depthImageType ? ( depthData << 3 ) : depthData );
+        WORD Disparity = ( ApcDIImageType::DEPTH_8BITS == m_depthImageType ? ( depthData << 3 ) : depthData );
 
         if ( m_DevType != PUMA )
         {
@@ -648,7 +648,7 @@ WORD CDepthDlg::GetZValue(int x, int y, BYTE* pDepth)
     };
     switch (m_depthImageType)
     {
-    case EtronDIImageType::DEPTH_8BITS:
+    case ApcDIImageType::DEPTH_8BITS:
         {
             WORD depthData = (WORD)pDepth[pixelIndex];
 
@@ -659,7 +659,7 @@ WORD CDepthDlg::GetZValue(int x, int y, BYTE* pDepth)
             return GetDepth( depthData );
         }
         break;
-    case EtronDIImageType::DEPTH_11BITS:
+    case ApcDIImageType::DEPTH_11BITS:
         {
             WORD depthData = *(WORD*)(&pDepth[pixelIndex * sizeof(WORD)]);
 
@@ -670,13 +670,13 @@ WORD CDepthDlg::GetZValue(int x, int y, BYTE* pDepth)
             return GetDepth( depthData );
         }
         break;
-    case EtronDIImageType::DEPTH_14BITS:
+    case ApcDIImageType::DEPTH_14BITS:
         return *(WORD*)(&pDepth[pixelIndex * sizeof(WORD)]);
     }
     return NULL;
 }
 
-bool CDepthDlg::GetDepthData(std::vector<unsigned char>& depthBuf, EtronDIImageType::Value& depthImageType
+bool CDepthDlg::GetDepthData(std::vector<unsigned char>& depthBuf, ApcDIImageType::Value& depthImageType
     , int& width, int& height, int& serialNumber)
 {
     {
@@ -711,14 +711,14 @@ void CDepthDlg::ApplyImage( BYTE **pDepthBuf, const int dataSize, const int nDep
     {
         std::lock_guard<std::mutex> lock(m_depthDataMutex);
         DepthFilter( *pDepthBuf, DfParam );
-        memcpy( m_depthData.data(), *pDepthBuf, m_nDepthResWidth * m_nDepthResHeight * ( m_depthImageType == EtronDIImageType::DEPTH_8BITS ? 1 : 2 ) );
+        memcpy( m_depthData.data(), *pDepthBuf, m_nDepthResWidth * m_nDepthResHeight * ( m_depthImageType == ApcDIImageType::DEPTH_8BITS ? 1 : 2 ) );
 
         m_depthSerialNumber = nDepthSerialNum;
         m_rtAccuracyRegion  = rtAccuracyRegion;
     }
  
-  //if(m_depthImageType == EtronDIImageType::DEPTH_8BITS || 
-  //   m_depthImageType == EtronDIImageType::DEPTH_8BITS_0x80)
+  //if(m_depthImageType == ApcDIImageType::DEPTH_8BITS || 
+  //   m_depthImageType == ApcDIImageType::DEPTH_8BITS_0x80)
   //{
 		//m_bmiDepth.bmiHeader.biBitCount = 8;
 		//m_bmiDepth.bmiHeader.biClrUsed = 256;
@@ -739,7 +739,7 @@ void CDepthDlg::ApplyImage( BYTE **pDepthBuf, const int dataSize, const int nDep
   //BYTE *p0,*p1,*p2;
   switch(m_depthImageType)
   {
-  case EtronDIImageType::DEPTH_8BITS:
+  case ApcDIImageType::DEPTH_8BITS:
       //p0 = *pDepthBuf+(m_nDepthResHeight-1)*m_nDepthResWidth;
       //p1 = m_pImageBuf;
       //for (y=0; y<m_nDepthResHeight; y++) {
@@ -751,7 +751,7 @@ void CDepthDlg::ApplyImage( BYTE **pDepthBuf, const int dataSize, const int nDep
           if ( m_zdTable ) UpdateD8DisplayImage_DIB24( m_DepthMapType == TRANSFER_TO_COLORFULRGB ? m_ColorPalette : m_GrayPalette, m_depthData.data(), m_pImageBuf);
       }
       break;
-  //case EtronDIImageType::DEPTH_8BITS_0x80:
+  //case ApcDIImageType::DEPTH_8BITS_0x80:
   //    p0 = *pDepthBuf+(m_nDepthResHeight-1)*m_nDepthResWidth*2;
   //    p1 = m_pImageBuf;
   //    for (y=0; y<m_nDepthResHeight; y++) {
@@ -764,7 +764,7 @@ void CDepthDlg::ApplyImage( BYTE **pDepthBuf, const int dataSize, const int nDep
   //        p0 -= (m_nDepthResWidth * 2);
   //    }
   //    break;
-  case EtronDIImageType::DEPTH_11BITS:
+  case ApcDIImageType::DEPTH_11BITS:
       {
           unsigned char* targetBuf = m_depthData.data();
           if (!m_mblDistMultiplier.empty())
@@ -794,7 +794,7 @@ void CDepthDlg::ApplyImage( BYTE **pDepthBuf, const int dataSize, const int nDep
           else if ( m_zdTable ) UpdateD11DisplayImage_DIB24( m_DepthMapType == TRANSFER_TO_COLORFULRGB ? m_ColorPalette : m_GrayPalette, ( WORD* )targetBuf, m_pImageBuf);
       }
       break;
-  case EtronDIImageType::DEPTH_14BITS:
+  case ApcDIImageType::DEPTH_14BITS:
       {
           UpdateZ14DisplayImage_DIB24( m_DepthMapType == TRANSFER_TO_COLORFULRGB ? m_ColorPalette : m_GrayPalette, ( WORD* )m_depthData.data(), m_pImageBuf );
       }
@@ -901,12 +901,12 @@ void CDepthDlg::GetDepthRGBImage(const RGBQUAD* pColorPalette, std::vector<BYTE>
 
 	switch (m_depthImageType)
 	{
-	case EtronDIImageType::DEPTH_8BITS:
+	case ApcDIImageType::DEPTH_8BITS:
 	{
 		if (m_zdTable) UpdateD8DisplayImage_DIB24(pColorPalette, m_depthData.data(), &buffer[0]);
 	}
 	break;
-	case EtronDIImageType::DEPTH_11BITS:
+	case ApcDIImageType::DEPTH_11BITS:
 	{
 		unsigned char* targetBuf = m_depthData.data();
 		if (!m_mblDistMultiplier.empty())
@@ -936,7 +936,7 @@ void CDepthDlg::GetDepthRGBImage(const RGBQUAD* pColorPalette, std::vector<BYTE>
 		else if (m_zdTable) UpdateD11DisplayImage_DIB24(pColorPalette, (WORD*)targetBuf, &buffer[0]);
 	}
 	break;
-	case EtronDIImageType::DEPTH_14BITS:
+	case ApcDIImageType::DEPTH_14BITS:
 	{
 		UpdateZ14DisplayImage_DIB24(pColorPalette, (WORD*)m_depthData.data(), &buffer[0]);
 	}
@@ -1114,36 +1114,36 @@ void CDepthDlg::DepthFilter(BYTE* pDepthBuf, const DepthfilterParam& DfParam)
 	int new_width = m_nDepthResWidth;
 	int new_height = m_nDepthResHeight;
 
-	EtronDI_ResetFilters( m_hEtronDI, &m_DevSelInfo );
+	APC_ResetFilters( m_hApcDI, &m_DevSelInfo );
 
 	if(DfParam.bSubSample)
 	{
 		new_width = 0;
 		new_height = 0;
 		sub_disparity = NULL;	// sub_disparity Initialize;
-		EtronDI_SubSample( m_hEtronDI, &m_DevSelInfo, &sub_disparity, pDepthBuf, DfParam.bytesPerPixel, m_nDepthResWidth, m_nDepthResHeight, new_width, new_height, DfParam.SubSampleMode, DfParam.SubSampleFactor);
+		APC_SubSample( m_hApcDI, &m_DevSelInfo, &sub_disparity, pDepthBuf, DfParam.bytesPerPixel, m_nDepthResWidth, m_nDepthResHeight, new_width, new_height, DfParam.SubSampleMode, DfParam.SubSampleFactor);
 	}
 
 	if (DfParam.bEdgePreServingFilter)
-		EtronDI_EdgePreServingFilter(m_hEtronDI, &m_DevSelInfo, sub_disparity, DfParam.type, new_width, new_height, DfParam.nEdgeLevel, DfParam.sigma, DfParam.lumda);
+		APC_EdgePreServingFilter(m_hApcDI, &m_DevSelInfo, sub_disparity, DfParam.type, new_width, new_height, DfParam.nEdgeLevel, DfParam.sigma, DfParam.lumda);
 	
 	if (DfParam.bHoleFill)
-		EtronDI_HoleFill(m_hEtronDI, &m_DevSelInfo, sub_disparity, DfParam.bytesPerPixel, DfParam.kernelSize, new_width, new_height, DfParam.nLevel, DfParam.bHorizontal);
+		APC_HoleFill(m_hApcDI, &m_DevSelInfo, sub_disparity, DfParam.bytesPerPixel, DfParam.kernelSize, new_width, new_height, DfParam.nLevel, DfParam.bHorizontal);
 	
 	if (DfParam.bTempleFilter)
-		EtronDI_TemporalFilter(m_hEtronDI, &m_DevSelInfo, sub_disparity, DfParam.bytesPerPixel, new_width, new_height, DfParam.alpha, DfParam.history);
+		APC_TemporalFilter(m_hApcDI, &m_DevSelInfo, sub_disparity, DfParam.bytesPerPixel, new_width, new_height, DfParam.alpha, DfParam.history);
 	
 	if (DfParam.bSubSample)
-		EtronDI_ApplyFilters(m_hEtronDI, &m_DevSelInfo, pDepthBuf, sub_disparity, DfParam.bytesPerPixel, m_nDepthResWidth, m_nDepthResHeight, new_width, new_height);
+		APC_ApplyFilters(m_hApcDI, &m_DevSelInfo, pDepthBuf, sub_disparity, DfParam.bytesPerPixel, m_nDepthResWidth, m_nDepthResHeight, new_width, new_height);
 
 
 	if (DfParam.bFlyingDepthCancellation)
     {
-		if (m_depthImageType == EtronDIImageType::DEPTH_8BITS)
-			EtronDI_FlyingDepthCancellation_D8(m_hEtronDI, &m_DevSelInfo, pDepthBuf, m_nDepthResWidth, m_nDepthResHeight);
-		else if (m_depthImageType == EtronDIImageType::DEPTH_11BITS)
-			EtronDI_FlyingDepthCancellation_D11(m_hEtronDI, &m_DevSelInfo, pDepthBuf, m_nDepthResWidth, m_nDepthResHeight);
-        else if (m_depthImageType == EtronDIImageType::DEPTH_14BITS)
+		if (m_depthImageType == ApcDIImageType::DEPTH_8BITS)
+			APC_FlyingDepthCancellation_D8(m_hApcDI, &m_DevSelInfo, pDepthBuf, m_nDepthResWidth, m_nDepthResHeight);
+		else if (m_depthImageType == ApcDIImageType::DEPTH_11BITS)
+			APC_FlyingDepthCancellation_D11(m_hApcDI, &m_DevSelInfo, pDepthBuf, m_nDepthResWidth, m_nDepthResHeight);
+        else if (m_depthImageType == ApcDIImageType::DEPTH_14BITS)
         {
             if ( !m_zdTable ) return;
 
@@ -1173,9 +1173,9 @@ void CDepthDlg::DepthFilter(BYTE* pDepthBuf, const DepthfilterParam& DfParam)
             }
             WORD* pZ14Depth = ( WORD* )pDepthBuf;
 
-            EtronDI_TableToData(m_hEtronDI, &m_DevSelInfo, m_nDepthResWidth, m_nDepthResHeight, m_vecTableZ14ToD11.size() * sizeof( WORD ), m_vecTableZ14ToD11.data(), pZ14Depth, m_vecZ14ToD11.data() );
-            EtronDI_FlyingDepthCancellation_D11(m_hEtronDI, &m_DevSelInfo, ( BYTE* )m_vecZ14ToD11.data(), m_nDepthResWidth, m_nDepthResHeight);
-            EtronDI_TableToData(m_hEtronDI, &m_DevSelInfo, m_nDepthResWidth, m_nDepthResHeight, 2048 * sizeof( WORD ), ( USHORT* )zdTable, m_vecZ14ToD11.data(), pZ14Depth );
+            APC_TableToData(m_hApcDI, &m_DevSelInfo, m_nDepthResWidth, m_nDepthResHeight, m_vecTableZ14ToD11.size() * sizeof( WORD ), m_vecTableZ14ToD11.data(), pZ14Depth, m_vecZ14ToD11.data() );
+            APC_FlyingDepthCancellation_D11(m_hApcDI, &m_DevSelInfo, ( BYTE* )m_vecZ14ToD11.data(), m_nDepthResWidth, m_nDepthResHeight);
+            APC_TableToData(m_hApcDI, &m_DevSelInfo, m_nDepthResWidth, m_nDepthResHeight, 2048 * sizeof( WORD ), ( USHORT* )zdTable, m_vecZ14ToD11.data(), pZ14Depth );
         }
     }
 }

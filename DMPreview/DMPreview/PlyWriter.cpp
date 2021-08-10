@@ -38,14 +38,14 @@ int PlyWriter::writePly(std::vector<CloudPoint>& cloud, std::string filename) {
 	return 0;
 }
 
-//int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, float zNear, float zFar, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
+//int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, float zNear, float zFar, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
 //	return etronFrameTo3D(depthWidth, depthHeight, dArray, colorWidth, colorHeight, colorArray, rectLogData, depthType, output, true, zNear, zFar, removeINF, useDepthResolution, scale_ratio);
 //}
 
-//int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
+//int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
 //	return etronFrameTo3D(depthWidth, depthHeight, dArray, colorWidth, colorHeight, colorArray, rectLogData, depthType, output, false,0.0f,0.0f, removeINF, useDepthResolution, scale_ratio);
 //}
-int PlyWriter::etronFrameTo3D_8029(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear,float zFar,bool removeINF, bool useDepthResolution, float scale_ratio){
+int PlyWriter::etronFrameTo3D_8029(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear,float zFar,bool removeINF, bool useDepthResolution, float scale_ratio){
 
 	float ratio_Mat = 1.0f;
 
@@ -74,7 +74,7 @@ int PlyWriter::etronFrameTo3D_8029(int depthWidth, int depthHeight, std::vector<
 	std::vector<unsigned char> dArrayResized(outputWidth * outputHeight * 2);
 
 	if (depthHeight != outputHeight) {
-        if ( depthType == EtronDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+        if ( depthType == ApcDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
         else MonoBilinearFineScaler_short( (USHORT*)&dArray[0], (USHORT*)&dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
 	}
 	else
@@ -148,7 +148,7 @@ int PlyWriter::etronFrameTo3D_8029(int depthWidth, int depthHeight, std::vector<
 	return 0;
 }
 
-int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear,float zFar,bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f){
+int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear,float zFar,bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f){
 
 	float ratio_Mat = 1.0f;
 
@@ -177,7 +177,7 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 	std::vector<unsigned char> dArrayResized(outputWidth * outputHeight * 2);
 
 	if (depthHeight != outputHeight) {
-        if ( depthType == EtronDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+        if ( depthType == ApcDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
         else MonoBilinearFineScaler_short( (USHORT*)&dArray[0], (USHORT*)&dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
 	}
 	else
@@ -207,18 +207,18 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 	int tableSize;	
 	switch (depthType)
 	{
-		case EtronDIImageType::DEPTH_8BITS_0x80:			
-		case EtronDIImageType::DEPTH_8BITS:
+		case ApcDIImageType::DEPTH_8BITS_0x80:			
+		case ApcDIImageType::DEPTH_8BITS:
 			tableSize = 1 << 8;			
 			for (int i = 0; i < tableSize; i++)
 				disparityToW[i] = (i * ratio_Mat) / baseline + diff;
 			break;
-		case EtronDIImageType::DEPTH_11BITS:
+		case ApcDIImageType::DEPTH_11BITS:
 			tableSize = 1 << 11;			
 			for (int i = 0; i < tableSize; i++) 
 				disparityToW[i] = (i * ratio_Mat / 8.0f) / baseline + diff;
 			break;
-		case EtronDIImageType::DEPTH_14BITS:
+		case ApcDIImageType::DEPTH_14BITS:
 			break;
 	}
 		
@@ -235,8 +235,8 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 								
 			switch (depthType)
 			{
-			case EtronDIImageType::DEPTH_8BITS_0x80:
-			case EtronDIImageType::DEPTH_11BITS:
+			case ApcDIImageType::DEPTH_8BITS_0x80:
+			case ApcDIImageType::DEPTH_11BITS:
 				disparity = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				W = disparityToW[disparity];
@@ -245,7 +245,7 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 					Z = focalLength / W;
 				}
 				break;
-			case EtronDIImageType::DEPTH_8BITS:
+			case ApcDIImageType::DEPTH_8BITS:
 				disparity = *(dArrayBuf++);
 				W = disparityToW[disparity];
 				if (W > 0)
@@ -253,7 +253,7 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 					Z = focalLength / W;
 				}
 				break;
-			case EtronDIImageType::DEPTH_14BITS:
+			case ApcDIImageType::DEPTH_14BITS:
 				Z = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				if (Z > 0)
@@ -290,7 +290,7 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 	return 0;
 }
 
-int PlyWriter::etronFrameTo3D_PlyFilterFloat(int depthWidth, int depthHeight, std::vector<float>& dFloatArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
+int PlyWriter::etronFrameTo3D_PlyFilterFloat(int depthWidth, int depthHeight, std::vector<float>& dFloatArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
 
 	float ratio_Mat = 1.0f;
 
@@ -372,7 +372,7 @@ int PlyWriter::etronFrameTo3D_PlyFilterFloat(int depthWidth, int depthHeight, st
 }
 
 
-int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData* rectLogDataK, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, bool isDownSampleK, float scale_ratio, int degreeOfRectifyLogK){
+int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData* rectLogDataK, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, bool isDownSampleK, float scale_ratio, int degreeOfRectifyLogK){
 
 	float ratio_Mat_L = 1.0f;
 	float ratio_Mat_K = 1.0f;
@@ -411,7 +411,7 @@ int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::v
 	}
 
 	if (depthHeight != outputHeight) {
-        if ( depthType == EtronDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+        if ( depthType == ApcDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
         else MonoBilinearFineScaler_short( (USHORT*)&dArray[0], (USHORT*)&dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
 	}
 	else
@@ -440,18 +440,18 @@ int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::v
 
 	switch (depthType)
 	{
-	case EtronDIImageType::DEPTH_8BITS_0x80:
-	case EtronDIImageType::DEPTH_8BITS:
+	case ApcDIImageType::DEPTH_8BITS_0x80:
+	case ApcDIImageType::DEPTH_8BITS:
 		tableSize = 1 << 8;
 		for (int i = 0; i < tableSize; i++)
 			disparityToW[i] = (i * ratio_Mat_L) / baseline_L + diff_L;
 		break;
-	case EtronDIImageType::DEPTH_11BITS:
+	case ApcDIImageType::DEPTH_11BITS:
 		tableSize = 1 << 11;
 		for (int i = 0; i < tableSize; i++)
 			disparityToW[i] = ((i * ratio_Mat_L) / 8.0f) / baseline_L + diff_L;
 		break;
-	case EtronDIImageType::DEPTH_14BITS:
+	case ApcDIImageType::DEPTH_14BITS:
 		break;
 	}
 
@@ -469,8 +469,8 @@ int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::v
 
 			switch (depthType)
 			{
-			case EtronDIImageType::DEPTH_8BITS_0x80:
-			case EtronDIImageType::DEPTH_11BITS:
+			case ApcDIImageType::DEPTH_8BITS_0x80:
+			case ApcDIImageType::DEPTH_11BITS:
 				disparity = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				W = disparityToW[disparity];
@@ -479,7 +479,7 @@ int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::v
 					Z = focalLength_L / W;
 				}
 				break;
-			case EtronDIImageType::DEPTH_8BITS:
+			case ApcDIImageType::DEPTH_8BITS:
 				disparity = *(dArrayBuf++);
 				W = disparityToW[disparity];
 				if (W > 0)
@@ -487,7 +487,7 @@ int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::v
 					Z = focalLength_L / W;
 				}
 				break;
-			case EtronDIImageType::DEPTH_14BITS:
+			case ApcDIImageType::DEPTH_14BITS:
 				Z = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				if (Z > 0)
@@ -578,7 +578,7 @@ int PlyWriter::etronFrameTo3DMultiSensor(int depthWidth, int depthHeight, std::v
 	return 0;
 }
 
-int PlyWriter::etronFrameTo3DMultiSensorPlyFilterFloat(int depthWidth, int depthHeight, std::vector<float>& dFloatArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData*rectLogDataK, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, bool isDownSampleK, float scale_ratio, int degreeOfRectifyLogK) {
+int PlyWriter::etronFrameTo3DMultiSensorPlyFilterFloat(int depthWidth, int depthHeight, std::vector<float>& dFloatArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData*rectLogDataK, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, bool isDownSampleK, float scale_ratio, int degreeOfRectifyLogK) {
 
 	float ratio_Mat_L = 1.0f;
 	float ratio_Mat_K = 1.0f;
@@ -724,7 +724,7 @@ int PlyWriter::etronFrameTo3DMultiSensorPlyFilterFloat(int depthWidth, int depth
 	output.assign(tempPointCloud.begin(), tempPointCloud.begin() + count);
 	return 0;
 }
-int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, float scale_ratio)
+int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, float scale_ratio)
 {
 
 	float ratio_Mat = 1.0f;
@@ -761,7 +761,7 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 	}
 
 	if (depthHeight != outputHeight) {
-        if ( depthType == EtronDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+        if ( depthType == ApcDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
         else MonoBilinearFineScaler_short( (USHORT*)&dArray[0], (USHORT*)&dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
 	}
 	else
@@ -782,18 +782,18 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 	int tableSize;
 	switch (depthType)
 	{
-	case EtronDIImageType::DEPTH_8BITS_0x80:
-	case EtronDIImageType::DEPTH_8BITS:
+	case ApcDIImageType::DEPTH_8BITS_0x80:
+	case ApcDIImageType::DEPTH_8BITS:
 		tableSize = 1 << 8;
 		for (int i = 0; i < tableSize; i++)
 			disparityToW[i] = (i * ratio_Mat) / baseline + diff;
 		break;
-	case EtronDIImageType::DEPTH_11BITS:
+	case ApcDIImageType::DEPTH_11BITS:
 		tableSize = 1 << 11;
 		for (int i = 0; i < tableSize; i++)
 			disparityToW[i] = (i * ratio_Mat / 8.0f) / baseline + diff;
 		break;
-	case EtronDIImageType::DEPTH_14BITS:
+	case ApcDIImageType::DEPTH_14BITS:
 		break;
 	}
 
@@ -812,17 +812,17 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 
 			switch (depthType)
 			{
-			case EtronDIImageType::DEPTH_8BITS_0x80:
-			case EtronDIImageType::DEPTH_11BITS:
+			case ApcDIImageType::DEPTH_8BITS_0x80:
+			case ApcDIImageType::DEPTH_11BITS:
 				disparity = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				W = disparityToW[disparity];	
 				break;
-			case EtronDIImageType::DEPTH_8BITS:
+			case ApcDIImageType::DEPTH_8BITS:
 				disparity = *(dArrayBuf++);
 				W = disparityToW[disparity];	
 				break;
-			case EtronDIImageType::DEPTH_14BITS:
+			case ApcDIImageType::DEPTH_14BITS:
 				int DtoZ = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				if (DtoZ > 0)
@@ -870,7 +870,7 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 	return 0;
 }
 
-int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData*rectLogDataK, EtronDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, float scale_ratio)
+int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData*rectLogDataK, ApcDIImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF, float scale_ratio)
 {
     float ratio_Mat = 1.0f;
     float ratio_Mat_K = 1.0f;
@@ -901,7 +901,7 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 	}
 
 	if (depthHeight != outputHeight) {
-        if ( depthType == EtronDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+        if ( depthType == ApcDIImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
         else MonoBilinearFineScaler_short( (USHORT*)&dArray[0], (USHORT*)&dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
 	}
 	else
@@ -927,18 +927,18 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 	int tableSize;
 	switch (depthType)
 	{
-	case EtronDIImageType::DEPTH_8BITS_0x80:
-	case EtronDIImageType::DEPTH_8BITS:
+	case ApcDIImageType::DEPTH_8BITS_0x80:
+	case ApcDIImageType::DEPTH_8BITS:
 		tableSize = 1 << 8;
 		for (int i = 0; i < tableSize; i++)
 			disparityToW[i] = (i * ratio_Mat) / baseline + diff;
 		break;
-	case EtronDIImageType::DEPTH_11BITS:
+	case ApcDIImageType::DEPTH_11BITS:
 		tableSize = 1 << 11;
 		for (int i = 0; i < tableSize; i++)
 			disparityToW[i] = (i * ratio_Mat / 8.0f) / baseline + diff;
 		break;
-	case EtronDIImageType::DEPTH_14BITS:
+	case ApcDIImageType::DEPTH_14BITS:
 		break;
 	}
 
@@ -957,17 +957,17 @@ int PlyWriter::etronFrameTo3DCylinder(int depthWidth, int depthHeight, std::vect
 
 			switch (depthType)
 			{
-			case EtronDIImageType::DEPTH_8BITS_0x80:
-			case EtronDIImageType::DEPTH_11BITS:
+			case ApcDIImageType::DEPTH_8BITS_0x80:
+			case ApcDIImageType::DEPTH_11BITS:
 				disparity = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				W = disparityToW[disparity];	
 				break;
-			case EtronDIImageType::DEPTH_8BITS:
+			case ApcDIImageType::DEPTH_8BITS:
 				disparity = *(dArrayBuf++);
 				W = disparityToW[disparity];	
 				break;
-			case EtronDIImageType::DEPTH_14BITS:
+			case ApcDIImageType::DEPTH_14BITS:
 				int DtoZ = *(WORD*)dArrayBuf;
 				dArrayBuf = dArrayBuf + sizeof(WORD);
 				if (DtoZ > 0)

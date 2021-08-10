@@ -35,7 +35,7 @@ class CPreviewImageDlg : public CDialog
     DECLARE_MESSAGE_MAP()
 public:
 
-	CPreviewImageDlg(void*& hEtronDI, DEVSELINFO& devSelInfo, const USHORT& devType, const USB_PORT_TYPE eUSB_Port_Type);   // standard constructor
+	CPreviewImageDlg(void*& hApcDI, DEVSELINFO& devSelInfo, const USHORT& devType, const USB_PORT_TYPE eUSB_Port_Type);   // standard constructor
 	virtual ~CPreviewImageDlg();
 
     enum { IDD = IDD_DIALOG_PREVIEW_IMAGE };
@@ -47,6 +47,7 @@ public:
 
     void SetFilterParam( DepthfilterParam& xDfParam );
     void EnableAccuracy( const BOOL bEnableAccuracy );
+	BOOL IsDevicePid(const int pid);
 
     afx_msg LRESULT OnSnapshot(WPARAM wParam, LPARAM lParam);
     afx_msg void OnBnClickedPreviewBtn();
@@ -83,9 +84,9 @@ private:
     void PreparePreviewDlg();
     void InitPreviewDlgPos();
     void CloseDeviceAndStopPreview(CDialog* pCallerDlg);
-    static void ImgCallback(EtronDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+    static void ImgCallback(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
         int width, int height, int serialNumber, void* pParam);
-	void ProcessImgCallback(EtronDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+	void ProcessImgCallback(ApcDIImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
 		int width, int height, int serialNumber);
 
     BOOL IsStream0ColorPlusDepth();
@@ -101,7 +102,6 @@ private:
     static DWORD __stdcall Thread_Preview( void* pvoid );
     void UpdateUIForDemo();
     bool IsSupportHwPostProc() const;
-    BOOL IsDevicePid( const int pid );
 	void EnableIR(bool enable);
 	void InitIR();
     void InitDepthROI();
@@ -120,11 +120,11 @@ private:
 	int getRectifyLogData(eSPCtrl_RectLogData* rectifyLog,int index);
 	int getRectifyLogDataSlave(eSPCtrl_RectLogData* rectifyLog, int index);
 
-	void SaveDepthYuv(std::vector<unsigned char> bufDepth, EtronDIImageType::Value depthImageType, int widthDepth, int heightDepth, const char* pFileName);
+	void SaveDepthYuv(std::vector<unsigned char> bufDepth, ApcDIImageType::Value depthImageType, int widthDepth, int heightDepth, const char* pFileName);
 	void SaveDepthGrayBmp(int DepthNum, const char* pFileName);
 	void SaveDepthColorBmp(int DepthNum, const char* pFileName);
-	void DepthFusionBmp(EtronDIImageType::Value depthImageType);
-	//bool CPreviewImageDlg::usePlyFilter(EtronDIImageType::Value depthImageType);
+	void DepthFusionBmp(ApcDIImageType::Value depthImageType);
+	//bool CPreviewImageDlg::usePlyFilter(ApcDIImageType::Value depthImageType);
 	static UINT DoSnapshot(LPVOID lpParam);//CPreviewImageDlg* pThis, WORD irValue, float zFar);
 
 	void InitAutoModuleSync();
@@ -159,7 +159,7 @@ private:
 		int m_kcolorOption;
         bool m_360ModeEnabled;
 		CPreviewItem m_depthInforPreview;
-        CPreviewItem m_depthPreview[ETronDI_MAX_DEPTH_STREAM_COUNT];
+        CPreviewItem m_depthPreview[APC_MAX_DEPTH_STREAM_COUNT];
         CPreviewItem m_depthFusionPreview;
         std::vector<unsigned char> m_depthFusionSelectedIndex;
         bool m_showFusionSelectedDlg;
@@ -173,32 +173,32 @@ private:
         WORD m_depthType;				//bits of depth data
         bool m_rectifyData;
         float m_camFocus;
-		eSPCtrl_RectLogData* m_rectifyLogData[ETronDI_MAX_DEPTH_STREAM_COUNT] = {nullptr}; //support 3 max rectify log
+		eSPCtrl_RectLogData* m_rectifyLogData[APC_MAX_DEPTH_STREAM_COUNT] = {nullptr}; //support 3 max rectify log
 		eSPCtrl_RectLogData* m_rectifyLogDataSlave =  nullptr ; //slave
 		CPointCloudViewer *m_pointCloudViewer;
         std::vector<float> m_baselineDist;
     };
-    void*& m_hEtronDI;
+    void*& m_hApcDI;
     DEVSELINFO& m_DevSelInfo;
     const USHORT& m_DevType;
     int m_iInterLeaveModeFPS;
 	int m_kcolorStreamOptionCount;
 	int m_tcolorStreamOptionCount;
     int m_colorStreamOptionCount;
-	ETRONDI_STREAM_INFO m_pStreamKColorInfo[ETronDI_MAX_STREAM_COUNT];
-	ETRONDI_STREAM_INFO m_pStreamTColorInfo[ETronDI_MAX_STREAM_COUNT];
-    ETRONDI_STREAM_INFO m_pStreamColorInfo[ETronDI_MAX_STREAM_COUNT];
+	APC_STREAM_INFO m_pStreamKColorInfo[APC_MAX_STREAM_COUNT];
+	APC_STREAM_INFO m_pStreamTColorInfo[APC_MAX_STREAM_COUNT];
+    APC_STREAM_INFO m_pStreamColorInfo[APC_MAX_STREAM_COUNT];
 	int m_kdepthStreamOptionCount;
 	int m_tdepthStreamOptionCount;
     int m_depthStreamOptionCount;
     int m_ZFar;
     int m_ZNear;
-	ETRONDI_STREAM_INFO m_pStreamKDepthInfo[ETronDI_MAX_STREAM_COUNT];
-	ETRONDI_STREAM_INFO m_pStreamTDepthInfo[ETronDI_MAX_STREAM_COUNT];
-    ETRONDI_STREAM_INFO m_pStreamDepthInfo[ETronDI_MAX_STREAM_COUNT];
+	APC_STREAM_INFO m_pStreamKDepthInfo[APC_MAX_STREAM_COUNT];
+	APC_STREAM_INFO m_pStreamTDepthInfo[APC_MAX_STREAM_COUNT];
+    APC_STREAM_INFO m_pStreamDepthInfo[APC_MAX_STREAM_COUNT];
     CPreviewParams m_previewParams;
     std::pair<WORD, WORD> m_irRange;
-    void AdjustZDTableIndex(int *pzdTblIdx, int width, int height, EtronDIImageType::Value DImgType);
+    void AdjustZDTableIndex(int *pzdTblIdx, int width, int height, ApcDIImageType::Value DImgType);
 	void AdjustColorResForDepth0(CPoint*colorRealRes);
 	void AdjustRegister();
     void AdjustNearFar( int& zFar, int& zNear, CDepthDlg* pDlg );

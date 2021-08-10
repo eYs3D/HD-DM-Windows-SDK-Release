@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "RegisterAccessDlg.h"
 #include "mmsystem.h"
 
@@ -18,9 +18,9 @@ const size_t maxRecentUpdateTimeQueueSize = 101;
 
 IMPLEMENT_DYNAMIC(CRegisterAccessDlg, CDialog)
 
-CRegisterAccessDlg::CRegisterAccessDlg(void*& hEtronDI, DEVSELINFO& devSelInfo, CWnd* pParent /*=NULL*/)
+CRegisterAccessDlg::CRegisterAccessDlg(void*& hApcDI, DEVSELINFO& devSelInfo, CWnd* pParent /*=NULL*/)
 	: CDialog(IDD_DIALOG_REGISTER_ACCESS, pParent), 
-    m_hEtronDI(hEtronDI), m_devSelInfo(devSelInfo), m_hTimerQueue(nullptr), m_hTimer(nullptr)
+    m_hApcDI(hApcDI), m_devSelInfo(devSelInfo), m_hTimerQueue(nullptr), m_hTimer(nullptr)
 {
 
 }
@@ -148,17 +148,17 @@ void CRegisterAccessDlg::ReadRegisterData(UINT regType, unsigned short address, 
     {
     case IDC_RADIO_I2C:
     {
-        EtronDI_GetSensorRegister(m_hEtronDI, &m_devSelInfo, id, address, &value, flag, sensorMode);
+        APC_GetSensorRegister(m_hApcDI, &m_devSelInfo, id, address, &value, flag, sensorMode);
         break;
     }
     case IDC_RADIO_ASIC:
     {
-        EtronDI_GetHWRegister(m_hEtronDI, &m_devSelInfo, address, &value, flag);
+        APC_GetHWRegister(m_hApcDI, &m_devSelInfo, address, &value, flag);
         break;
     }
     case IDC_RADIO_FW:
     {
-        EtronDI_GetFWRegister(m_hEtronDI, &m_devSelInfo, address, &value, flag);
+        APC_GetFWRegister(m_hApcDI, &m_devSelInfo, address, &value, flag);
         break;
     }
     default:
@@ -209,13 +209,13 @@ void CRegisterAccessDlg::GetAndShowGyroData(bool periodicVersion, int GyroCase)
     {
         unsigned short GyroLen;
 		
-        int nRet = EtronDI_GetFlexibleGyroLength(m_hEtronDI, &m_devSelInfo, &GyroLen);
-        if (nRet != ETronDI_OK)
+        int nRet = APC_GetFlexibleGyroLength(m_hApcDI, &m_devSelInfo, &GyroLen);
+        if (nRet != APC_OK)
         {
             MessageBox(L"Read Gyro Data Failed !");
             return;
         }
-        EtronDI_GetFlexibleGyroData(m_hEtronDI, &m_devSelInfo, GyroLen, buf);
+        APC_GetFlexibleGyroData(m_hApcDI, &m_devSelInfo, GyroLen, buf);
         frameCount = *((unsigned short*)&buf[0]);
         xValue = *((unsigned short*)&buf[2]);
         yValue = *((unsigned short*)&buf[4]);
@@ -228,7 +228,7 @@ void CRegisterAccessDlg::GetAndShowGyroData(bool periodicVersion, int GyroCase)
 /*
 	unsigned char buf[256] = {0};
 	char dump[1024];
-	EtronDI_GetFlexibleGyroData(m_hEtronDI, &m_devSelInfo, 142, buf);
+	APC_GetFlexibleGyroData(m_hApcDI, &m_devSelInfo, 142, buf);
 	for (int i = 0; i < 142; i++)
 		{
 		sprintf(dump+i*3, "%02x ",buf[i]);
@@ -438,17 +438,17 @@ void CRegisterAccessDlg::WriteRegisterData(UINT regType, unsigned short address,
     {
     case IDC_RADIO_I2C:
     {
-        EtronDI_SetSensorRegister(m_hEtronDI, &m_devSelInfo, id, address, value, flag, sensorMode);
+        APC_SetSensorRegister(m_hApcDI, &m_devSelInfo, id, address, value, flag, sensorMode);
         break;
     }
     case IDC_RADIO_ASIC:
     {
-        EtronDI_SetHWRegister(m_hEtronDI, &m_devSelInfo, address, value, flag);
+        APC_SetHWRegister(m_hApcDI, &m_devSelInfo, address, value, flag);
         break;
     }
     case IDC_RADIO_FW:
     {
-        EtronDI_SetFWRegister(m_hEtronDI, &m_devSelInfo, address, value, flag);
+        APC_SetFWRegister(m_hApcDI, &m_devSelInfo, address, value, flag);
         break;
     }
     default:
@@ -462,23 +462,23 @@ int CRegisterAccessDlg::GetSensorMode() const
     {
         if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_RADIO_SENSOR1))->GetCheck())
         {
-            return EtronDI_SensorMode::Sensor1;
+            return APC_SensorMode::Sensor1;
         }
         else if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_RADIO_SENSOR2))->GetCheck())
         {
-            return EtronDI_SensorMode::Sensor2;
+            return APC_SensorMode::Sensor2;
         }
         else if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_RADIO_SENSOR3))->GetCheck())
         {
-            return EtronDI_SensorMode::Sensor3;
+            return APC_SensorMode::Sensor3;
         }
         else if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_RADIO_SENSOR4))->GetCheck())
         {
-            return EtronDI_SensorMode::Sensor4;
+            return APC_SensorMode::Sensor4;
         }
         else if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_RADIO_SENSOR_ALL))->GetCheck())
         {
-            return EtronDI_SensorMode::SensorAll;
+            return APC_SensorMode::SensorAll;
         }
     }
 

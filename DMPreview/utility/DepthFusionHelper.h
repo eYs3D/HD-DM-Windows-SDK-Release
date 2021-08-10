@@ -22,14 +22,14 @@ public:
     virtual ~CDepthMergeWrapper();
 
     int DepthMerge(unsigned char** inDepth, unsigned char* outDepth, unsigned char* selectedIndex = nullptr);
-    void SetSDKHandle( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo );
+    void SetSDKHandle( void *pHandleApcDI, PDEVSELINFO pDevSelInfo );
 
 private:
     int m_depthCount;
     int m_width;
     int m_height;
     float m_focus;
-    void * m_pHandleEtronDI;
+    void * m_pHandleApcDI;
     PDEVSELINFO m_pDevSelInfo;
     std::vector<float> m_outDepth;
     std::vector<unsigned char> m_flag;
@@ -56,7 +56,7 @@ public:
     void UpdateColorData(int serialNumber, unsigned char* colorBuf, size_t colorSize);// yuy2
     void UpdateDepthData(int depthId, int serialNumber, unsigned char* depthBuf, size_t depthSize);// id is 0-base
     void EnablePostProc(bool enable);
-    void SetSDKHandle( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo );
+    void SetSDKHandle( void *pHandleApcDI, PDEVSELINFO pDevSelInfo );
 
 private:
     class DataItem

@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "DepthDlg.h"
 #include "DistanceAccuracyDlg.h"
 
@@ -26,13 +26,13 @@ BEGIN_MESSAGE_MAP( DistanceAccuracyDlg, CDialogEx )
     ON_EN_CHANGE( IDC_ED_GROUNDTRUTH, &DistanceAccuracyDlg::OnEnChangeEdGroundtruth )
     ON_WM_DESTROY()
     ON_CBN_SELCHANGE(IDC_CB_DEPTHLIST, &DistanceAccuracyDlg::OnCbnSelchangeCbDepthlist)
-	ON_BN_CLICKED(IDC_BUTTON1, &DistanceAccuracyDlg::OnBnClickedButton1)
 	ON_WM_HSCROLL()
+	ON_BN_CLICKED(IDC_BUTTON_ADJUST_FOCAL_LENGTH, &DistanceAccuracyDlg::OnBnClickedButtonAdjustFocalLength)
 END_MESSAGE_MAP()
 
-DistanceAccuracyDlg::DistanceAccuracyDlg( void*& hEtronDI, DEVSELINFO& devSelInfo, CPreviewImageDlg* pPreviewDlg ) : 
+DistanceAccuracyDlg::DistanceAccuracyDlg( void*& hApcDI, DEVSELINFO& devSelInfo, CPreviewImageDlg* pPreviewDlg ) : 
 	CDialogEx( IDD_DLG_DISTANCE_ACCURACY, NULL ),
-	m_hEtronDI(hEtronDI),
+	m_hApcDI(hApcDI),
 	m_devSelInfo(devSelInfo),
     m_pPreviewDlg( pPreviewDlg ),
     m_bEnable( FALSE ),
@@ -79,6 +79,9 @@ BOOL DistanceAccuracyDlg::OnInitDialog()
     pDepthList->SetCurSel( NULL );
 
 	((CSliderCtrl*)GetDlgItem(IDC_SLIDER_PIXEL_UNIT))->SetRange(0, 10, true);
+
+	bool bAujustingFocalLengthVisible = m_pPreviewDlg->IsDevicePid(APC_PID_8062);
+	GetDlgItem(IDC_BUTTON_ADJUST_FOCAL_LENGTH)->EnableWindow(bAujustingFocalLengthVisible ? SW_SHOW : SW_HIDE);
 
     OnCbnSelchangeCbInterest();
 
@@ -641,23 +644,13 @@ void DistanceAccuracyDlg::Thread_UpdateTemporalNoise( void* )
     }
 }
 
-void DistanceAccuracyDlg::OnBnClickedButton1()
-{
-	// TODO: Add your control notification handler code here
-	int PixelUnit = ((CSliderCtrl*)GetDlgItem(IDC_SLIDER_PIXEL_UNIT))->GetPos() * -1;
-	EtronDI_AdjustFocalLength(m_hEtronDI, &m_devSelInfo, m_Width, m_Height, PixelUnit);
-
-	UpdatePixelUnit();
-	UpdateFocalLength();
-}
-
 void DistanceAccuracyDlg::UpdatePixelUnit()
 {
 	int PixelUnit = 0;
 
 	int LeftFx, LeftFy, RightFx, RightFy;
 
-	if (ETronDI_OK != EtronDI_GetFlashFocalLength(m_hEtronDI, &m_devSelInfo,
+	if (APC_OK != APC_GetFlashFocalLength(m_hApcDI, &m_devSelInfo,
 												  m_Width, m_Height,
 												  &LeftFx, &LeftFy, &RightFx, &RightFy,
 												  &PixelUnit)) 
@@ -674,7 +667,7 @@ void DistanceAccuracyDlg::UpdatePixelUnit()
 void DistanceAccuracyDlg::UpdateFocalLength()
 {
 	int LeftFx, LeftFy, RightFx, RightFy;
-	if (ETronDI_OK != EtronDI_GetDeviceFocalLength(m_hEtronDI, &m_devSelInfo,
+	if (APC_OK != APC_GetDeviceFocalLength(m_hApcDI, &m_devSelInfo,
 		&LeftFx, &LeftFy, &RightFx, &RightFy) )
 	{
 		return;
@@ -705,4 +698,15 @@ void DistanceAccuracyDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScroll
 	}
 	break;
 	}
+}
+
+
+void DistanceAccuracyDlg::OnBnClickedButtonAdjustFocalLength()
+{
+	// TODO: Add your control notification handler code here
+	int PixelUnit = ((CSliderCtrl*)GetDlgItem(IDC_SLIDER_PIXEL_UNIT))->GetPos() * -1;
+	APC_AdjustFocalLength(m_hApcDI, &m_devSelInfo, m_Width, m_Height, PixelUnit);
+
+	UpdatePixelUnit();
+	UpdateFocalLength();
 }

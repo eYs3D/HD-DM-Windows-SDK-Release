@@ -74,14 +74,14 @@ bool CImgManipulator::ImgRotate90(
 	}
 #endif
 
-	if (ETronDI_PID_8054 == devicePid || ETronDI_PID_8040S == devicePid) {
+	if (APC_PID_8054 == devicePid || APC_PID_8040S == devicePid) {
 		unsigned char *ptr = src;
 		for (int i = 0; i < height; i++) {
 			memcpy(&m_tempBuffer[0] + i*squareEdge*bytesPerPixel, ptr, width*bytesPerPixel);
 			ptr += width*bytesPerPixel;
 		}
 	}
-	else if(ETronDI_PID_8040W == devicePid) {
+	else if(APC_PID_8040W == devicePid) {
 		memcpy(&m_tempBuffer[0], src, width * height * bytesPerPixel);
 	}
 
@@ -118,7 +118,7 @@ bool CImgManipulator::ImgRotate90(
 	}
 #endif
 
-	if (ETronDI_PID_8054 == devicePid || ETronDI_PID_8040S == devicePid) {
+	if (APC_PID_8054 == devicePid || APC_PID_8040S == devicePid) {
 		if (nChipID == 0x15)
 		{
 			ret = eys::img_alter::Img_Crop_CV(squareEdge, squareEdge,
@@ -136,7 +136,7 @@ bool CImgManipulator::ImgRotate90(
 				bytesPerPixel, &m_tempBuffer[0], &m_tempBuffer[0]);
 		}
 	}
-	else if(ETronDI_PID_8040W == devicePid) {
+	else if(APC_PID_8040W == devicePid) {
 		ret = eys::img_alter::Img_Crop_CV(squareEdge, squareEdge,
 			clockwise ? squareEdge - height : 0, 0,
 			clockwise ? squareEdge - 1 : height - 1, clockwise ? squareEdge - 1 : width - 1,

@@ -13,7 +13,7 @@ class CRegisterAccessDlg : public CDialog
 	DECLARE_DYNAMIC(CRegisterAccessDlg)
 
 public:
-	CRegisterAccessDlg(void*& hEtronDI, DEVSELINFO& devSelInfo, CWnd* pParent = NULL);   // standard constructor
+	CRegisterAccessDlg(void*& hApcDI, DEVSELINFO& devSelInfo, CWnd* pParent = NULL);   // standard constructor
 	virtual ~CRegisterAccessDlg();
 
 	enum { IDD = IDD_DIALOG_REGISTER_ACCESS };
@@ -104,7 +104,7 @@ private:
     };
 
 private:
-    void*& m_hEtronDI;
+    void*& m_hApcDI;
     DEVSELINFO& m_devSelInfo;
     PeriodicReadParams m_periodicReadParams;
     HANDLE m_hTimerQueue;

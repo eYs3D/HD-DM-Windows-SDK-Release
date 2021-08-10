@@ -17,7 +17,7 @@ public:
 
     enum { IDD = IDD_AEAWB_PROPERTY_DIALOG };
 
-	AEAWB_PropertyDlg( void*& hEtronDI, DEVSELINFO& devSelInfo, const DEVINFORMATIONEX& devinfoEx, CWnd* pParent );
+	AEAWB_PropertyDlg( void*& hApcDI, DEVSELINFO& devSelInfo, const DEVINFORMATIONEX& devinfoEx, CWnd* pParent );
 	virtual ~AEAWB_PropertyDlg();
 
     void ReadProperty();
@@ -47,7 +47,7 @@ private:
 	void EnableUI_LLC(BOOL enable);
 	void UpdateUI_LLC(long value);
 
-	void*&            m_hEtronDI;
+	void*&            m_hApcDI;
 	DEVSELINFO&       m_DevSelInfo;
     const DEVINFORMATIONEX& m_xDevinfoEx;
 	CComboBox*        m_pComboBox;

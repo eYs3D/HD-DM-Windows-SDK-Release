@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "WaitDlg.h"
 
 IMPLEMENT_DYNAMIC( WaitDlg, CDialogEx )

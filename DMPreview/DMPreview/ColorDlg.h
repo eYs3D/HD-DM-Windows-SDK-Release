@@ -21,8 +21,8 @@ public:
     virtual BOOL OnInitDialog();
 
     void SetDlgName(std::string name);
-    void SetColorParams( void* hEtronDI, const DEVSELINFO& devSelInfo, const int imgWidth, const int imgHeight, const BOOL isLRD_Mode, const CPoint& cpDepth );
-    void SetHandle( void* hEtronDI, const DEVSELINFO& devSelInfo );
+    void SetColorParams( void* hApcDI, const DEVSELINFO& devSelInfo, const int imgWidth, const int imgHeight, const BOOL isLRD_Mode, const CPoint& cpDepth );
+    void SetHandle( void* hApcDI, const DEVSELINFO& devSelInfo );
     bool GetImage(std::vector<unsigned char>& imgBuf, int& width, int& height, int& serialNumber);
     void EnableRotate( const BOOL bRotate );
     void ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum);
@@ -33,7 +33,7 @@ private:
     virtual void OnCancel();
 
     void ShowImage( CDC& dc );
-    void *m_hEtronDI;
+    void *m_hApcDI;
     DEVSELINFO m_DevSelInfo;
     BOOL m_mouseTracking;
     LARGE_INTEGER m_liPerfFreq;
@@ -59,7 +59,7 @@ private:
     LPBITMAPINFO m_BmpInfo;  
     CPoint m_cpDepth;
     BOOL m_bRotate;
-    EtronDIImageType::Value m_eImageType;
+    ApcDIImageType::Value m_eImageType;
 
     float UpdateAndGetFramerate();
     void Thread_ShowImage();

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "AudioDlg.h"
 #include "afxdialogex.h"
 #include "../utility/audioCapture.h"

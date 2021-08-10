@@ -14,7 +14,7 @@ public:
 
     enum { IDD = IDD_DLG_DISTANCE_ACCURACY };
 
-	DistanceAccuracyDlg( void*& hEtronDI, DEVSELINFO& devSelInfo, CPreviewImageDlg* pPreviewDlg );
+	DistanceAccuracyDlg( void*& hApcDI, DEVSELINFO& devSelInfo, CPreviewImageDlg* pPreviewDlg );
 	virtual ~DistanceAccuracyDlg();
 
     void UpdateDepthMap( const int Width, const int Height, CDepthDlg* pDepthDlg );
@@ -70,7 +70,7 @@ private:
 
 	void SortZ(std::vector< WORD > &vecDepthZ, double dblDeleteBoundaryRatio = 0.005);
 
-	void*& m_hEtronDI;
+	void*& m_hApcDI;
 	DEVSELINFO& m_devSelInfo;
 
 	CString m_csPixelUnit;
@@ -88,6 +88,6 @@ private:
     afx_msg void    OnDestroy();
     afx_msg void    OnCbnSelchangeCbDepthlist();
 public:
-	afx_msg void OnBnClickedButton1();
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnBnClickedButtonAdjustFocalLength();
 };

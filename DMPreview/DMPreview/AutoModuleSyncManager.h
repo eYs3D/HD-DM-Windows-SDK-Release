@@ -64,9 +64,9 @@ private:
 
 	bool IsModuleSyncSupport(unsigned short pid)
 	{
-		return ETronDI_PID_8053 == pid ||
-			   ETronDI_PID_8059 == pid || 
-			   ETronDI_PID_8062 == pid ;
+		return APC_PID_8053 == pid ||
+			   APC_PID_8059 == pid || 
+			   APC_PID_8062 == pid ;
 	}
 
 	void SetMasterDeviceSerialNumber(wchar_t *pSerialNumber, bool bSaveConfig = true);
@@ -79,7 +79,7 @@ private:
 	DEVSELINFO m_masterDevice = { -1 };
 
 	std::map<int, bool> m_mapModuleFrameStart;
-	std::map<int, void*> m_maphEtronDI;
+	std::map<int, void*> m_maphApcDI;
 
 	std::vector<DEVSELINFO> m_vecModuleSyncDevice;
 	std::vector<DEVINFORMATIONEX> m_vecDevInfo;

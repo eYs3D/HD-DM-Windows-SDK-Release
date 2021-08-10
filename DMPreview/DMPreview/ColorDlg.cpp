@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "ColorDlg.h"
 #include "WmMsgDef.h"
 
@@ -26,7 +26,7 @@ CColorDlg::CColorDlg(CWnd* pParent /*=NULL*/)
     m_bRotate = FALSE;
     m_bRun = FALSE;
     m_bImageArrival = FALSE;
-    m_eImageType = EtronDIImageType::IMAGE_UNKNOWN;
+    m_eImageType = ApcDIImageType::IMAGE_UNKNOWN;
     m_pShowImage = nullptr;
 
     m_cpDepth.SetPoint( NULL, NULL );
@@ -60,9 +60,9 @@ void CColorDlg::SetDlgName(std::string name)
     m_dlgName = CString(name.c_str());
 }
 
-void CColorDlg::SetColorParams( void* hEtronDI, const DEVSELINFO& devSelInfo, const int imgWidth, const int imgHeight, const BOOL isLRD_Mode, const CPoint& cpDepth )
+void CColorDlg::SetColorParams( void* hApcDI, const DEVSELINFO& devSelInfo, const int imgWidth, const int imgHeight, const BOOL isLRD_Mode, const CPoint& cpDepth )
 {
-    SetHandle( hEtronDI, devSelInfo );
+    SetHandle( hApcDI, devSelInfo );
 
     m_nColorResWidth = imgWidth; 
     m_nColorResHeight = imgHeight;
@@ -70,9 +70,9 @@ void CColorDlg::SetColorParams( void* hEtronDI, const DEVSELINFO& devSelInfo, co
     m_IsLRD_Mode = isLRD_Mode;
 }
 
-void CColorDlg::SetHandle( void* hEtronDI, const DEVSELINFO& devSelInfo )
+void CColorDlg::SetHandle( void* hApcDI, const DEVSELINFO& devSelInfo )
 {
-    m_hEtronDI = hEtronDI;
+    m_hApcDI = hApcDI;
     m_DevSelInfo.index = devSelInfo.index;
 }
 
@@ -154,13 +154,13 @@ void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutp
         {
             memcpy( &m_vecRGBImageBuf[ NULL ], pColorBuf, *dataSize );
 
-            m_eImageType = EtronDIImageType::COLOR_RGB24;
+            m_eImageType = ApcDIImageType::COLOR_RGB24;
         }
         else
         {
             memcpy( &m_vecRawImageBuf[ NULL ], pColorBuf, *dataSize );
 
-            m_eImageType = bIsMJPEG ? EtronDIImageType::COLOR_MJPG : EtronDIImageType::COLOR_YUY2;
+            m_eImageType = bIsMJPEG ? ApcDIImageType::COLOR_MJPG : ApcDIImageType::COLOR_YUY2;
         }
         m_imgSerialNumber = nColorSerialNum;
 
@@ -176,7 +176,7 @@ void CColorDlg::Thread_ShowImage()
 {
     std::vector< BYTE > vecRawImageBuf;
 
-    EtronDIImageType::Value eImageType = EtronDIImageType::IMAGE_UNKNOWN;
+    ApcDIImageType::Value eImageType = ApcDIImageType::IMAGE_UNKNOWN;
 
     CDC* pDC = GetDC();
 
@@ -198,7 +198,7 @@ void CColorDlg::Thread_ShowImage()
         {
             {
                 std::unique_lock< std::mutex > lock( m_imgBufMutex );
-                if ( ETronDI_OK != EtronDI_ColorFormat_to_RGB24( m_hEtronDI, 
+                if ( APC_OK != APC_ColorFormat_to_RGB24( m_hApcDI, 
                                                                  &m_DevSelInfo,
                                                                  &m_vecRGBImageBuf[ NULL ],
                                                                  &vecRawImageBuf[ NULL ],
@@ -207,7 +207,7 @@ void CColorDlg::Thread_ShowImage()
                                                                  m_nColorResHeight,
                                                                  eImageType ) )
                 {
-                    TRACE( "EtronDI_ColorFormat_to_RGB24 fail\n" );
+                    TRACE( "APC_ColorFormat_to_RGB24 fail\n" );
                 }
             }
             ShowImage( *pDC );

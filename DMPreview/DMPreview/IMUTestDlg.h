@@ -49,6 +49,7 @@ struct SetFeatureDATA_Item {
 	int nDataLength;
 };
 
+class CPreviewImageDlg;
 class IMUTestDlg : public CDialog
 {
 	DECLARE_DYNAMIC(IMUTestDlg)
@@ -56,7 +57,7 @@ class IMUTestDlg : public CDialog
 
 public:
 	//IMUTestDlg( const wchar_t* SN, const BOOL bIs9Axis, CWnd* pParent );
-	IMUTestDlg(const wchar_t* SN, void*& hEtronDI, DEVSELINFO& devSelInfo, ModeConfig::IMU_TYPE imu_type, CWnd* pParent);
+	IMUTestDlg(const wchar_t* SN, void*& hApcDI, DEVSELINFO& devSelInfo, ModeConfig::IMU_TYPE imu_type, CWnd* pParent, CPreviewImageDlg* pPreviewDlg);
     virtual ~IMUTestDlg();
 
 	//int initIMU();
@@ -78,9 +79,9 @@ public:
 	bool m_bIsDeviceMappingIMU;
 	bool Is9axis();
 	int IMU_SetHWRegister();
-	void*& m_hEtronDI;
+	void*& m_hApcDI;
 	DEVSELINFO& m_DevSelInfo;
-	void IMU_Device_Reopen(void*& hEtronDI, DEVSELINFO& devSelInfo);
+	void IMU_Device_Reopen(void*& hApcDI, DEVSELINFO& devSelInfo);
 	void measureBeginQuaternion();
 
 	void IMUDataCallback(IMUData imu);
@@ -98,7 +99,7 @@ private:
         USHORT      VID;
         CString     SN;
     };
-	static int IMUfunc(IMUTestDlg * pThis, int nIndex_s_vecIMU);
+	static int IMUfunc(IMUTestDlg * pThis);
 	static int IMUCalibrationfunc(IMUTestDlg * pThis);
 
     static std::vector< IMU_INFO > s_vecIMU;
@@ -110,6 +111,8 @@ private:
 	CMutex m_mutex;
 	hid_device *handle = nullptr;
 	//hid_device *m_handle[MAX_DEVICE_IMU];
+
+	CPreviewImageDlg *m_pPreviewDlg;
 
 	//std::thread *m_IMUThread = nullptr;
 	std::thread *m_IMUThread[MAX_DEVICE_IMU];

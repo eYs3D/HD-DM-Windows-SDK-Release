@@ -34,7 +34,7 @@ public:
 	void ChangeIMU_UI_FrameCount_SerialCount(bool enableModuleSync);
 	int IMU_Device_Mapping();
 	void Update_IMU_Device_Mapping();
-	void IMU_Device_Reopen(void*& hEtronDI, DEVSELINFO& devSelInfo);
+	void IMU_Device_Reopen(void*& hApcDI, DEVSELINFO& devSelInfo);
 	bool m_bIMU_Device_Sync;
 private:
 
@@ -49,7 +49,7 @@ private:
     void InitModuleInformation();
     void GetFWVersion();
 
-    void *m_hEtronDI;
+    void *m_hApcDI;
     DEVSELINFO m_DevSelInfo; 
     const DEVINFORMATIONEX* m_pDevInfo;
 

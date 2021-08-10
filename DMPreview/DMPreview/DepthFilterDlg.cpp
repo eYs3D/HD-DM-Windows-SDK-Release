@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "PreviewImageDlg.h"
 #include "DepthFilterDlg.h"
 #include "DepthDlg.h"
@@ -54,7 +54,9 @@ BOOL DepthFilterDlg::OnInitDialog()
     m_oSampleMode.AddString( L"0" );
     m_oSampleMode.AddString( L"1" );
 
-    ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck( BST_CHECKED );
+    // Disable the depth filter as default
+    ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck(BST_UNCHECKED);
+
     ( ( CButton* )GetDlgItem( IDC_CHK_MIN ) )->SetCheck( BST_CHECKED );
 
 	if (AutoModuleSyncManager::GetInstance()->IsAutoModuleSyncEnabled()) {
@@ -146,7 +148,7 @@ void DepthFilterDlg::OnBnClickedChkFilterEnable()
     {
         EnableControl( bEnable );
 
-        if ( ETronDI_PID_8029 == m_PID )
+        if ( APC_PID_8029 == m_PID )
         {
             ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck( BST_CHECKED );
             ( ( CButton* )GetDlgItem( IDC_CHK_REMOVECURVE ) )->SetCheck( BST_CHECKED );
@@ -232,7 +234,7 @@ void DepthFilterDlg::FullMinConfig( const BOOL bEnable, const BOOL bEnableRemove
 
     if ( bEnable ) DefaultSetting();
 
-    if ( ETronDI_PID_8029 == m_PID )
+    if ( APC_PID_8029 == m_PID )
     {
         ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck( BST_CHECKED );
         ( ( CButton* )GetDlgItem( IDC_CHK_REMOVECURVE ) )->SetCheck( BST_CHECKED );

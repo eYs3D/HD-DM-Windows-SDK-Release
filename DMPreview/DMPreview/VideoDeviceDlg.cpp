@@ -1,8 +1,8 @@
 
 #include "stdafx.h"
-#include "EtronDI_Test.h"
+#include "APC_Test.h"
 #include "VideoDeviceDlg.h"
-#include "EtronDI_TestDlg.h"
+#include "APC_TestDlg.h"
 #include "AEAWB_PropertyDlg.h"
 #include "AudioDlg.h"
 #include "PreviewImageDlg.h"
@@ -21,9 +21,9 @@ void onDeviceEventFn(UINT pid, UINT vid, BOOL bAttached, void* pUserData)
 	CString szMessage;
 
 	if(bAttached)
-		szMessage.Format(_T("Device PID=0x%X, VID=0x%X attached.\nYou can call EtronDI_Init2 to initialize the SDK and call EtronDI_OpenEx2 to open the device."), pid, vid, bAttached);
+		szMessage.Format(_T("Device PID=0x%X, VID=0x%X attached.\nYou can call APC_Init2 to initialize the SDK and call APC_OpenEx2 to open the device."), pid, vid, bAttached);
 	else
-		szMessage.Format(_T("Device PID=0x%X, VID=0x%X dettached\nYou can call EtronDI_Release to release resource allocated by the SDK."), pid, vid, bAttached);
+		szMessage.Format(_T("Device PID=0x%X, VID=0x%X dettached\nYou can call APC_Release to release resource allocated by the SDK."), pid, vid, bAttached);
 
 	::OutputDebugString( szMessage );//AfxMessageBox(szMessage);
 }
@@ -40,20 +40,20 @@ BEGIN_MESSAGE_MAP(CVideoDeviceDlg, CDialog)
 END_MESSAGE_MAP()
 
 CVideoDeviceDlg::CVideoDeviceDlg(CWnd* pParent, bool enableSDKLog)
-	: CDialog(CVideoDeviceDlg::IDD, pParent), m_hEtronDI(nullptr), m_pDevInfo( NULL ), m_bIMU_Device_Sync(false)
+	: CDialog(CVideoDeviceDlg::IDD, pParent), m_hApcDI(nullptr), m_pDevInfo( NULL ), m_bIMU_Device_Sync(false)
 {
-  /*EtronDI_Init2 can enable the auto-restart function and register USB device events */
-  EtronDI_Init2(&m_hEtronDI, enableSDKLog, false); 
-  if (m_hEtronDI)
-	  EtronDI_RegisterDeviceEvents(m_hEtronDI, onDeviceEventFn, this);
+  /*APC_Init2 can enable the auto-restart function and register USB device events */
+  APC_Init2(&m_hApcDI, enableSDKLog, false); 
+  if (m_hApcDI)
+	  APC_RegisterDeviceEvents(m_hApcDI, onDeviceEventFn, this);
 } 
 
 CVideoDeviceDlg::~CVideoDeviceDlg()
 {
-    if (m_hEtronDI != nullptr)
+    if (m_hApcDI != nullptr)
     {
-        EtronDI_Release(&m_hEtronDI);
-        m_hEtronDI = nullptr;
+        APC_Release(&m_hApcDI);
+        m_hApcDI = nullptr;
     }
 }
 
@@ -144,16 +144,16 @@ void CVideoDeviceDlg::InitChildDlg()
     DEVINFORMATIONEX xdevinfoEx;
     USB_PORT_TYPE eUSB_Port_Type = USB_PORT_TYPE_UNKNOW;
 
-    EtronDI_GetDevicePortType( m_hEtronDI, &m_DevSelInfo, &eUSB_Port_Type );
-    EtronDI_GetDeviceInfoEx( m_hEtronDI, &m_DevSelInfo , &xdevinfoEx );
+    APC_GetDevicePortType( m_hApcDI, &m_DevSelInfo, &eUSB_Port_Type );
+    APC_GetDeviceInfoEx( m_hApcDI, &m_DevSelInfo , &xdevinfoEx );
 
-	CPreviewImageDlg* previewDlg = new CPreviewImageDlg(m_hEtronDI, m_DevSelInfo, m_pDevInfo->nDevType, eUSB_Port_Type);
+	CPreviewImageDlg* previewDlg = new CPreviewImageDlg(m_hApcDI, m_DevSelInfo, m_pDevInfo->nDevType, eUSB_Port_Type);
 	previewDlg->m_pdlgVideoDeviceDlg = this;
     DepthFilterDlg* depthfilterDlg = new DepthFilterDlg(xdevinfoEx.wPID, eUSB_Port_Type, previewDlg);
-    const char* version = EtronDI_GetDepthFilterVersion(m_hEtronDI, &m_DevSelInfo);
+    const char* version = APC_GetDepthFilterVersion(m_hApcDI, &m_DevSelInfo);
     depthfilterDlg->setVersion(version);
 
-    AEAWB_PropertyDlg* aeAwbCtrlDlg = new AEAWB_PropertyDlg(m_hEtronDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
+    AEAWB_PropertyDlg* aeAwbCtrlDlg = new AEAWB_PropertyDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
 
 	previewDlg->SetDepthFilterDlg( depthfilterDlg );
 	previewDlg->SetPropertyDlg( aeAwbCtrlDlg );
@@ -170,9 +170,9 @@ void CVideoDeviceDlg::InitChildDlg()
     m_oTabPage.AddTab( depthfilterDlg, _T( "Depth Filter" ) );
     m_oTabPage.AddTab( aeAwbCtrlDlg, _T( "Property" ) );
 
-    DistanceAccuracyDlg* DAlg = new DistanceAccuracyDlg(m_hEtronDI, m_DevSelInfo, previewDlg );
+    DistanceAccuracyDlg* DAlg = new DistanceAccuracyDlg(m_hApcDI, m_DevSelInfo, previewDlg );
 	DAlg->Create(DAlg->IDD, &m_oTabPage);
-    DAlg->EnableDepthList( xdevinfoEx.wPID == ETronDI_PID_8038 );
+    DAlg->EnableDepthList( xdevinfoEx.wPID == APC_PID_8038 );
 	m_childDlg.push_back(DAlg);
     m_oTabPage.AddTab( DAlg, _T( "Accuracy" ) );
 
@@ -183,7 +183,7 @@ void CVideoDeviceDlg::InitChildDlg()
         wchar_t szBuf[ MAX_PATH ] = { NULL };
         GetDlgItemText( IDC_EDIT_SN, szBuf, MAX_PATH );
 		//IMUTestDlg* pIMUTestDlg = new IMUTestDlg( szBuf, ModeConfig::IMU_9Axis == g_ModeConfig.GetIMU_Type( xdevinfoEx.wPID ), &m_oTabPage );
-		IMUTestDlg* pIMUTestDlg = new IMUTestDlg(szBuf, m_hEtronDI, m_DevSelInfo, g_ModeConfig.GetIMU_Type(xdevinfoEx.wPID), &m_oTabPage);
+		IMUTestDlg* pIMUTestDlg = new IMUTestDlg(szBuf, m_hApcDI, m_DevSelInfo, g_ModeConfig.GetIMU_Type(xdevinfoEx.wPID), &m_oTabPage, previewDlg);
 		pIMUTestDlg->Create(pIMUTestDlg->IDD, &m_oTabPage);
 		pIMUTestDlg->startGetImuData();
 		pIMUTestDlg->PauseGetImuData( true );
@@ -191,7 +191,7 @@ void CVideoDeviceDlg::InitChildDlg()
         m_childDlg.push_back(pIMUTestDlg);
         m_oTabPage.AddTab(pIMUTestDlg, _T( "IMU" ) );
     }
-    if ( xdevinfoEx.wPID == ETronDI_PID_8060 )
+    if ( xdevinfoEx.wPID == APC_PID_8060 )
     {
 	    AudioDlg* audioDlg = new AudioDlg(&m_oTabPage);
 	    audioDlg->Create(audioDlg->IDD, &m_oTabPage);
@@ -199,7 +199,7 @@ void CVideoDeviceDlg::InitChildDlg()
         m_oTabPage.AddTab( audioDlg, _T( "Audio" ) );
     }
 
-	CRegisterAccessDlg* regAccessDlg = new CRegisterAccessDlg(m_hEtronDI, m_DevSelInfo, &m_oTabPage);
+	CRegisterAccessDlg* regAccessDlg = new CRegisterAccessDlg(m_hApcDI, m_DevSelInfo, &m_oTabPage);
 	regAccessDlg->Create(regAccessDlg->IDD, &m_oTabPage);
 	m_childDlg.push_back(regAccessDlg);
     m_oTabPage.AddTab( regAccessDlg, _T( "Register" ) );
@@ -226,7 +226,7 @@ void CVideoDeviceDlg::InitDefaultUI()
     unsigned short nVendorID = 0;
     CString csText;
   
-    if( EtronDI_GetPidVid( m_hEtronDI, &m_DevSelInfo, nProductID, &nVendorID ) == ETronDI_OK ) 
+    if( APC_GetPidVid( m_hApcDI, &m_DevSelInfo, nProductID, &nVendorID ) == APC_OK ) 
     {
         for ( int i = 0; i < 3; i++ )
         {
@@ -238,12 +238,12 @@ void CVideoDeviceDlg::InitDefaultUI()
         SetDlgItemText( IDC_EDIT_PID, csText );
         csText.Format( L"0x%04X", nVendorID  ); SetDlgItemText( IDC_EDIT_VID, csText );
     }
-    else AfxMessageBox(_T("EtronDI_GetPidVid failed !!"));
+    else AfxMessageBox(_T("APC_GetPidVid failed !!"));
 
     int nActualSNLenByByte = 0;
   
     wchar_t szBuf[ MAX_PATH ] = { NULL };
-    if( EtronDI_GetSerialNumber( m_hEtronDI, &m_DevSelInfo, ( BYTE* )szBuf, MAX_PATH, &nActualSNLenByByte) == ETronDI_OK )
+    if( APC_GetSerialNumber( m_hApcDI, &m_DevSelInfo, ( BYTE* )szBuf, MAX_PATH, &nActualSNLenByByte) == APC_OK )
     {
         //char* pStrSerialNumber = ( char* )malloc( nActualSNLenByByte / 2 + 1 );  
     
@@ -261,12 +261,12 @@ void CVideoDeviceDlg::InitDefaultUI()
         //    pStrSerialNumber = NULL;
         //}
     }
-    else AfxMessageBox( _T( "EtronDI_GetSerialNumber Failed !!" ) );
+    else AfxMessageBox( _T( "APC_GetSerialNumber Failed !!" ) );
 
 
-    GetDlgItem( IDC_SLAVECHK )->EnableWindow( nProductID[ 0 ] == ETronDI_PID_8060  ||
-                                              nProductID[ 0 ] == ETronDI_PID_8054  ||
-                                              nProductID[ 0 ] == ETronDI_PID_8040S );
+    GetDlgItem( IDC_SLAVECHK )->EnableWindow( nProductID[ 0 ] == APC_PID_8060  ||
+                                              nProductID[ 0 ] == APC_PID_8054  ||
+                                              nProductID[ 0 ] == APC_PID_8040S );
     InitChildDlg();
 }
 
@@ -276,7 +276,7 @@ void CVideoDeviceDlg::GetFWVersion()
 
     int nActualLength = 0;  
   
-    EtronDI_GetFwVersion(m_hEtronDI, &m_DevSelInfo, &szBuf[ 0 ], 256, &nActualLength);
+    APC_GetFwVersion(m_hApcDI, &m_DevSelInfo, &szBuf[ 0 ], 256, &nActualLength);
 
     char* pHasSecondFW = strchr( &szBuf[ 0 ], '\n' );
 
@@ -315,7 +315,7 @@ LRESULT CVideoDeviceDlg::OnChangeActiveTab( WPARAM wparam,LPARAM lparam )
 //void CVideoDeviceDlg::OnBnClickedFlashdataRead()
 //{
 //#ifdef ESPDI_EG
-//    AfxMessageBox(_T("EtronDI_GetRectifyTable NOT support !!"));
+//    AfxMessageBox(_T("APC_GetRectifyTable NOT support !!"));
 //    return;
 //#else
 //    FILE*   fp            = NULL;
@@ -349,118 +349,118 @@ LRESULT CVideoDeviceDlg::OnChangeActiveTab( WPARAM wparam,LPARAM lparam )
 //    }
 //    if( iSelect == SENSOR_OFFSET )
 //    {
-//	    if ( ETronDI_OK == EtronDI_GetSlaveYOffset( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_Y_OFFSET_FILE_SIZE, &nActualLength, index ) )
+//	    if ( APC_OK == APC_GetSlaveYOffset( m_hApcDI, &m_DevSelInfo, buffer, APC_Y_OFFSET_FILE_SIZE, &nActualLength, index ) )
 //        {
 //            csFileName.Format( L"FDATA_Offset_Slave_%d.bin", index );
 //
 //            WriteFile();
 //
-//            csMessage = _T( "EtronDI_GetYOffset Success !!" );
+//            csMessage = _T( "APC_GetYOffset Success !!" );
 //        }
 //	    /*Only EX8054 & 8040S Master need to Set write to AR0330 sensor*/   
-//	    if ( ETronDI_OK == EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, true ) )
+//	    if ( APC_OK == APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, true ) )
 //	    {
-//		    if ( ETronDI_OK == EtronDI_GetYOffset( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_Y_OFFSET_FILE_SIZE, &nActualLength, index ) )
+//		    if ( APC_OK == APC_GetYOffset( m_hApcDI, &m_DevSelInfo, buffer, APC_Y_OFFSET_FILE_SIZE, &nActualLength, index ) )
 //            {
 //                csFileName.Format( L"FDATA_Offset_ARO330_%d.bin", index );
 //
 //                WriteFile();
 //
-//                csMessage = _T( "EtronDI_GetYOffset Success !!" );
+//                csMessage = _T( "APC_GetYOffset Success !!" );
 //            }
-//		    EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, false );
+//		    APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, false );
 //	    }
-//	    nRet = EtronDI_GetYOffset( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_Y_OFFSET_FILE_SIZE, &nActualLength, index );
+//	    nRet = APC_GetYOffset( m_hApcDI, &m_DevSelInfo, buffer, APC_Y_OFFSET_FILE_SIZE, &nActualLength, index );
 //    
-//        if ( csMessage.IsEmpty() ) csMessage = _T( "EtronDI_GetYOffset Failed !!" );
+//        if ( csMessage.IsEmpty() ) csMessage = _T( "APC_GetYOffset Failed !!" );
 //
-//        if ( ETronDI_OK == nRet )
+//        if ( APC_OK == nRet )
 //        {
 //            csFileName.Format( L"FDATA_Offset_%d.bin", index );
 //
-//            csMessage = _T( "EtronDI_GetYOffset Success !!" );
+//            csMessage = _T( "APC_GetYOffset Success !!" );
 //        }
 //    }
 //  
 //    else if( iSelect == RECTIFY_TABLE )
 //    {
-//        if ( ETronDI_OK == EtronDI_GetSlaveRectifyTable( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_RECTIFY_FILE_SIZE, &nActualLength, index ) )
+//        if ( APC_OK == APC_GetSlaveRectifyTable( m_hApcDI, &m_DevSelInfo, buffer, APC_RECTIFY_FILE_SIZE, &nActualLength, index ) )
 //        {
 //            csFileName.Format( L"FDATA_Rectify_Slave_%d.bin", index );
 //
 //            WriteFile();
 //
-//            csMessage = _T( "EtronDI_GetRectifyTable Success !!" );
+//            csMessage = _T( "APC_GetRectifyTable Success !!" );
 //        }
 //	    /*Only EX8054 & 8040S Master need to Set write to AR0330 sensor*/   
-//	    if ( ETronDI_OK == EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, true ) )
+//	    if ( APC_OK == APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, true ) )
 //	    {
-//		    if ( ETronDI_OK == EtronDI_GetRectifyTable( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_RECTIFY_FILE_SIZE, &nActualLength, index ) )
+//		    if ( APC_OK == APC_GetRectifyTable( m_hApcDI, &m_DevSelInfo, buffer, APC_RECTIFY_FILE_SIZE, &nActualLength, index ) )
 //            {
 //                csFileName.Format( L"FDATA_Rectify_ARO330_%d.bin", index );
 //
 //                WriteFile();
 //
-//                csMessage = _T( "EtronDI_GetRectifyTable Success !!" );
+//                csMessage = _T( "APC_GetRectifyTable Success !!" );
 //            }
-//		    EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, false );
+//		    APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, false );
 //	    }
-//	    nRet = EtronDI_GetRectifyTable( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_RECTIFY_FILE_SIZE, &nActualLength, index );
+//	    nRet = APC_GetRectifyTable( m_hApcDI, &m_DevSelInfo, buffer, APC_RECTIFY_FILE_SIZE, &nActualLength, index );
 //
-//        if ( csMessage.IsEmpty() ) csMessage = _T( "EtronDI_GetRectifyTable Failed !!" );
+//        if ( csMessage.IsEmpty() ) csMessage = _T( "APC_GetRectifyTable Failed !!" );
 //
-//        if ( ETronDI_OK == nRet )
+//        if ( APC_OK == nRet )
 //        {
 //            csFileName.Format( L"FDATA_Rectify_%d.bin", index );
 //
-//            csMessage = _T( "EtronDI_GetRectifyTable Success !!" );
+//            csMessage = _T( "APC_GetRectifyTable Success !!" );
 //        }
 //    }
 //    else if( iSelect == ZD_TABLE )
 //    {
-//        ZDTABLEINFO zdTableInfo { index, ETronDI_DEPTH_DATA_11_BITS };
+//        ZDTABLEINFO zdTableInfo { index, APC_DEPTH_DATA_11_BITS };
 //
-//        csMessage = _T( "EtronDI_GetZDTable Failed !!" );
+//        csMessage = _T( "APC_GetZDTable Failed !!" );
 //
-//        if( ETronDI_OK == EtronDI_GetZDTable( m_hEtronDI, &m_DevSelInfo, buffer, sizeof( buffer ), &nActualLength, &zdTableInfo ) )
+//        if( APC_OK == APC_GetZDTable( m_hApcDI, &m_DevSelInfo, buffer, sizeof( buffer ), &nActualLength, &zdTableInfo ) )
 //        {   
 //            csFileName.Format( L"FDATA_ZDTable_%d.bin", index );
 //
-//            csMessage = _T( "EtronDI_GetZDTable Success !!" );
+//            csMessage = _T( "APC_GetZDTable Success !!" );
 //        }
 //    }
 //    else if( iSelect == LOG_DATA )
 //    {
-//        if ( ETronDI_OK == EtronDI_GetSlaveLogData( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_CALIB_LOG_FILE_SIZE, &nActualLength, index ) )
+//        if ( APC_OK == APC_GetSlaveLogData( m_hApcDI, &m_DevSelInfo, buffer, APC_CALIB_LOG_FILE_SIZE, &nActualLength, index ) )
 //        {
 //            csFileName.Format( L"FDATA_LogData_Slave_%d.bin", index );
 //
 //            WriteFile();
 //
-//            csMessage = _T( "EtronDI_GetLogData Success !!" );
+//            csMessage = _T( "APC_GetLogData Success !!" );
 //        }
 //	    /*Only EX8054 & 8040S Master need to Set write to AR0330 sensor*/   
-//	    if ( ETronDI_OK == EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, true ) )
+//	    if ( APC_OK == APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, true ) )
 //	    {
-//		    if ( ETronDI_OK == EtronDI_GetLogData( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_CALIB_LOG_FILE_SIZE, &nActualLength, index ) )
+//		    if ( APC_OK == APC_GetLogData( m_hApcDI, &m_DevSelInfo, buffer, APC_CALIB_LOG_FILE_SIZE, &nActualLength, index ) )
 //            {
 //                csFileName.Format( L"FDATA_LogData_ARO330_%d.bin", index );
 //
 //                WriteFile();
 //
-//                csMessage = _T( "EtronDI_GetLogData Success !!" );
+//                csMessage = _T( "APC_GetLogData Success !!" );
 //            }
-//		    EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, false );
+//		    APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, false );
 //	    }
-//        nRet = EtronDI_GetLogData( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_CALIB_LOG_FILE_SIZE, &nActualLength, index );
+//        nRet = APC_GetLogData( m_hApcDI, &m_DevSelInfo, buffer, APC_CALIB_LOG_FILE_SIZE, &nActualLength, index );
 //
-//        if ( csMessage.IsEmpty() ) csMessage = _T( "EtronDI_GetLogData Failed !!" );
+//        if ( csMessage.IsEmpty() ) csMessage = _T( "APC_GetLogData Failed !!" );
 //
-//        if ( ETronDI_OK == nRet )
+//        if ( APC_OK == nRet )
 //        {
 //            csFileName.Format( L"FDATA_LogData_%d.bin", index );
 //
-//            csMessage = _T( "EtronDI_GetLogData Success !!" );
+//            csMessage = _T( "APC_GetLogData Success !!" );
 //        }
 //    }
 //    WriteFile();
@@ -472,7 +472,7 @@ LRESULT CVideoDeviceDlg::OnChangeActiveTab( WPARAM wparam,LPARAM lparam )
 //void CVideoDeviceDlg::OnBnClickedFlashdataWrite()
 //{
 //#ifdef ESPDI_EG
-//    AfxMessageBox(_T("EtronDI_GetRectifyTable NOT support !!"));
+//    AfxMessageBox(_T("APC_GetRectifyTable NOT support !!"));
 //    return;
 //#else
 //    BYTE buffer[4096] = {0};
@@ -507,115 +507,115 @@ LRESULT CVideoDeviceDlg::OnChangeActiveTab( WPARAM wparam,LPARAM lparam )
 //    {
 //        csFileName.Format( L"FDATA_Offset_Slave_%d.bin", index );
 //
-//        if( ReadFile( ETronDI_Y_OFFSET_FILE_SIZE ) )
+//        if( ReadFile( APC_Y_OFFSET_FILE_SIZE ) )
 //        {
-//            EtronDI_SetSlaveYOffset( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_Y_OFFSET_FILE_SIZE, &nActualLength, index );
+//            APC_SetSlaveYOffset( m_hApcDI, &m_DevSelInfo, buffer, APC_Y_OFFSET_FILE_SIZE, &nActualLength, index );
 //
-//            csMessage = _T( "EtronDI_SetYOffset Success !!" );
+//            csMessage = _T( "APC_SetYOffset Success !!" );
 //        }
 //	    /*Only EX8054 & 8040S Master need to Set write to AR0330 sensor*/
-//        if ( ETronDI_OK == EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, true ) )
+//        if ( APC_OK == APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, true ) )
 //        {
 //            csFileName.Format( L"FDATA_Offset_ARO330_%d.bin", index );
 //
-//	        if( ReadFile( ETronDI_Y_OFFSET_FILE_SIZE ) )
+//	        if( ReadFile( APC_Y_OFFSET_FILE_SIZE ) )
 //	        {
-//		        EtronDI_SetYOffset( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_Y_OFFSET_FILE_SIZE, &nActualLength, index );
+//		        APC_SetYOffset( m_hApcDI, &m_DevSelInfo, buffer, APC_Y_OFFSET_FILE_SIZE, &nActualLength, index );
 //
-//		        EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, false );
+//		        APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, false );
 //
-//                csMessage = _T( "EtronDI_SetYOffset Success !!" );
+//                csMessage = _T( "APC_SetYOffset Success !!" );
 //	        }
 //        }
 //        csFileName.Format( L"FDATA_Offset_%d.bin", index );
 //    
-//        if ( csMessage.IsEmpty() ) csMessage = _T( "EtronDI_SetYOffset Failed !!" );
+//        if ( csMessage.IsEmpty() ) csMessage = _T( "APC_SetYOffset Failed !!" );
 //
-//        if( ReadFile( ETronDI_Y_OFFSET_FILE_SIZE ) )
+//        if( ReadFile( APC_Y_OFFSET_FILE_SIZE ) )
 //        {
-//            if ( ETronDI_OK == EtronDI_SetYOffset( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_Y_OFFSET_FILE_SIZE, &nActualLength, index ) )
-//                csMessage = _T( "EtronDI_SetYOffset Success !!" );
+//            if ( APC_OK == APC_SetYOffset( m_hApcDI, &m_DevSelInfo, buffer, APC_Y_OFFSET_FILE_SIZE, &nActualLength, index ) )
+//                csMessage = _T( "APC_SetYOffset Success !!" );
 //        }
 //    }
 //    else if( iSelect == RECTIFY_TABLE )
 //    {
 //        csFileName.Format( L"FDATA_Rectify_Slave_%d.bin", index );
 //
-//        if( ReadFile( ETronDI_RECTIFY_FILE_SIZE ) )
+//        if( ReadFile( APC_RECTIFY_FILE_SIZE ) )
 //        {
-//            EtronDI_SetSlaveRectifyTable( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_RECTIFY_FILE_SIZE, &nActualLength, index );
+//            APC_SetSlaveRectifyTable( m_hApcDI, &m_DevSelInfo, buffer, APC_RECTIFY_FILE_SIZE, &nActualLength, index );
 //
-//            csMessage = _T( "EtronDI_SetRectifyTable Success !!" );
+//            csMessage = _T( "APC_SetRectifyTable Success !!" );
 //        }
 //	    /*Only EX8054 & 8040S Master need to Set write to AR0330 sensor*/
-//        if ( ETronDI_OK == EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, true ) )
+//        if ( APC_OK == APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, true ) )
 //        {
 //            csFileName.Format( L"FDATA_Rectify_ARO330_%d.bin", index );
 //
-//	        if( ReadFile( ETronDI_RECTIFY_FILE_SIZE ) )
+//	        if( ReadFile( APC_RECTIFY_FILE_SIZE ) )
 //	        {
-//		        EtronDI_SetRectifyTable( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_RECTIFY_FILE_SIZE, &nActualLength, index );
+//		        APC_SetRectifyTable( m_hApcDI, &m_DevSelInfo, buffer, APC_RECTIFY_FILE_SIZE, &nActualLength, index );
 //
-//		        EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, false );
+//		        APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, false );
 //
-//                csMessage = _T( "EtronDI_SetRectifyTable Success !!" );
+//                csMessage = _T( "APC_SetRectifyTable Success !!" );
 //	        }
 //        }
 //        csFileName.Format( L"FDATA_Rectify_%d.bin", index );
 //
-//        if ( csMessage.IsEmpty() ) csMessage = _T( "EtronDI_SetRectifyTable Failed !!" );
+//        if ( csMessage.IsEmpty() ) csMessage = _T( "APC_SetRectifyTable Failed !!" );
 //
-//        if( ReadFile( ETronDI_RECTIFY_FILE_SIZE ) )
+//        if( ReadFile( APC_RECTIFY_FILE_SIZE ) )
 //        {
-//	        if ( ETronDI_OK == EtronDI_SetRectifyTable( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_RECTIFY_FILE_SIZE, &nActualLength, index ) )
-//                csMessage = _T( "EtronDI_SetRectifyTable Success !!" );
+//	        if ( APC_OK == APC_SetRectifyTable( m_hApcDI, &m_DevSelInfo, buffer, APC_RECTIFY_FILE_SIZE, &nActualLength, index ) )
+//                csMessage = _T( "APC_SetRectifyTable Success !!" );
 //        }
 //    }
 //    else if( iSelect == ZD_TABLE )
 //    {
-//	    ZDTABLEINFO zdTableInfo { index, ETronDI_DEPTH_DATA_11_BITS };
+//	    ZDTABLEINFO zdTableInfo { index, APC_DEPTH_DATA_11_BITS };
 //
 //        csFileName.Format( L"FDATA_ZDTable_%d.bin", index );
 //
 //        if( ReadFile( sizeof( buffer ) ) )
 //        {
-//            csMessage = ( ETronDI_OK == EtronDI_SetZDTable( m_hEtronDI, &m_DevSelInfo, buffer, sizeof( buffer ), &nActualLength, &zdTableInfo ) ) ?
-//                        _T("EtronDI_SetZDTable Success !!" ) :
-//                        _T("EtronDI_SetZDTable Failed !!" );
+//            csMessage = ( APC_OK == APC_SetZDTable( m_hApcDI, &m_DevSelInfo, buffer, sizeof( buffer ), &nActualLength, &zdTableInfo ) ) ?
+//                        _T("APC_SetZDTable Success !!" ) :
+//                        _T("APC_SetZDTable Failed !!" );
 //        }
 //    } 
 //    else if( iSelect == LOG_DATA )
 //    {
 //        csFileName.Format( L"FDATA_LogData_Slave_%d.bin", index );
 //
-//        if( ReadFile( ETronDI_RECTIFY_FILE_SIZE ) )
+//        if( ReadFile( APC_RECTIFY_FILE_SIZE ) )
 //        {
-//            EtronDI_SetSlaveLogData( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_CALIB_LOG_FILE_SIZE, &nActualLength, index );
+//            APC_SetSlaveLogData( m_hApcDI, &m_DevSelInfo, buffer, APC_CALIB_LOG_FILE_SIZE, &nActualLength, index );
 //
-//            csMessage = _T( "EtronDI_SetLogData Success !!" );
+//            csMessage = _T( "APC_SetLogData Success !!" );
 //        }
 //	    /*Only EX8054 & 8040S Master need to Set write to AR0330 sensor*/
-//        if ( ETronDI_OK == EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, true ) )
+//        if ( APC_OK == APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, true ) )
 //        {
 //            csFileName.Format( L"FDATA_LogData_ARO330_%d.bin", index );
 //
-//	        if( ReadFile( ETronDI_RECTIFY_FILE_SIZE ) )
+//	        if( ReadFile( APC_RECTIFY_FILE_SIZE ) )
 //	        {
-//		        EtronDI_SetLogData( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_CALIB_LOG_FILE_SIZE, &nActualLength, index );
+//		        APC_SetLogData( m_hApcDI, &m_DevSelInfo, buffer, APC_CALIB_LOG_FILE_SIZE, &nActualLength, index );
 //
-//		        EtronDI_SetPlumAR0330( m_hEtronDI, &m_DevSelInfo, false );
+//		        APC_SetPlumAR0330( m_hApcDI, &m_DevSelInfo, false );
 //
-//                csMessage = _T( "EtronDI_SetLogData Success !!" );
+//                csMessage = _T( "APC_SetLogData Success !!" );
 //	        }
 //        }
 //        csFileName.Format( L"FDATA_LogData_%d.bin", index );
 //
-//        if ( csMessage.IsEmpty() ) csMessage = _T( "EtronDI_SetLogData Failed !!" );
+//        if ( csMessage.IsEmpty() ) csMessage = _T( "APC_SetLogData Failed !!" );
 //
-//        if( ReadFile( ETronDI_CALIB_LOG_FILE_SIZE ) )
+//        if( ReadFile( APC_CALIB_LOG_FILE_SIZE ) )
 //        {
-//            if ( ETronDI_OK == EtronDI_SetLogData( m_hEtronDI, &m_DevSelInfo, buffer, ETronDI_CALIB_LOG_FILE_SIZE, &nActualLength, index ) )
-//                csMessage = _T( "EtronDI_SetLogData Success !!" );
+//            if ( APC_OK == APC_SetLogData( m_hApcDI, &m_DevSelInfo, buffer, APC_CALIB_LOG_FILE_SIZE, &nActualLength, index ) )
+//                csMessage = _T( "APC_SetLogData Success !!" );
 //        }
 //    }
 //    AfxMessageBox( csMessage );
@@ -625,7 +625,7 @@ LRESULT CVideoDeviceDlg::OnChangeActiveTab( WPARAM wparam,LPARAM lparam )
 void CVideoDeviceDlg::OnBnClickedRectifylogGet()
 {
 #ifdef ESPDI_EG
-    AfxMessageBox(_T("EtronDI_GetRectifyLogData NOT support !!"));
+    AfxMessageBox(_T("APC_GetRectifyLogData NOT support !!"));
 #else
   int index = ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_INDEX))->GetCurSel();
   eSPCtrl_RectLogData data;
@@ -637,14 +637,14 @@ void CVideoDeviceDlg::OnBnClickedRectifylogGet()
   */
   if (((CButton*)GetDlgItem(IDC_SLAVECHK))->GetCheck() == BST_CHECKED)
   {
-	  nRet = EtronDI_GetRectifyMatLogDataSlave(m_hEtronDI, &m_DevSelInfo, &data, index);
+	  nRet = APC_GetRectifyMatLogDataSlave(m_hApcDI, &m_DevSelInfo, &data, index);
   }
   else
   {
-	  nRet = EtronDI_GetRectifyMatLogData(m_hEtronDI, &m_DevSelInfo, &data, index);
+	  nRet = APC_GetRectifyMatLogData(m_hApcDI, &m_DevSelInfo, &data, index);
   }
 
-  if( nRet == ETronDI_OK) {
+  if( nRet == APC_OK) {
     
     // store to txt
     FILE *fl;
@@ -764,7 +764,7 @@ void CVideoDeviceDlg::OnBnClickedRectifylogGet()
 
     }
   }
-  else AfxMessageBox(_T("EtronDI_GetRectifyLogData Failed !!"));
+  else AfxMessageBox(_T("APC_GetRectifyLogData Failed !!"));
 #endif
 }
 void CVideoDeviceDlg::OnClose()
@@ -821,7 +821,7 @@ void CVideoDeviceDlg::Update_IMU_Device_Mapping()
 	}
 }
 
-void CVideoDeviceDlg::IMU_Device_Reopen(void*& hEtronDI, DEVSELINFO& devSelInfo)
+void CVideoDeviceDlg::IMU_Device_Reopen(void*& hApcDI, DEVSELINFO& devSelInfo)
 {
 	if (m_bIMU_Device_Sync == false)
 		return;
@@ -834,7 +834,7 @@ void CVideoDeviceDlg::IMU_Device_Reopen(void*& hEtronDI, DEVSELINFO& devSelInfo)
 
 		if (pIMUTestDlg)
 		{
-			pIMUTestDlg->IMU_Device_Reopen(hEtronDI, devSelInfo);
+			pIMUTestDlg->IMU_Device_Reopen(hApcDI, devSelInfo);
 			break;
 		}
 	}

@@ -68,7 +68,7 @@ var menudata={children:[
 {text:"s",url:"globals.html#index_s"},
 {text:"u",url:"globals.html#index_u"}]},
 {text:"Functions",url:"globals_func.html",children:[
-{text:"e",url:"globals_func.html#index_e"}]},
+{text:"a",url:"globals_func.html#index_a"}]},
 {text:"Typedefs",url:"globals_type.html"},
 {text:"Enumerations",url:"globals_enum.html"},
 {text:"Enumerator",url:"globals_eval.html"}]}]}]}

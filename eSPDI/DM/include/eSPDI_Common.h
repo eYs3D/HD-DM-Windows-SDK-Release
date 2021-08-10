@@ -1,21 +1,21 @@
 /*! \file eSPDI_Common.h
-  	\brief Etron SDK API export functions, data structure and variable definition
-  	\copyright This file copyright (C) 2017 by eYs3D an Etron company
+  	\brief eYs3D SDK API export functions, data structure and variable definition
+  	\copyright This file copyright (C) 2017 by eYs3D company
 
 	\details An unpublished work.  All rights reserved.
 	This file is proprietary information, and may not be disclosed or
-	copied without the prior permission of eYs3D an Etron company.
+	copied without the prior permission of eYs3D company.
  */
 #pragma once
 
-#ifndef ETRONDI_API
+#ifndef APC_API
 #ifdef __WEYE__
-#define ETRONDI_API
+#define APC_API
 #else
-#ifdef ETRONDI_EXPORTS
-#define ETRONDI_API __declspec(dllexport)
+#ifdef APC_EXPORTS
+#define APC_API __declspec(dllexport)
 #else
-#define ETRONDI_API __declspec(dllimport)
+#define APC_API __declspec(dllimport)
 #endif
 #endif
 #endif
@@ -48,14 +48,14 @@ extern "C" {
 #endif //CALLBACK
 
 
-#define ETronDI_MAX_STREAM_COUNT 64
-#define ETronDI_MAX_DEPTH_STREAM_COUNT 8
+#define APC_MAX_STREAM_COUNT 64
+#define APC_MAX_DEPTH_STREAM_COUNT 8
 #pragma pack(push, 1)
-typedef struct tagETRONDI_STREAM_INFO {
+typedef struct tagAPC_STREAM_INFO {
 	int		nWidth;
 	int		nHeight;
 	BOOL	bFormatMJPG;
-} ETRONDI_STREAM_INFO, *PETRONDI_STREAM_INFO;
+} APC_STREAM_INFO, *PAPC_STREAM_INFO;
 #pragma pack(pop)
 
 #ifndef WM_MYMSG_NOTICE_CAPTURE
@@ -64,47 +64,48 @@ typedef struct tagETRONDI_STREAM_INFO {
 
 #include "eSPDI_ErrCode.h"
 
-/* Etron Stream Index */
-#define ETron_Stream_Color 0
-#define ETron_Stream_Track 4
-#define ETron_Stream_Kolor 5
+/* APC Stream Index */
+#define APC_Stream_Color 0
+#define APC_Stream_Track 4
+#define APC_Stream_Kolor 5
 
-/* Etron VID */
-#define ETronDI_VID_0x1E4E 0x1E4E
+/* APC VID */
+#define APC_VID_0x1E4E 0x1E4E
 
-/* Etron PID */
-#define ETronDI_PID_8029    0x0568
-#define ETronDI_PID_8030    ETronDI_PID_8029
-#define ETronDI_PID_8039    ETronDI_PID_8029
-#define ETronDI_PID_8031    0x0117
-#define ETronDI_PID_8032    0x0118
-#define ETronDI_PID_8036    0x0120
-#define ETronDI_PID_8037    0x0121
-#define ETronDI_PID_8038    0x0124
-#define ETronDI_PID_8038_M0 ETronDI_PID_8038
-#define ETronDI_PID_8038_M1 0x0147
-#define ETronDI_PID_8040W   0x0130
-#define ETronDI_PID_8040S   0x0131
-#define ETronDI_PID_8040S_K 0x0149
-#define ETronDI_PID_8041    0x0126
-#define ETronDI_PID_8042    0x0127
-#define ETronDI_PID_8043    0x0128
-#define ETronDI_PID_8044    0x0129
-#define ETronDI_PID_8045K   0x0134
-#define ETronDI_PID_8046K   0x0135
-#define ETronDI_PID_8051    0x0136
-#define ETronDI_PID_8052    0x0137
-#define ETronDI_PID_8053    0x0138
-#define ETronDI_PID_8054    0x0139
-#define ETronDI_PID_8054_K  0x0143
-#define ETronDI_PID_8059    0x0146
-#define ETronDI_PID_8060    0x0152
-#define ETronDI_PID_8060_K  0x0150
-#define ETronDI_PID_8060_T  0x0151
-#define ETronDI_PID_AMBER   0x0112
-#define ETronDI_PID_SALLY   0x0158
-#define ETronDI_PID_8062    0x0162
-#define ETronDI_PID_Hypatia 0x0160
+/* APC PID */
+#define APC_PID_8029    0x0568
+#define APC_PID_8030    APC_PID_8029
+#define APC_PID_8039    APC_PID_8029
+#define APC_PID_8031    0x0117
+#define APC_PID_8032    0x0118
+#define APC_PID_8036    0x0120
+#define APC_PID_8037    0x0121
+#define APC_PID_8038    0x0124
+#define APC_PID_8038_M0 APC_PID_8038
+#define APC_PID_8038_M1 0x0147
+#define APC_PID_8040W   0x0130
+#define APC_PID_8040S   0x0131
+#define APC_PID_8040S_K 0x0149
+#define APC_PID_8041    0x0126
+#define APC_PID_8042    0x0127
+#define APC_PID_8043    0x0128
+#define APC_PID_8044    0x0129
+#define APC_PID_8045K   0x0134
+#define APC_PID_8046K   0x0135
+#define APC_PID_8051    0x0136
+#define APC_PID_8052    0x0137
+#define APC_PID_8053    0x0138
+#define APC_PID_8054    0x0139
+#define APC_PID_8054_K  0x0143
+#define APC_PID_8059    0x0146
+#define APC_PID_8060    0x0152
+#define APC_PID_8060_K  0x0150
+#define APC_PID_8060_T  0x0151
+#define APC_PID_AMBER   0x0112
+#define APC_PID_SALLY   0x0158
+#define APC_PID_8062    0x0162
+#define APC_PID_Hypatia 0x0160
+#define APC_PID_SANDRA  0x0167
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
@@ -117,63 +118,94 @@ typedef struct tagETRONDI_STREAM_INFO {
 #define FG_Value_2Byte   0x20
 
 // For Depth Data Type - 2016/12/14 by Sean
-#define ETronDI_DEPTH_DATA_DEFAULT						0
-#define ETronDI_DEPTH_DATA_OFF_RAW						0 // raw (depth off, only raw color)
-#define ETronDI_DEPTH_DATA_8_BITS						1 // rectify
-#define ETronDI_DEPTH_DATA_14_BITS						2 // rectify
-#define ETronDI_DEPTH_DATA_8_BITS_x80					3 // rectify
-#define ETronDI_DEPTH_DATA_11_BITS						4 // rectify
-#define ETronDI_DEPTH_DATA_OFF_RECTIFY					5 // rectify (depth off, only rectify color)
-#define ETronDI_DEPTH_DATA_8_BITS_RAW					6 // raw
-#define ETronDI_DEPTH_DATA_14_BITS_RAW					7 // raw
-#define ETronDI_DEPTH_DATA_8_BITS_x80_RAW				8 // raw
-#define ETronDI_DEPTH_DATA_11_BITS_RAW					9 // raw
-#define ETronDI_DEPTH_DATA_8_BITS_COMBINED_RECTIFY		10// multi-baseline
-#define ETronDI_DEPTH_DATA_14_BITS_COMBINED_RECTIFY		11// multi-baseline
-#define ETronDI_DEPTH_DATA_8_BITS_x80_COMBINED_RECTIFY	12// multi-baseline
-#define ETronDI_DEPTH_DATA_11_BITS_COMBINED_RECTIFY		13// multi-baseline
+#define APC_DEPTH_DATA_DEFAULT						0
+#define APC_DEPTH_DATA_OFF_RAW						0 // raw (depth off, only raw color)
+#define APC_DEPTH_DATA_8_BITS						1 // rectify
+#define APC_DEPTH_DATA_14_BITS						2 // rectify
+#define APC_DEPTH_DATA_8_BITS_x80					3 // rectify
+#define APC_DEPTH_DATA_11_BITS						4 // rectify
+#define APC_DEPTH_DATA_OFF_RECTIFY					5 // rectify (depth off, only rectify color)
+#define APC_DEPTH_DATA_8_BITS_RAW					6 // raw
+#define APC_DEPTH_DATA_14_BITS_RAW					7 // raw
+#define APC_DEPTH_DATA_8_BITS_x80_RAW				8 // raw
+#define APC_DEPTH_DATA_11_BITS_RAW					9 // raw
+#define APC_DEPTH_DATA_8_BITS_COMBINED_RECTIFY		10// multi-baseline
+#define APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY		11// multi-baseline
+#define APC_DEPTH_DATA_8_BITS_x80_COMBINED_RECTIFY	12// multi-baseline
+#define APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY		13// multi-baseline
 
 // For Inter-Leave-Mode Depth Data Type
-#define ETronDI_DEPTH_DATA_ILM_DEFAULT						16
-#define ETronDI_DEPTH_DATA_ILM_OFF_RAW						16 // raw (depth off, only raw color)
-#define ETronDI_DEPTH_DATA_ILM_8_BITS						17 // rectify
-#define ETronDI_DEPTH_DATA_ILM_14_BITS						18 // rectify
-#define ETronDI_DEPTH_DATA_ILM_8_BITS_x80					19 // rectify
-#define ETronDI_DEPTH_DATA_ILM_11_BITS						20 // rectify
-#define ETronDI_DEPTH_DATA_ILM_OFF_RECTIFY					21 // rectify (depth off, only rectify color)
-#define ETronDI_DEPTH_DATA_ILM_8_BITS_RAW					22 // raw
-#define ETronDI_DEPTH_DATA_ILM_14_BITS_RAW					23 // raw
-#define ETronDI_DEPTH_DATA_ILM_8_BITS_x80_RAW				24 // raw
-#define ETronDI_DEPTH_DATA_ILM_11_BITS_RAW					25 // raw
-#define ETronDI_DEPTH_DATA_ILM_8_BITS_COMBINED_RECTIFY		26// multi-baseline
-#define ETronDI_DEPTH_DATA_ILM_14_BITS_COMBINED_RECTIFY		27// multi-baseline
-#define ETronDI_DEPTH_DATA_ILM_8_BITS_x80_COMBINED_RECTIFY	28// multi-baseline
-#define ETronDI_DEPTH_DATA_ILM_11_BITS_COMBINED_RECTIFY		29// multi-baseline
+#define APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET           16
+#define APC_DEPTH_DATA_ILM_DEFAULT                      16
+#define APC_DEPTH_DATA_ILM_OFF_RAW						16 // raw (depth off, only raw color)
+#define APC_DEPTH_DATA_ILM_8_BITS						17 // rectify
+#define APC_DEPTH_DATA_ILM_14_BITS						18 // rectify
+#define APC_DEPTH_DATA_ILM_8_BITS_x80					19 // rectify
+#define APC_DEPTH_DATA_ILM_11_BITS						20 // rectify
+#define APC_DEPTH_DATA_ILM_OFF_RECTIFY					21 // rectify (depth off, only rectify color)
+#define APC_DEPTH_DATA_ILM_8_BITS_RAW					22 // raw
+#define APC_DEPTH_DATA_ILM_14_BITS_RAW					23 // raw
+#define APC_DEPTH_DATA_ILM_8_BITS_x80_RAW				24 // raw
+#define APC_DEPTH_DATA_ILM_11_BITS_RAW					25 // raw
+#define APC_DEPTH_DATA_ILM_8_BITS_COMBINED_RECTIFY		26// multi-baseline
+#define APC_DEPTH_DATA_ILM_14_BITS_COMBINED_RECTIFY		27// multi-baseline
+#define APC_DEPTH_DATA_ILM_8_BITS_x80_COMBINED_RECTIFY	28// multi-baseline
+#define APC_DEPTH_DATA_ILM_11_BITS_COMBINED_RECTIFY		29// multi-baseline
+
+#define APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET 32
+#define APC_DEPTH_DATA_SCALE_DOWN_OFF_RAW			    (APC_DEPTH_DATA_OFF_RAW + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET)/* raw (depth off, only raw color) */
+#define APC_DEPTH_DATA_SCALE_DOWN_DEFAULT			    (APC_DEPTH_DATA_DEFAULT + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET)  /* raw (depth off, only raw color) */
+#define APC_DEPTH_DATA_SCALE_DOWN_8_BITS				(APC_DEPTH_DATA_8_BITS + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET)/* rectify, 1 byte per pixel */
+#define APC_DEPTH_DATA_SCALE_DOWN_14_BITS				(APC_DEPTH_DATA_14_BITS + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* rectify, 2 byte per pixel */
+#define APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80			(APC_DEPTH_DATA_8_BITS_x80 + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* rectify, 2 byte per pixel but using 1 byte only */
+#define APC_DEPTH_DATA_SCALE_DOWN_11_BITS				(APC_DEPTH_DATA_11_BITS + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET)/* rectify, 2 byte per pixel but using 11 bit only */
+#define APC_DEPTH_DATA_SCALE_DOWN_OFF_RECTIFY		    (APC_DEPTH_DATA_OFF_RECTIFY + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* Rule 0.4b  Reserved unused in any firmware*/
+#define APC_DEPTH_DATA_SCALE_DOWN_8_BITS_RAW			(APC_DEPTH_DATA_8_BITS_RAW + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_14_BITS_RAW		    (APC_DEPTH_DATA_14_BITS_RAW + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80_RAW	    (APC_DEPTH_DATA_8_BITS_x80_RAW + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_11_BITS_RAW		    (APC_DEPTH_DATA_11_BITS_RAW + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_14_BITS_COMBINED_RECTIFY     (APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* Rule 0.4b Reserved unused in any firmware*/
+#define APC_DEPTH_DATA_SCALE_DOWN_11_BITS_COMBINED_RECTIFY     (APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY + APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET) /* Rule 0.4b Reserved unused in any firmware*/
+
+// For Interleave mode depth data type
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_OFF_RAW			(APC_DEPTH_DATA_SCALE_DOWN_OFF_RAW + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* raw (depth off, only raw color) */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_DEFAULT			(APC_DEPTH_DATA_SCALE_DOWN_DEFAULT + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* raw (depth off, only raw color) */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS			(APC_DEPTH_DATA_SCALE_DOWN_8_BITS + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* rectify, 1 byte per pixel */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS			(APC_DEPTH_DATA_SCALE_DOWN_14_BITS + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* rectify, 2 byte per pixel */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80		(APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80 + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* rectify, 2 byte per pixel but using 1 byte only */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS			(APC_DEPTH_DATA_SCALE_DOWN_11_BITS + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* rectify, 2 byte per pixel but using 11 bit only */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_OFF_RECTIFY		(APC_DEPTH_DATA_SCALE_DOWN_OFF_RECTIFY + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* rectify (depth off, only rectify color) */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_RAW		(APC_DEPTH_DATA_SCALE_DOWN_8_BITS_RAW + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_RAW		(APC_DEPTH_DATA_SCALE_DOWN_14_BITS_RAW + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80_RAW	(APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80_RAW + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_RAW		(APC_DEPTH_DATA_SCALE_DOWN_11_BITS_RAW + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) /* raw */
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_COMBINED_RECTIFY     (APC_DEPTH_DATA_SCALE_DOWN_14_BITS_COMBINED_RECTIFY + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) //
+#define APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_COMBINED_RECTIFY (APC_DEPTH_DATA_SCALE_DOWN_11_BITS_COMBINED_RECTIFY + APC_DEPTH_DATA_INTERLEAVE_MODE_OFFSET) // multi-baseline
 
 
 // For Flash Read/Write
 // Firmware (size in KBytes)
-#define ETronDI_READ_FLASH_TOTAL_SIZE			128
-#define ETronDI_READ_FLASH_FW_PLUGIN_SIZE		104
-#define ETronDI_WRITE_FLASH_TOTAL_SIZE			128
-#define ETronDI_READ_FLASH_TOTAL_SIZE_256		256
-#define ETronDI_WRITE_FLASH_TOTAL_SIZE_256	256
+#define APC_READ_FLASH_TOTAL_SIZE			128
+#define APC_READ_FLASH_FW_PLUGIN_SIZE		104
+#define APC_WRITE_FLASH_TOTAL_SIZE			128
+#define APC_READ_FLASH_TOTAL_SIZE_256		256
+#define APC_WRITE_FLASH_TOTAL_SIZE_256	256
 
 
 // PlugIn data (size in bytes)
-#define ETronDI_Y_OFFSET_FILE_ID_0				30
-#define ETronDI_Y_OFFSET_FILE_SIZE			    256
-#define ETronDI_RECTIFY_FILE_ID_0				40
-#define ETronDI_RECTIFY_FILE_SIZE				1024
-#define ETronDI_ZD_TABLE_FILE_ID_0				50
-#define ETronDI_CALIB_LOG_FILE_ID_0				240
-#define ETronDI_CALIB_LOG_FILE_SIZE				4096
-#define ETronDI_USER_DATA_FILE_ID_0				200
-#define ETronDI_USER_DATA_FILE_SIZE_0			1024
-#define ETronDI_USER_DATA_FILE_SIZE_1			4096
-#define ETronDI_USER_DATA_FILE_SIZE_2			128
-#define ETronDI_USER_DATA_FILE_SIZE_3			1024
-#define ETronDI_USER_DATA_FILE_SIZE_4			4096
+#define APC_Y_OFFSET_FILE_ID_0				30
+#define APC_Y_OFFSET_FILE_SIZE			    256
+#define APC_RECTIFY_FILE_ID_0				40
+#define APC_RECTIFY_FILE_SIZE				1024
+#define APC_ZD_TABLE_FILE_ID_0				50
+#define APC_CALIB_LOG_FILE_ID_0				240
+#define APC_CALIB_LOG_FILE_SIZE				4096
+#define APC_USER_DATA_FILE_ID_0				200
+#define APC_USER_DATA_FILE_SIZE_0			1024
+#define APC_USER_DATA_FILE_SIZE_1			4096
+#define APC_USER_DATA_FILE_SIZE_2			128
+#define APC_USER_DATA_FILE_SIZE_3			1024
+#define APC_USER_DATA_FILE_SIZE_4			4096
 
 //================================================================
 //
@@ -340,7 +372,7 @@ typedef struct ParaLUT
     BYTE      serial_number[256];
 } PARALUT, *PPARALUT;
 
-struct EtronDIImageType
+struct ApcDIImageType
 {
     enum Value
     {
@@ -354,50 +386,70 @@ struct EtronDIImageType
         DEPTH_14BITS
     };
 
-    static bool IsImageColor(EtronDIImageType::Value type)
+    static bool IsImageColor(ApcDIImageType::Value type)
     {
         return (type == COLOR_YUY2 || type == COLOR_RGB24 || type == COLOR_MJPG);
     }
 
-    static bool IsImageDepth(EtronDIImageType::Value type)
+    static bool IsImageDepth(ApcDIImageType::Value type)
     {
         return (type != IMAGE_UNKNOWN && !IsImageColor(type));
     }
 
-    static EtronDIImageType::Value DepthDataTypeToDepthImageType(WORD dataType)
-    {
-        switch (dataType)
-        {
-        case ETronDI_DEPTH_DATA_ILM_8_BITS:
-        case ETronDI_DEPTH_DATA_ILM_8_BITS_RAW:
-        case ETronDI_DEPTH_DATA_8_BITS:
-        case ETronDI_DEPTH_DATA_8_BITS_RAW:
-            return EtronDIImageType::DEPTH_8BITS;
-        case ETronDI_DEPTH_DATA_ILM_8_BITS_x80:
-        case ETronDI_DEPTH_DATA_ILM_8_BITS_x80_RAW:
-        case ETronDI_DEPTH_DATA_8_BITS_x80:
-        case ETronDI_DEPTH_DATA_8_BITS_x80_RAW:
-            return EtronDIImageType::DEPTH_8BITS_0x80;
-        case ETronDI_DEPTH_DATA_ILM_11_BITS:
-        case ETronDI_DEPTH_DATA_ILM_11_BITS_RAW:
-        case ETronDI_DEPTH_DATA_11_BITS:
-        case ETronDI_DEPTH_DATA_11_BITS_RAW:
-        case ETronDI_DEPTH_DATA_ILM_11_BITS_COMBINED_RECTIFY:
-        case ETronDI_DEPTH_DATA_11_BITS_COMBINED_RECTIFY:
-            return EtronDIImageType::DEPTH_11BITS;
-        case ETronDI_DEPTH_DATA_ILM_14_BITS:
-        case ETronDI_DEPTH_DATA_ILM_14_BITS_RAW:
-        case ETronDI_DEPTH_DATA_14_BITS:
-        case ETronDI_DEPTH_DATA_14_BITS_RAW:
-        case ETronDI_DEPTH_DATA_ILM_14_BITS_COMBINED_RECTIFY:
-		case ETronDI_DEPTH_DATA_14_BITS_COMBINED_RECTIFY:
-            return EtronDIImageType::DEPTH_14BITS;
-        default: return EtronDIImageType::IMAGE_UNKNOWN;
-        }
-    }
+	static ApcDIImageType::Value DepthDataTypeToDepthImageType(WORD dataType)
+	{
+		switch (dataType)
+		{
+		case APC_DEPTH_DATA_8_BITS:
+		case APC_DEPTH_DATA_8_BITS_RAW:
+		case APC_DEPTH_DATA_ILM_8_BITS:
+		case APC_DEPTH_DATA_ILM_8_BITS_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_8_BITS:
+		case APC_DEPTH_DATA_SCALE_DOWN_8_BITS_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_RAW:
+			return ApcDIImageType::DEPTH_8BITS;
+		case APC_DEPTH_DATA_8_BITS_x80:
+		case APC_DEPTH_DATA_8_BITS_x80_RAW:
+		case APC_DEPTH_DATA_ILM_8_BITS_x80:
+		case APC_DEPTH_DATA_ILM_8_BITS_x80_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80:
+		case APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80_RAW:
+			return ApcDIImageType::DEPTH_8BITS_0x80;
+		case APC_DEPTH_DATA_11_BITS:
+		case APC_DEPTH_DATA_11_BITS_RAW:
+		case APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY:
+		case APC_DEPTH_DATA_ILM_11_BITS:
+		case APC_DEPTH_DATA_ILM_11_BITS_RAW:
+		case APC_DEPTH_DATA_ILM_11_BITS_COMBINED_RECTIFY:
+		case APC_DEPTH_DATA_SCALE_DOWN_11_BITS:
+		case APC_DEPTH_DATA_SCALE_DOWN_11_BITS_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_11_BITS_COMBINED_RECTIFY:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_COMBINED_RECTIFY:
+			return ApcDIImageType::DEPTH_11BITS;
+		case APC_DEPTH_DATA_14_BITS:
+		case APC_DEPTH_DATA_14_BITS_RAW:
+		case APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY:
+		case APC_DEPTH_DATA_ILM_14_BITS:
+		case APC_DEPTH_DATA_ILM_14_BITS_RAW:
+		case APC_DEPTH_DATA_ILM_14_BITS_COMBINED_RECTIFY:
+		case APC_DEPTH_DATA_SCALE_DOWN_14_BITS:
+		case APC_DEPTH_DATA_SCALE_DOWN_14_BITS_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_14_BITS_COMBINED_RECTIFY:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_RAW:
+		case APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_COMBINED_RECTIFY:
+			return ApcDIImageType::DEPTH_14BITS;
+		default: return ApcDIImageType::IMAGE_UNKNOWN;
+		}
+	}
 };
 
-struct EtronDIDepthSwitch
+struct ApcDIDepthSwitch
 {
     enum Value
     {
@@ -406,12 +458,12 @@ struct EtronDIDepthSwitch
         Depth2 = 0x04
     };
 
-    static bool IsOn(EtronDIDepthSwitch::Value target, int setting)
+    static bool IsOn(ApcDIDepthSwitch::Value target, int setting)
     {
         return ((target & setting) != 0);
     }
 };
-/*! \fn void(*EtronDI_ImgCallbackFn)(EtronDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+/*! \fn void(*APC_ImgCallbackFn)(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
     int width, int height, int serialNumber, void* pParam)
 \brief Callback function when video or data is ready
 \param pid	product id of the USB device
@@ -420,11 +472,11 @@ struct EtronDIDepthSwitch
 \param pData user defined data to pass to the callback function
 \return none
 */
-typedef void(*EtronDI_ImgCallbackFn)(EtronDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+typedef void(*APC_ImgCallbackFn)(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
     int width, int height, int serialNumber, void* pParam);
 	
 /**
- * \enum ETRONDI_DEVICE_TYPE
+ * \enum APC_DEVICE_TYPE
  *
  * chip enum value
  */
@@ -433,9 +485,9 @@ typedef enum {
     AXES1,			/**< AXIS1 */
     PUMA,			/**< PUMA */
     PLUM
-}ETRONDI_DEVICE_TYPE;
+}APC_DEVICE_TYPE;
 
-struct EtronDI_SensorMode
+struct APC_SensorMode
 {
     enum Value
     {
@@ -466,10 +518,10 @@ typedef struct tagDEVINFORMATION {
 									<tr> <td>0x0120
 									</table>
 									*/
-    unsigned short wVID;			/**< vender ID, 0x1E4E for EtronDI device */
+    unsigned short wVID;			/**< vender ID, 0x1E4E for ApcDI device */
     char *strDevName;				/**< pointer to device name stored inside the SDK*/
     unsigned short  nChipID;		/**< chip ID, 0x18 for AXES1, 0x1C for KIWI, 0x15 for PUMA */
-    unsigned short  nDevType;		/**< chip enum value, @see ETRONDI_DEVICE_TYPE */
+    unsigned short  nDevType;		/**< chip enum value, @see APC_DEVICE_TYPE */
 	unsigned short wUsbNode;		/**< USB Node */
 } DEVINFORMATION;
 
@@ -533,10 +585,10 @@ public:
 									<tr> <td>0x0120
 									</table>
 									*/
-    unsigned short wVID;		/**< vender ID, 0x1E4E for EtronDI device */
+    unsigned short wVID;		/**< vender ID, 0x1E4E for ApcDI device */
     char strDevName[512];		/**< device name */
     unsigned short nChipID;		/**< chip ID, 0x18 for AXES1, 0x1C for KIWI, 0x15 for PUMA */
-    unsigned short nDevType;	/**< chip enum value, see ETRONDI_DEVICE_TYPE */
+    unsigned short nDevType;	/**< chip enum value, see APC_DEVICE_TYPE */
 	unsigned short wUsbNode;		/**< USB Node */
 };
 /*! \struct DEVSELINFO*/
@@ -587,32 +639,32 @@ typedef struct tagKEEP_DATA_CTRL {
 } KEEP_DATA_CTRL;
 // for total and fw+plugin read/write -
 
-/*! \fn int EtronDI_Init(
-		void **ppHandleEtronDI,
+/*! \fn int APC_Init(
+		void **ppHandleApcDI,
 		bool bIsLogEnabled)
-	\brief entry point of Etron camera SDK. This API allocates resource and find all the eSPI camera devices connected to the system.
-	\param ppHandleEtronDI	a pointer of pointer to receive EtronDI SDK instance
+	\brief entry point of eYs3D camera SDK. This API allocates resource and find all the eSPI camera devices connected to the system.
+	\param ppHandleApcDI	a pointer of pointer to receive ApcDI SDK instance
 	\param bIsLogEnabled	set to true to generate log file, named log.txt in current folder
 	\return success: none negative integer to indicate numbers of devices found in the system.
 			
 */
-int  ETRONDI_API EtronDI_Init( void **ppHandleEtronDI, bool bIsLogEnabled);
+int  APC_API APC_Init( void **ppHandleApcDI, bool bIsLogEnabled);
 
-/*! \fn int EtronDI_Init2(
-		void **ppHandleEtronDI,
+/*! \fn int APC_Init2(
+		void **ppHandleApcDI,
 		bool bIsLogEnabled,
 		bool bEnableAutoRestart)
-	\brief entry point of Etron camera SDK. This API allocates resource and find all the eSPI camera devices connected to the system.
-	\param ppHandleEtronDI	a pointer of pointer to receive EtronDI SDK instance
+	\brief entry point of eYs3D camera SDK. This API allocates resource and find all the eSPI camera devices connected to the system.
+	\param ppHandleApcDI	a pointer of pointer to receive ApcDI SDK instance
 	\param bIsLogEnabled	set to true to generate log file, named log.txt in current folder
 	\param bEnableAutoRestart	set true to auto-restart the device if the device was detached and attached again.
 	\return success: none negative integer to indicate numbers of devices found in the system.
-	\note Calls EtronDI_Init or EtronDI_Init2 to initilize the EtronDI SDK. EtronDI_Init2 adds the auto-restart function to the initilization options.
-	      If you call EtronDI_Init, the bEnableAutoRestart is set as disabled.
+	\note Calls APC_Init or APC_Init2 to initilize the ApcDI SDK. APC_Init2 adds the auto-restart function to the initilization options.
+	      If you call APC_Init, the bEnableAutoRestart is set as disabled.
 */
-int  ETRONDI_API EtronDI_Init2( void **ppHandleEtronDI, bool bIsLogEnabled, bool bAutoRestart);
+int  APC_API APC_Init2( void **ppHandleApcDI, bool bIsLogEnabled, bool bAutoRestart);
 
-/*! \fn void (*EtronDI_DeviceEventFn)(UINT pid, UINT vid, BOOL bAttached, void* pData)
+/*! \fn void (*APC_DeviceEventFn)(UINT pid, UINT vid, BOOL bAttached, void* pData)
 \brief Callback function to receive any USB capture device attachment or detachment events
 \param pid	product id of the USB device
 \param vid	vender id of the USB device
@@ -620,82 +672,82 @@ int  ETRONDI_API EtronDI_Init2( void **ppHandleEtronDI, bool bIsLogEnabled, bool
 \param pData user defined data to pass to the callback function
 \return none
 */
-#ifndef EtronDI_DeviceEventFn_
-typedef void(*EtronDI_DeviceEventFn)(UINT pid, UINT vid, BOOL bAttached, void* pData);
-#define EtronDI_DeviceEventFn_
+#ifndef APC_DeviceEventFn_
+typedef void(*APC_DeviceEventFn)(UINT pid, UINT vid, BOOL bAttached, void* pData);
+#define APC_DeviceEventFn_
 #endif
 
-/*! \fn int EtronDI_RegisterDeviceEvents(
-		void *pHandleEtronDI,
-		EtronDI_DeviceEventFn cbFunc, void *pData)
+/*! \fn int APC_RegisterDeviceEvents(
+		void *pHandleApcDI,
+		APC_DeviceEventFn cbFunc, void *pData)
 	\brief Register the USB device plug or unplug events. Any USB capture device attachment or detachment events will call the callback function cbFunc
-	\param pHandleEtronDI	a pointer to EtronDI SDK instance
-	\param cbFunc a callback function of type #EtronDI_DeviceEventFn that will receive USB cappure device events when the device is attached or detached.
+	\param pHandleApcDI	a pointer to ApcDI SDK instance
+	\param cbFunc a callback function of type #APC_DeviceEventFn that will receive USB cappure device events when the device is attached or detached.
 	\param pData user defined data which will send to the callback function
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int  ETRONDI_API EtronDI_RegisterDeviceEvents(void *pHandleEtronDI, EtronDI_DeviceEventFn cbFunc, void *pData);
+int  APC_API APC_RegisterDeviceEvents(void *pHandleApcDI, APC_DeviceEventFn cbFunc, void *pData);
 
-/*! \fn void EtronDI_Release(
-		void **ppHandleEtronDI)
-	\brief release all resource that EtronDI_Init had allocated
-	\param ppHandleEtronDI	pointer of the pointer to the initilized EtronDI SDK instance.
+/*! \fn void APC_Release(
+		void **ppHandleApcDI)
+	\brief release all resource that APC_Init had allocated
+	\param ppHandleApcDI	pointer of the pointer to the initilized ApcDI SDK instance.
 	\return none
-	\note the pointer to ppHandleEtronDI will be set to NULL when this call returns successfully. 
+	\note the pointer to ppHandleApcDI will be set to NULL when this call returns successfully. 
 */
-void ETRONDI_API EtronDI_Release( void **ppHandleEtronDI);
+void APC_API APC_Release( void **ppHandleApcDI);
 
-/*! \fn int EtronDI_FindDevice(
-		void *pHandleEtronDI)
-	\brief find out all Etron USB devices by PID, VID and ChipID, also remember device types
-	\param pHandleEtronDI the pointer to the initilized EtronDI SDK instance
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+/*! \fn int APC_FindDevice(
+		void *pHandleApcDI)
+	\brief find out all eYs3D USB devices by PID, VID and ChipID, also remember device types
+	\param pHandleApcDI the pointer to the initilized ApcDI SDK instance
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
  */
-int  ETRONDI_API EtronDI_FindDevice( void *pHandleEtronDI);
+int  APC_API APC_FindDevice( void *pHandleApcDI);
 
-/*! \fn int EtronDI_RefreshDevice(
-		void *pHandleEtronDI)
-	\brief refresh all Etron UVC devices
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+/*! \fn int APC_RefreshDevice(
+		void *pHandleApcDI)
+	\brief refresh all eYs3D UVC devices
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
  */
-int  ETRONDI_API EtronDI_RefreshDevice( void *pHandleEtronDI);
+int  APC_API APC_RefreshDevice( void *pHandleApcDI);
 
-/*! \fn int EtronDI_GetDeviceNumber(
-		void *pHandleEtronDI)
-	\brief get Etron USB device numbers
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
-	\return number of Etron device
+/*! \fn int APC_GetDeviceNumber(
+		void *pHandleApcDI)
+	\brief get eYs3D USB device numbers
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\return number of eYs3D device
 */
-int  ETRONDI_API EtronDI_GetDeviceNumber( void *pHandleEtronDI);
+int  APC_API APC_GetDeviceNumber( void *pHandleApcDI);
 
-/*! \fn int EtronDI_GetDeviceInfo(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetDeviceInfo(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		DEVINFORMATION* pdevinfo)
-	\brief get informations of Etron UVC devices, see @DEVINFORMATION
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\brief get informations of eYs3D UVC devices, see @DEVINFORMATION
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param pdevinfo	pointer of device information
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int  ETRONDI_API EtronDI_GetDeviceInfo( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo ,DEVINFORMATION* pdevinfo);
+int  APC_API APC_GetDeviceInfo( void *pHandleApcDI, PDEVSELINFO pDevSelInfo ,DEVINFORMATION* pdevinfo);
 
-/*! \fn int EtronDI_GetDeviceInfoEx(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetDeviceInfoEx(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		DEVINFORMATIONEX* pdevinfo)
 	\brief get target device info,
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param pdevinfo	pointer of buffer to store DEVINFORMATIONEX
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int  ETRONDI_API EtronDI_GetDeviceInfoEx( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo ,DEVINFORMATIONEX* pdevinfo);
+int  APC_API APC_GetDeviceInfoEx( void *pHandleApcDI, PDEVSELINFO pDevSelInfo ,DEVINFORMATIONEX* pdevinfo);
 
 // register APIs +
-/*! \fn int EtronDI_GetSlaveSensorRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetSlaveSensorRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		unsigned short address,
@@ -703,7 +755,7 @@ int  ETRONDI_API EtronDI_GetDeviceInfoEx( void *pHandleEtronDI, PDEVSELINFO pDev
 		int flag,
 		int nSensorMode)
 	\brief get value from sensor register
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	sensor slave address. see #SENSOR_TYPE_NAME enum definition
 	\param address	register address
@@ -716,12 +768,12 @@ int  ETRONDI_API EtronDI_GetDeviceInfoEx( void *pHandleEtronDI, PDEVSELINFO pDev
 		#define FG_Value_2Byte   0x20
 	\param nSensorMode	sensor mode(sensor A, B or Both)
 		A is 0, B is 1, Both is 2
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetSlaveSensorRegister(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short *pValue, int flag, int nSensorMode);
+int APC_API APC_GetSlaveSensorRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short *pValue, int flag, int nSensorMode);
 
-/*! \fn int EtronDI_GetSensorRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetSensorRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		unsigned short address,
@@ -729,7 +781,7 @@ int ETRONDI_API EtronDI_GetSlaveSensorRegister(void *pHandleEtronDI, PDEVSELINFO
 		int flag,
 		int nSensorMode)
 	\brief get value from sensor register
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	sensor slave address. see #SENSOR_TYPE_NAME enum definition
 	\param address	register address
@@ -742,12 +794,12 @@ int ETRONDI_API EtronDI_GetSlaveSensorRegister(void *pHandleEtronDI, PDEVSELINFO
 		#define FG_Value_2Byte   0x20
 	\param nSensorMode	sensor mode(sensor A, B or Both)
 		A is 0, B is 1, Both is 2
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetSensorRegister ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short *pValue, int flag, int nSensorMode);
+int APC_API APC_GetSensorRegister ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short *pValue, int flag, int nSensorMode);
 
-/*! \fn int EtronDI_SetSlaveSensorRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetSlaveSensorRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		unsigned short address,
@@ -755,7 +807,7 @@ int ETRONDI_API EtronDI_GetSensorRegister ( void *pHandleEtronDI, PDEVSELINFO pD
 		int flag,
 		int nSensorMode)
 	\brief set value from sensor register
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	sensor slave address. see #SENSOR_TYPE_NAME enum definition
 	\param address	register address
@@ -768,12 +820,12 @@ int ETRONDI_API EtronDI_GetSensorRegister ( void *pHandleEtronDI, PDEVSELINFO pD
 		#define FG_Value_2Byte   0x20
 	\param nSensorMode	sensor mode(sensor A, B or Both)
 		A is 0, B is 1, Both is 2
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetSlaveSensorRegister(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short nValue, int flag, int nSensorMode);
+int APC_API APC_SetSlaveSensorRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short nValue, int flag, int nSensorMode);
 
-/*! \fn int EtronDI_SetSensorRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetSensorRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		unsigned short address,
@@ -781,7 +833,7 @@ int ETRONDI_API EtronDI_SetSlaveSensorRegister(void *pHandleEtronDI, PDEVSELINFO
 		int flag,
 		int nSensorMode)
 	\brief set value from sensor register
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	sensor slave address. see #SENSOR_TYPE_NAME enum definition
 	\param address	register address
@@ -794,18 +846,18 @@ int ETRONDI_API EtronDI_SetSlaveSensorRegister(void *pHandleEtronDI, PDEVSELINFO
 		#define FG_Value_2Byte   0x20
 	\param nSensorMode	sensor mode(sensor A, B or Both)
 		A is 0, B is 1, Both is 2
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetSensorRegister ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short nValue,  int flag, int nSensorMode);
+int APC_API APC_SetSensorRegister ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, unsigned short address, unsigned short nValue,  int flag, int nSensorMode);
 
-/*! \fn int EtronDI_GetFWRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetFWRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short address,
 		unsigned short *pValue,
 		int flag)
 	\brief get firmware register value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param address	register address
 	\param pValue	pointer of value got from register address
@@ -815,18 +867,18 @@ int ETRONDI_API EtronDI_SetSensorRegister ( void *pHandleEtronDI, PDEVSELINFO pD
 		#define FG_Address_2Byte 0x02
 		#define FG_Value_1Byte   0x10
 		#define FG_Value_2Byte   0x20
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetFWRegister     ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short *pValue, int flag);
+int APC_API APC_GetFWRegister     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short *pValue, int flag);
 
-/*! \fn int EtronDI_SetFWRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetFWRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short address,
 		unsigned short nValue,
 		int flag)
 	\brief set firmware register value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param address	register address
 	\param nValue	register value to set
@@ -836,18 +888,18 @@ int ETRONDI_API EtronDI_GetFWRegister     ( void *pHandleEtronDI, PDEVSELINFO pD
 		#define FG_Address_2Byte 0x02
 		#define FG_Value_1Byte   0x10
 		#define FG_Value_2Byte   0x20
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetFWRegister     ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue,  int flag);
+int APC_API APC_SetFWRegister     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue,  int flag);
 
-/*! \fn int EtronDI_GetSlaveHWRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetSlaveHWRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short address,
 		unsigned short *pValue,
 		int flag)
 	\brief get hardware register value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param address	register address
 	\param pValue	pointer of value got from register address
@@ -857,18 +909,18 @@ int ETRONDI_API EtronDI_SetFWRegister     ( void *pHandleEtronDI, PDEVSELINFO pD
 		#define FG_Address_2Byte 0x02
 		#define FG_Value_1Byte   0x10
 		#define FG_Value_2Byte   0x20
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetSlaveHWRegister(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short *pValue, int flag);
+int APC_API APC_GetSlaveHWRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short *pValue, int flag);
 
-/*! \fn int EtronDI_GetHWRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetHWRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short address,
 		unsigned short *pValue,
 		int flag)
 	\brief get hardware register value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param address	register address
 	\param pValue	pointer of value got from register address
@@ -878,18 +930,18 @@ int ETRONDI_API EtronDI_GetSlaveHWRegister(void *pHandleEtronDI, PDEVSELINFO pDe
 		#define FG_Address_2Byte 0x02
 		#define FG_Value_1Byte   0x10
 		#define FG_Value_2Byte   0x20
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetHWRegister     ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short *pValue, int flag);
+int APC_API APC_GetHWRegister     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short *pValue, int flag);
 
-/*! \fn int EtronDI_SetSlaveHWRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetSlaveHWRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short address,
 		unsigned short nValue,
 		int flag)
 	\brief set hardware register
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param address	register address
 	\param nValue	register value to set
@@ -899,18 +951,18 @@ int ETRONDI_API EtronDI_GetHWRegister     ( void *pHandleEtronDI, PDEVSELINFO pD
 		#define FG_Address_2Byte 0x02
 		#define FG_Value_1Byte   0x10
 		#define FG_Value_2Byte   0x20
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetSlaveHWRegister(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue, int flag);
+int APC_API APC_SetSlaveHWRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue, int flag);
 
-/*! \fn int EtronDI_SetHWRegister(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetHWRegister(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short address,
 		unsigned short nValue,
 		int flag)
 	\brief set hardware register
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param address	register address
 	\param nValue	register value to set
@@ -920,143 +972,167 @@ int ETRONDI_API EtronDI_SetSlaveHWRegister(void *pHandleEtronDI, PDEVSELINFO pDe
 		#define FG_Address_2Byte 0x02
 		#define FG_Value_1Byte   0x10
 		#define FG_Value_2Byte   0x20
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetHWRegister     ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue,  int flag);
+int APC_API APC_SetHWRegister     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue,  int flag);
 // register APIs -
 
 // File ID +
-/*! \fn int EtronDI_GetFwVersion(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetFwVersion(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		char *pszFwVersion,
 		int nBufferSize,
 		int *pActualLength)
 	\brief get the firmware version of device, the version is a string
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param pszFwVersion	firmware version string
 	\param nBufferSize	input buffer length to receive FW version
 	\param pActualLength	the actual length of FW version in byte
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetFwVersion    ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, char *pszFwVersion, int nBufferSize, int *pActualLength);
+int APC_API APC_GetFwVersion    ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, char *pszFwVersion, int nBufferSize, int *pActualLength);
 
-/*! \fn int EtronDI_GetPidVid(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetPidVid(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		unsigned short *pPidBuf,
 		unsigned short *pVidBuf)
 	\brief get PID(product ID) and VID(vendor ID) of device
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param pPidBuf	4 byte buffer to store PID value
 	\param pVidBuf	4 byte buffer to store VID value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetPidVid       ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short *pPidBuf, unsigned short *pVidBuf );
+int APC_API APC_GetPidVid       ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short *pPidBuf, unsigned short *pVidBuf );
 
-/*! \fn int EtronDI_GetSerialNumber( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize, int *pActualLength)
+/*! \fn int APC_SetPidVid(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo,
+        unsigned short *pPidBuf,
+        unsigned short *pVidBuf)
+    \brief set PID and VID to device
+    \param pHandleApcDI	CApcDI handler
+    \param pDevSelInfo	pointer of device select index
+    \param pPidBuf	4 byte PID value buffer to set
+    \param pVidBuf	4 byte VID value buffer to set
+    \return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_SetPidVid(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short *pPidBuf, unsigned short *pVidBuf);
+
+/*! \fn int APC_GetSerialNumber( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize, int *pActualLength)
 	\brief get the module serial number (the devixe trace code, 14 or 17 digits of ASCII code)
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param pSerialNum	a pre-allocated buffer to store the serial number.
 	\param nBufferSize	length of pBuf
 	\param pActualLength	actual numbers of byte copied o the buffer	
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetSerialNumber( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *pSerialNum, int nBufferSize, int *pACtualSNLenByByte);
+int APC_API APC_GetSerialNumber( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *pSerialNum, int nBufferSize, int *pACtualSNLenByByte);
 
-/*! \fn int EtronDI_GetSlaveLogData(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetSerialNumber( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize)
+    \brief set the module serial number (the device trace code, 14 or 17 digits of ASCII code)
+    \param pHandleApcDI	CApcDI handler
+    \param pDevSelInfo	pointer of device select index
+    \param pSerialNum	a pre-allocated buffer to store the serial number.
+    \param nBufferSize	length of pBuf
+    \return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_SetSerialNumber(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *pSerialNum, int nBufferSize);
+
+/*! \fn int APC_GetSlaveLogData(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		BYTE *buffer,
 		int BufferLength,
 		int *pActualLength,
 		int index)
 	\brief get log data from flash
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param buffer	buffer to store log data
 	\param BufferLength	input buffer length
 	\param pActualLength	actual length has written to buffer
 	\param index	index to identify log data for corresponding depth
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetSlaveLogData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+int APC_API APC_GetSlaveLogData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
-/*! \fn int EtronDI_GetLogData(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetLogData(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		BYTE *buffer,
 		int BufferLength,
 		int *pActualLength,
 		int index)
 	\brief get log data from flash
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param buffer	buffer to store log data
 	\param BufferLength	input buffer length
 	\param pActualLength	actual length has written to buffer
 	\param index	index to identify log data for corresponding depth
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetLogData      ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+int APC_API APC_GetLogData      ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
-/*! \fn int EtronDI_GetUserData(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetUserData(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		BYTE *buffer,
 		int BufferLength,
 		#USERDATA_SECTION_INDEX usi)
 	\brief get user data from flash
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param buffer	buffer to store user data
 	\param BufferLength	input buffer length
 	\param usi	which user index data to select
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetUserData     ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi);
+int APC_API APC_GetUserData     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi);
 
-/*! \fn int EtronDI_SetSlaveLogData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
+/*! \fn int APC_SetSlaveLogData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
 	\brief set log data to flash
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param buffer	buffer to store log data
 	\param BufferLength	input buffer length
 	\param pActualLength	actual length has written to buffer
 	\param index	index to identify log data for corresponding depth
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetSlaveLogData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+int APC_API APC_SetSlaveLogData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
-/*! \fn int EtronDI_SetLogData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
+/*! \fn int APC_SetLogData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
 	\brief set log data to flash
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param buffer	buffer to store log data
 	\param BufferLength	input buffer length
 	\param pActualLength	actual length has written to buffer
 	\param index	index to identify log data for corresponding depth
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetLogData      ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+int APC_API APC_SetLogData      ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
-/*! \fn int  EtronDI_SetUserData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi)
+/*! \fn int  APC_SetUserData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi)
 	\brief set user data to flash
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param buffer	buffer to store user data
 	\param BufferLength	input buffer length
 	\param usi	which user index data to select
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetUserData     ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi);
+int APC_API APC_SetUserData     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi);
 
 
-/*! \fn int EtronDI_ReadFlashData(
-		void *pHandleEtronDI,
+/*! \fn int APC_ReadFlashData(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		FLASH_DATA_TYPE fdt,
 		BYTE *pBuffer,
@@ -1065,33 +1141,33 @@ int ETRONDI_API EtronDI_SetUserData     ( void *pHandleEtronDI, PDEVSELINFO pDev
 	\brief read firmware code(.bin) form flash
 		The firmware code is the combination of boot loader, firmware body and plug-in data.
 		This input buffer length has to match with the flash data type
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param fdt	segment type of flash be read
 	\param pBuffer	buffer to store firmware code
 	\param nLengthOfBuffer	input buffer length 
 	\param pActualBufferLen	actual length has written to pBuffer
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_ReadFlashData   ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, FLASH_DATA_TYPE fdt, BYTE *pBuffer, 
+int APC_API APC_ReadFlashData   ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, FLASH_DATA_TYPE fdt, BYTE *pBuffer, 
                                           unsigned long int nLengthOfBuffer, unsigned long int *pActualBufferLen);
 
 										  
-int ETRONDI_API EtronDI_WriteFlashData  ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, FLASH_DATA_TYPE fdt, BYTE *pBuffer, 
+int APC_API APC_WriteFlashData  ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, FLASH_DATA_TYPE fdt, BYTE *pBuffer, 
 									      unsigned long int nLengthOfBuffer, BOOL bIsDataVerify, KEEP_DATA_CTRL kdc);
 
-/*! \fn int EtronDI_OpenDevice(
-		void* pHandleEtronDI,
+/*! \fn int APC_OpenDevice(
+		void* pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int colorStreamIndex,
 		int depthStreamIndex,
 		int depthStreamSwitch,
 		int iFps,
-        EtronDI_ImgCallbackFn callbackFn,
+        APC_ImgCallbackFn callbackFn,
 		void* pCallbackParam,
 		int pid)
 	\brief open camera device with image callback support
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param colorStreamIndex	index of the desired color stream
 	\param depthStreamIndex index of the desired sdepth tream
@@ -1108,31 +1184,43 @@ int ETRONDI_API EtronDI_WriteFlashData  ( void *pHandleEtronDI, PDEVSELINFO pDev
 <tr><td>0x04 <td>stitch images if this bit is set, for fisheye spherical module only
 <tr><td>0x08 <td>use OpenCL in stitching. This bit effective only when bit-2 is set.
 </table>
-	\return success:EtronDI_OK, others:see eSPDI_ErrCode.h
+	\return success:APC_OK, others:see eSPDI_ErrCode.h
  */
-int ETRONDI_API EtronDI_OpenDevice( void* pHandleEtronDI, PDEVSELINFO pDevSelInfo,
+int APC_API APC_OpenDevice( void* pHandleApcDI, PDEVSELINFO pDevSelInfo,
                                     int colorStreamIndex, int depthStreamIndex, int depthStreamSwitch, int iFps,
-	                                EtronDI_ImgCallbackFn callbackFn, void* pCallbackParam, int pid = -1 );
+	                                APC_ImgCallbackFn callbackFn, void* pCallbackParam, int pid = -1 );
 
-/*! \fn int EtronDI_CloseDevice(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetColorImage(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *pBuf, unsigned long int *pImageSize, int *pSerial)
+	\brief get color image
+*/
+int APC_API APC_GetColorImage(void *pHandleApcDI, PDEVSELINFO pDevSelInfo,
+	BYTE *pBuf, unsigned long int *pImageSize, int *pSerial = NULL);
+
+/*! \fn int APC_GetDepthImage(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *pBuf, unsigned long int *pImageSize, int *pSerial)
+	\brief get depth image
+*/
+int APC_API APC_GetDepthImage(void *pHandleApcDI, PDEVSELINFO pDevSelInfo,
+	BYTE *pBuf, unsigned long int *pImageSize, int *pSerial = NULL, int nDepthDataType = 0);
+
+/*! \fn int APC_CloseDevice(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo)
 	\brief close device and stop video render
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
-	\return success:EtronDI_OK, others:see eSPDI_ErrCode.h
+	\return success:APC_OK, others:see eSPDI_ErrCode.h
 */                                     
-int ETRONDI_API EtronDI_CloseDevice( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+int APC_API APC_CloseDevice( void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int EtronDI_GetDeviceResolutionListEx(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetDeviceResolutionListEx(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nMaxCount0,
-		ETRONDI_STREAM_INFO *pStreamInfo0,
+		APC_STREAM_INFO *pStreamInfo0,
 			 int nMaxCount1,
-			 ETRONDI_STREAM_INFO *pStreamInfo1)
+			 APC_STREAM_INFO *pStreamInfo1)
 	\brief get the device resolution list
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param nMaxCount0	max count of endpoint1 resolutions
 	\param pStreamInfo0	resolution infos of endpoint1
@@ -1140,20 +1228,20 @@ int ETRONDI_API EtronDI_CloseDevice( void *pHandleEtronDI, PDEVSELINFO pDevSelIn
 	\param pStreamInfo1	resolutions infos of endpoint2
 	\return success: nCount0*256+nCount1, others: see eSPDI_ErrCode.h
  */
-int ETRONDI_API EtronDI_GetDeviceResolutionListEx( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo,
-												   int nMaxCount0, ETRONDI_STREAM_INFO *pStreamInfo0,
-												   int nMaxCount1, ETRONDI_STREAM_INFO *pStreamInfo1,
+int APC_API APC_GetDeviceResolutionListEx( void *pHandleApcDI, PDEVSELINFO pDevSelInfo,
+												   int nMaxCount0, APC_STREAM_INFO *pStreamInfo0,
+												   int nMaxCount1, APC_STREAM_INFO *pStreamInfo1,
 												   int pid);
 
-/*! \fn int EtronDI_GetDeviceResolutionList(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetDeviceResolutionList(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nMaxCount0,
-		ETRONDI_STREAM_INFO *pStreamInfo0, 
+		APC_STREAM_INFO *pStreamInfo0, 
              int nMaxCount1,
-             ETRONDI_STREAM_INFO *pStreamInfo1)
+             APC_STREAM_INFO *pStreamInfo1)
 	\brief get the device resolution list
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\param nMaxCount0	max count of endpoint1 resolutions
 	\param pStreamInfo0	resolution infos of endpoint1
@@ -1161,89 +1249,89 @@ int ETRONDI_API EtronDI_GetDeviceResolutionListEx( void *pHandleEtronDI, PDEVSEL
 	\param pStreamInfo1	resolutions infos of endpoint2
 	\return success: nCount0*256+nCount1, others: see eSPDI_ErrCode.h
  */									 
-int ETRONDI_API EtronDI_GetDeviceResolutionList( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, 
-                                                 int nMaxCount0, ETRONDI_STREAM_INFO *pStreamInfo0, 
-                                                 int nMaxCount1, ETRONDI_STREAM_INFO *pStreamInfo1);
+int APC_API APC_GetDeviceResolutionList( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, 
+                                                 int nMaxCount0, APC_STREAM_INFO *pStreamInfo0, 
+                                                 int nMaxCount1, APC_STREAM_INFO *pStreamInfo1);
 
-/*! \fn bool EtronDI_Is360Device(
-		void *pHandleEtronDI,
+/*! \fn bool APC_Is360Device(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo)
 	\brief check module is spherical device or not
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\return true: module support 360, false: not support
 */
-bool ETRONDI_API EtronDI_Is360Device(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+bool APC_API APC_Is360Device(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int EtronDI_GetSerialNumberFromLog( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize, int *pActualLength)
+/*! \fn int APC_GetSerialNumberFromLog( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize, int *pActualLength)
 	\brief get the module serial number 
 */
-int ETRONDI_API EtronDI_GetSerialNumberFromLog( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize, int *pActualLength);
+int APC_API APC_GetSerialNumberFromLog( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, char *pSerialNum, int nBufferSize, int *pActualLength);
 
 // IR support
-/*! \fn int EtronDI_SetCurrentIRValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD wType)
+/*! \fn int APC_SetCurrentIRValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType)
 	\brief set current infrared radiation(IR) value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param wType	value to set
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetCurrentIRValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD wType);
+int APC_API APC_SetCurrentIRValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType);
 
-/*! \fn int EtronDI_GetCurrentIRValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
+/*! \fn int APC_GetCurrentIRValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
 	\brief get current infrared radiation(IR) value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index	
 	\param pwType	value of current IR
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h	
+	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int ETRONDI_API EtronDI_GetCurrentIRValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
+int APC_API APC_GetCurrentIRValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
 
-/*! \fn int EtronDI_GetIRMinValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
+/*! \fn int APC_GetIRMinValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
 	\brief get minimum IR value the module support
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index	
 	\param pwType	pointer strors minimum IR value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h	
+	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int ETRONDI_API EtronDI_GetIRMinValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
+int APC_API APC_GetIRMinValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
 
-/*! \fn int EtronDI_SetIRMaxValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD wType)
+/*! \fn int APC_SetIRMaxValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType)
 	\brief set maximum IR value the module support
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index	
 	\param wType	pointer strors maximum IR value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h	
+	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int ETRONDI_API EtronDI_SetIRMaxValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD wType);
+int APC_API APC_SetIRMaxValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType);
 
-/*! \fn int EtronDI_GetIRMaxValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
+/*! \fn int APC_GetIRMaxValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
 	\brief get maximum IR value the module support
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index	
 	\param pwType	pointer strors maximum IR value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h	
+	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int ETRONDI_API EtronDI_GetIRMaxValue(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
+int APC_API APC_GetIRMaxValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
 
-/*! \fn int EtronDI_SetIRMode(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD wType)
+/*! \fn int APC_SetIRMode(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType)
 	\brief set IR mode, left, right or both
 */
-int ETRONDI_API EtronDI_SetIRMode(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD wType);
+int APC_API APC_SetIRMode(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType);
 
-/*! \fn int EtronDI_GetIRMode(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
+/*! \fn int APC_GetIRMode(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
 	\brief set IR mode, left, right or both
 */
-int ETRONDI_API EtronDI_GetIRMode(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
+int APC_API APC_GetIRMode(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType);
 
 // for sensorif
-/*! \fn int EtronDI_EnableSensorIF( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool bIsEnable)
+/*! \fn int APC_EnableSensorIF( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool bIsEnable)
 	\brief turn on/off sensor IF function
 */
-int ETRONDI_API EtronDI_EnableSensorIF( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool bIsEnable);
+int APC_API APC_EnableSensorIF( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool bIsEnable);
 
  
-//int ETRONDI_API EtronDI_GetMotorCurrentState( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool* bIsRunning);
+//int APC_API APC_GetMotorCurrentState( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool* bIsRunning);
 
 // for Gyro
 
@@ -1278,17 +1366,17 @@ typedef enum
 /*! \enum sensor model name */
 typedef enum
 {
-    ETRONDI_SENSOR_TYPE_H22 = 0,	/**< H22 */
-    ETRONDI_SENSOR_TYPE_OV7740,		/**< OV7740 */			
-    ETRONDI_SENSOR_TYPE_AR0134,		/**< AR0134 */
-    ETRONDI_SENSOR_TYPE_AR0135,		/**< AR0135 */
-	ETRONDI_SENSOR_TYPE_AR0144,		/**< AR0144 */
-	ETRONDI_SENSOR_TYPE_OV9714,		/**< OV9714 */
-	ETRONDI_SENSOR_TYPE_OV9282,		/**< OV9282 */
-	ETRONDI_SENSOR_TYPE_AR0330,		/**< AR0330 */
-	ETRONDI_SENSOR_TYPE_AR1335,		/**< AR1335 */
-    ETRONDI_SENSOR_TYPE_H65,
-    ETRONDI_SENSOR_TYPE_AR0522,
+    APC_SENSOR_TYPE_H22 = 0,	/**< H22 */
+    APC_SENSOR_TYPE_OV7740,		/**< OV7740 */			
+    APC_SENSOR_TYPE_AR0134,		/**< AR0134 */
+    APC_SENSOR_TYPE_AR0135,		/**< AR0135 */
+	APC_SENSOR_TYPE_AR0144,		/**< AR0144 */
+	APC_SENSOR_TYPE_OV9714,		/**< OV9714 */
+	APC_SENSOR_TYPE_OV9282,		/**< OV9282 */
+	APC_SENSOR_TYPE_AR0330,		/**< AR0330 */
+	APC_SENSOR_TYPE_AR1335,		/**< AR1335 */
+    APC_SENSOR_TYPE_H65,
+    APC_SENSOR_TYPE_AR0522,
 } SENSOR_TYPE_NAME; 
 
 //
@@ -1337,167 +1425,167 @@ typedef enum
 #define    CT_PROPERTY_ID_PANTILT_RELATIVE             17
 #define    CT_PROPERTY_ID_AUTO_EXPOSURE_PRIORITY       19 
 
-/*! \fn int EtronDI_SetSensorTypeName(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetSensorTypeName(
+		void *pHandleApcDI,
 		SENSOR_TYPE_NAME stn)
 	\brief select which sensor to operate
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param stn	sensor type
-	\return ETronDI_OK
+	\return APC_OK
 */                        
-int ETRONDI_API EtronDI_SetSensorTypeName( void *pHandleEtronDI, SENSOR_TYPE_NAME stn);
+int APC_API APC_SetSensorTypeName( void *pHandleApcDI, SENSOR_TYPE_NAME stn);
 
-/*! \fn int EtronDI_EnableAE(
-		void *pHandleEtronDI,
+/*! \fn int APC_EnableAE(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo)
 	\brief enable auto exposure function of ISP
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_EnableAE  ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+int APC_API APC_EnableAE  ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int EtronDI_DisableAE(
-		void *pHandleEtronDI,
+/*! \fn int APC_DisableAE(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo)
 	\brief disable auto exposure function of ISP
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_DisableAE ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+int APC_API APC_DisableAE ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int EtronDI_EnableAWB(
-		void *pHandleEtronDI,
+/*! \fn int APC_EnableAWB(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo)
 	\brief enable auto white balance function of ISP
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_EnableAWB ( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+int APC_API APC_EnableAWB ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int EtronDI_DisableAWB(
-		void *pHandleEtronDI,
+/*! \fn int APC_DisableAWB(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo)
 	\brief disable auto white balance of ISP
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_DisableAWB( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+int APC_API APC_DisableAWB( void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
 
-/*! \fn int EtronDI_GetExposureTime(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetExposureTime(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nSensorMode,
 		float *pfExpTimeMS)
 	\brief get exposure time of ISP setting in millisecond
-		the target sensor type was set in EtronDI_SetSensorTypeName()
-	\param pHandleEtronDI	CEtronDI handler
+		the target sensor type was set in APC_SetSensorTypeName()
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nSensorMode	which sensor(sensor A, B or Both) to get
 		A is 0, B is 1, Both is 2
     \param pid	product id of the USB device
 	\param pfExpTimeMS	pointer of getting exposure time in millisecond
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetExposureTime( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float *pfExpTimeMS);
+int APC_API APC_GetExposureTime( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float *pfExpTimeMS);
 
-/*! \fn int EtronDI_SetExposureTime(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetExposureTime(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nSensorMode,
 		float fExpTimeMS)
 	\brief set exposure time of ISP sensor setting
-		the target sensor type was set in EtronDI_SetSensorTypeName()
-	\param *pHandleEtronDI	CEtronDI handler
+		the target sensor type was set in APC_SetSensorTypeName()
+	\param *pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nSensorMode	which sensor(sensor A, B or Both) to set
 		A is 0, B is 1, Both is 2
     \param pid	product id of the USB device
 	\param fExpTimeMS	pointer of setting exposure time in millisecond
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetExposureTime( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fExpTimeMS);
+int APC_API APC_SetExposureTime( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fExpTimeMS);
 
-/*! \fn int EtronDI_GetGlobalGain(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetGlobalGain(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nSensorMode,
 		float *pfGlobalGain)
 	\brief get global gain of ISP setting
-		the target sensor type was set in EtronDI_SetSensorTypeName()
-	\param pHandleEtronDI	CEtronDI handler
+		the target sensor type was set in APC_SetSensorTypeName()
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nSensorMode	which sensor(sensor A, B or Both) to get
 		A is 0, B is 1, Both is 2
     \param pid	product id of the USB device
 	\param pfGlobalGain	pointer of global gain value
 		see source code for value calculation of different sensor type
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetGlobalGain( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float *pfGlobalGain);
+int APC_API APC_GetGlobalGain( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float *pfGlobalGain);
 
-/*! \fn int EtronDI_SetGlobalGain(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetGlobalGain(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nSensorMode,
 		float fGlobalGain)
 	\brief set global gain of ISP sensor setting
-		the target sensor type was set in EtronDI_SetSensorTypeName()
-	\param pHandleEtronDI	CEtronDI handler
+		the target sensor type was set in APC_SetSensorTypeName()
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nSensorMode	which sensor(sensor A, B or Both) to get
 		A is 0, B is 1, Both is 2
     \param pid	product id of the USB device
 	\param fGlobalGain	pointer of global gain value
 		see source code for value calculation of different sensor type
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetGlobalGain( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fGlobalGain);
+int APC_API APC_SetGlobalGain( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fGlobalGain);
 
-/*! \fn int EtronDI_GetGPIOValue(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetGPIOValue(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nGPIOIndex,
 		BYTE *pValue)
 	\brief get general purpose IO value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index	
 	\param nGPIOIndex	GPIO index, 1 or 2 is valid
 	\param pValue	pointer of GPIO value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetGPIOValue( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE *pValue);
+int APC_API APC_GetGPIOValue( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE *pValue);
 
-/*! \fn int EtronDI_SetGPIOValue(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetGPIOValue(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nGPIOIndex,
 		BYTE nValue)
 	\brief set GPIO value
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nGPIOIndex	GPIO index, 1 or 2 is valid
 	\param nValue	GPIO value to set
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetGPIOValue( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE nValue);
+int APC_API APC_SetGPIOValue( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE nValue);
 
-/*! \fn int EtronDI_SetGPIOCtrl(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE nValue)
+/*! \fn int APC_SetGPIOCtrl(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE nValue)
 	\brief set GPIO control address
 	\param nGPIOIndex	index of GPIO (1 ~ 4)
 	\param nValue	register value to set
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetGPIOCtrl(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE nValue);
+int APC_API APC_SetGPIOCtrl(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nGPIOIndex, BYTE nValue);
 
-int ETRONDI_API EtronDI_GetAccMeterValue( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int *pX, int *pY, int *pZ);
+int APC_API APC_GetAccMeterValue( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int *pX, int *pY, int *pZ);
 
-/*! \fn int EtronDI_GetPUPropVal(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetPUPropVal(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		int *pValue)
@@ -1527,32 +1615,32 @@ int ETRONDI_API EtronDI_GetAccMeterValue( void *pHandleEtronDI, PDEVSELINFO pDev
 		https://msdn.microsoft.com/en-us/library/windows/hardware/ff566089(v=vs.85).aspx
 		The KSPROPERTY_VIDEOPROCAMP_S structure describes filter-based property settings
 		in the PROPSETID_VIDCAP_VIDEOPROCAMP property set.
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	specifies the member of the property set
 	\param pValue	pointer of store PU property value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetPUPropVal( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, int *pValue);
+int APC_API APC_GetPUPropVal( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, int *pValue);
 
-/*! \fn int EtronDI_SetPUPropVal(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetPUPropVal(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		int nValue)
 	\brief get processing unit property value
 		https://msdn.microsoft.com/en-us/library/windows/hardware/ff568122(v=vs.85).aspx
 		https://msdn.microsoft.com/en-us/library/windows/hardware/ff566089(v=vs.85).aspx
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	specifies the member of the property set
 	\param nValue	value to set
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetPUPropVal( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, int nValue);
+int APC_API APC_SetPUPropVal( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, int nValue);
 
-/*! \fn int EtronDI_GetCTPropVal(
-		void *pHandleEtronDI,
+/*! \fn int APC_GetCTPropVal(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		int *pValue)
@@ -1577,148 +1665,148 @@ int ETRONDI_API EtronDI_SetPUPropVal( void *pHandleEtronDI, PDEVSELINFO pDevSelI
 		KSPROPERTY_CAMERACONTROL_TILT
 
 		https://msdn.microsoft.com/en-us/library/windows/hardware/ff566089(v=vs.85).aspx
-	\param *pHandleEtronDI	CEtronDI handler
+	\param *pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	specifies the member of the property set
 	\param pValue	pointer of store CT property value
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_GetCTPropVal( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, int *pValue);
+int APC_API APC_GetCTPropVal( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, int *pValue);
 
-/*! \fn int EtronDI_SetCTPropVal(
-		void *pHandleEtronDI,
+/*! \fn int APC_SetCTPropVal(
+		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
 		int nId,
 		int nValue)
 	\brief get control terminal property value
 		https://msdn.microsoft.com/en-us/library/windows/hardware/ff567802(v=vs.85).aspx
 		https://msdn.microsoft.com/en-us/library/windows/hardware/ff566089(v=vs.85).aspx
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param nId	specifies the member of the property set
 	\param nValue	CT property value to set
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetCTPropVal( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int nId, int nValue);
+int APC_API APC_SetCTPropVal( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nId, int nValue);
 
 // For AEAWB - 2015/01/28 by Wolf
 
-int ETRONDI_API EtronDI_EncryptMP4(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, const char* filename);
-int ETRONDI_API EtronDI_DecryptMP4(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, const char* filename);
-int ETRONDI_API EtronDI_RetrieveMp4ExtraData(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, 
+int APC_API APC_EncryptMP4(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, const char* filename);
+int APC_API APC_DecryptMP4(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, const char* filename);
+int APC_API APC_RetrieveMp4ExtraData(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, 
     const char* filename, char* dataBuf, int* dataSize);
-int ETRONDI_API EtronDI_FlushMp4ExtraData(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, 
+int APC_API APC_FlushMp4ExtraData(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, 
     const char* filename, const char* dataBuf, int dataSize);
-/*! \fn int EtronDI_GetAutoExposureMode(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short* mode)
+/*! \fn int APC_GetAutoExposureMode(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short* mode)
 	\brief misc function : get auto exposure mode
 */	
-int ETRONDI_API EtronDI_GetAutoExposureMode(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short* mode);
+int APC_API APC_GetAutoExposureMode(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short* mode);
 
-/*! \fn int EtronDI_SetAutoExposureMode(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short mode)
+/*! \fn int APC_SetAutoExposureMode(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short mode)
 	\brief misc function : set auto exposure mode
 */
-int ETRONDI_API EtronDI_SetAutoExposureMode(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short mode);
+int APC_API APC_SetAutoExposureMode(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short mode);
 
-/*! \fn int EtronDI_GetFlexibleGyroData(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo,
+/*! \fn int APC_GetFlexibleGyroData(void* pHandleApcDI, PDEVSELINFO pDevSelInfo,
 	    int length, BYTE *pGyroData)
 	\brief get IMU(Gyro) data
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
-	\param length	length of IMU data to read, should be get from EtronDI_GetFlexibleGyroLength
+	\param length	length of IMU data to read, should be get from APC_GetFlexibleGyroLength
 	\param pGyroData	data buffer to store IMU data
 */
-int ETRONDI_API EtronDI_GetFlexibleGyroData(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo,
+int APC_API APC_GetFlexibleGyroData(void * pHandleApcDI, PDEVSELINFO pDevSelInfo,
     int length, BYTE *pGyroData);
 
-/*! \fn int EtronDI_GetFlexibleGyroLength(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short* GyroLen)
+/*! \fn int APC_GetFlexibleGyroLength(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short* GyroLen)
 	\brief get the IMU(Gyro) data length
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param GyroLen	pointer to store IMU data length
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */	
-int ETRONDI_API EtronDI_GetFlexibleGyroLength(void* pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned short* GyroLen);
+int APC_API APC_GetFlexibleGyroLength(void* pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short* GyroLen);
 
-/*! \fn int EtronDI_SetHuffmanTableData(
-	void *pHandleEtronDI,
+/*! \fn int APC_SetHuffmanTableData(
+	void *pHandleApcDI,
 	PDEVSELINFO pDevSelInfo,
 	const char *filename,
 	bool bLogFile)
 	\brief set huffman table data for jpeg encode
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param filename	huffman table file, see jh_vga_422.dat sample file
 	\param bLogFile	if true then puma_htable.dat file is generated
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetHuffmanTableData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, const char *filename, bool bLogFile);
+int APC_API APC_SetHuffmanTableData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, const char *filename, bool bLogFile);
 
-/*! \fn int EtronDI_SetQuantizationTableData(
-	void *pHandleEtronDI,
+/*! \fn int APC_SetQuantizationTableData(
+	void *pHandleApcDI,
 	PDEVSELINFO pDevSelInfo,
 	const char *filename)
 	\brief set quantication table data for jpeg encode
-	\param pHandleEtronDI	CEtronDI handler
+	\param pHandleApcDI	CApcDI handler
 	\param pDevSelInfo	pointer of device select index
 	\param filename	quantization table file, see FS_DEF_010.txt sample file
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_SetQuantizationTableData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, const char *filename);
+int APC_API APC_SetQuantizationTableData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, const char *filename);
 
-/*! \fn int ETRONDI_API EtronDI_SetPlumAR0330(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool bEnable)
+/*! \fn int APC_API APC_SetPlumAR0330(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool bEnable)
 \brief Set Plum Sensor AR0330.
 */
-int ETRONDI_API EtronDI_SetPlumAR0330(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool bEnable);
+int APC_API APC_SetPlumAR0330(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool bEnable);
 
-/*! \fn int ETRONDI_API EtronDI_GetDevicePortType(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, USB_PORT_TYPE* pUSB_Port_Type)
+/*! \fn int APC_API APC_GetDevicePortType(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, USB_PORT_TYPE* pUSB_Port_Type)
 \brief Get Device USB-port-type.
 */
-int ETRONDI_API EtronDI_GetDevicePortType(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, USB_PORT_TYPE* pUSB_Port_Type);
+int APC_API APC_GetDevicePortType(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, USB_PORT_TYPE* pUSB_Port_Type);
 
-/*! \fn int ETRONDI_API EtronDI_SubSample(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int width, int height, int& new_width, int& new_height, int mode = 0, int factor = 3)
+/*! \fn int APC_API APC_SubSample(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int width, int height, int& new_width, int& new_height, int mode = 0, int factor = 3)
 */
-int ETRONDI_API EtronDI_SubSample(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char** SubSample, unsigned char* depthBuf, int bytesPerPixel, int width, int height, int& new_width, int& new_height, int mode = 0, int factor = 3);
+int APC_API APC_SubSample(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char** SubSample, unsigned char* depthBuf, int bytesPerPixel, int width, int height, int& new_width, int& new_height, int mode = 0, int factor = 3);
 
-/*! \fn int ETRONDI_API EtronDI_HoleFill(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int kernel_size, int width, int height, int level, bool horizontal)
+/*! \fn int APC_API APC_HoleFill(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int kernel_size, int width, int height, int level, bool horizontal)
 */
-int ETRONDI_API EtronDI_HoleFill(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int kernel_size, int width, int height, int level, bool horizontal);
+int APC_API APC_HoleFill(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int kernel_size, int width, int height, int level, bool horizontal);
 
-/*! \fn int ETRONDI_API EtronDI_TemporalFilter(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int width, int height, float alpha, int history).
+/*! \fn int APC_API APC_TemporalFilter(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int width, int height, float alpha, int history).
 */
-int ETRONDI_API EtronDI_TemporalFilter(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int width, int height, float alpha, int history);
+int APC_API APC_TemporalFilter(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int bytesPerPixel, int width, int height, float alpha, int history);
 
-/*! \fn int ETRONDI_API EtronDI_EdgePreServingFilter(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int type, int width, int height, int level, float sigma, float lumda)
+/*! \fn int APC_API APC_EdgePreServingFilter(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int type, int width, int height, int level, float sigma, float lumda)
 */
-int ETRONDI_API EtronDI_EdgePreServingFilter(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int type, int width, int height, int level, float sigma, float lumda);
+int APC_API APC_EdgePreServingFilter(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, int type, int width, int height, int level, float sigma, float lumda);
 
-/*! \fn int ETRONDI_API EtronDI_ApplyFilters(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, unsigned char* subDisparity, int bytesPerPixel, int width, int height, int sub_w, int sub_h, int threshold=64)
+/*! \fn int APC_API APC_ApplyFilters(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, unsigned char* subDisparity, int bytesPerPixel, int width, int height, int sub_w, int sub_h, int threshold=64)
 */
-int ETRONDI_API EtronDI_ApplyFilters(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, unsigned char* subDisparity, int bytesPerPixel, int width, int height, int sub_w, int sub_h, int threshold=64);
+int APC_API APC_ApplyFilters(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* depthBuf, unsigned char* subDisparity, int bytesPerPixel, int width, int height, int sub_w, int sub_h, int threshold=64);
 
-/*! \fn int ETRONDI_API EtronDI_EnableGPUAcceleration(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool enable)
+/*! \fn int APC_API APC_EnableGPUAcceleration(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool enable)
 	\brief enable depth filter with GPU acceleration or not
-	\param pHandleEtronDI: the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI: the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo: pointer of device select index
 	\param enable: true:enable, fales:diable
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_EnableGPUAcceleration(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, bool enable);
+int APC_API APC_EnableGPUAcceleration(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool enable);
 
-/*! \fn char* ETRONDI_API EtronDI_GetDepthFilterVersion(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo)
+/*! \fn char* APC_API APC_GetDepthFilterVersion(void *pHandleApcDI, PDEVSELINFO pDevSelInfo)
 	\brief get depth filter version
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
 	\return success: get version string, others: get N/A string
 */
-ETRONDI_API char* EtronDI_GetDepthFilterVersion(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+APC_API char* APC_GetDepthFilterVersion(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int ETRONDI_API EtronDI_ResetFilters(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo)
+/*! \fn int APC_API APC_ResetFilters(void *pHandleApcDI, PDEVSELINFO pDevSelInfo)
 */
-int ETRONDI_API EtronDI_ResetFilters(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo);
+int APC_API APC_ResetFilters(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int ETRONDI_API EtronDI_TableToData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int width, int height, unsigned char* Table, unsigned char* Src, unsigned char* Dst)
+/*! \fn int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int width, int height, unsigned char* Table, unsigned char* Src, unsigned char* Dst)
     \brief transfer Src to Dst by Table
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
     \param width 	 input  image width
 	\param height	 input  image height
@@ -1726,33 +1814,33 @@ int ETRONDI_API EtronDI_ResetFilters(void *pHandleEtronDI, PDEVSELINFO pDevSelIn
 	\param Table	 input  Table buffer
 	\param Src	     input  Src   buffer
     \param Dst       output Dst   buffer
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
-int ETRONDI_API EtronDI_TableToData(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, int width, int height, int TableSize, unsigned short* Table, unsigned short* Src, unsigned short* Dst);
+int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int width, int height, int TableSize, unsigned short* Table, unsigned short* Src, unsigned short* Dst);
 
-/*! \fn int EtronDI_ColorFormat_to_RGB24(void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, EtronDIImageType::Value type)
+/*! \fn int APC_ColorFormat_to_RGB24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, ApcDIImageType::Value type)
 	\brief get hardware post processing status
-	\param pHandleEtronDI	 the pointer to the initilized EtronDI SDK instance
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
     \param ImgDst 	output image buffer
 	\param ImgSrc	input  image buffer
 	\param width	input  image width
 	\param height	input  image height
     \param type     input  image-format
-	\return success: EtronDI_OK, others: see eSPDI_ErrCode.h	
+	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int ETRONDI_API EtronDI_ColorFormat_to_RGB24( void *pHandleEtronDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, EtronDIImageType::Value type );
+int APC_API APC_ColorFormat_to_RGB24( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, ApcDIImageType::Value type );
 
-int ETRONDI_API EtronDI_PropertyPU_GetRange(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);
-int ETRONDI_API EtronDI_PropertyCT_GetRange(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);
-int ETRONDI_API EtronDI_PropertyPU_GetCurrent(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, long nProperty, long *pCur, long *pCur2, long *pCapsFlag, int pid);
-int ETRONDI_API EtronDI_PropertyCT_GetCurrent(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, long nProperty, long *pCur, long *pCur2, long *pCapsFlag, int pid);
-int ETRONDI_API EtronDI_PropertyPU_SetCurrent(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, long nProperty, long nCur, long nCur2, long nCapsFlag, int pid);
-int ETRONDI_API EtronDI_PropertyCT_SetCurrent(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, long nProperty, long nCur, long nCur2, long nCapsFlag, int pid);
-int ETRONDI_API EtronDI_PropertyItem_Write(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, REFGUID guid, int nPropertyItem, LONG nValue, int pid);
-int ETRONDI_API EtronDI_PropertyItem_Read(void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, REFGUID guid, int nPropertyItem, LONG *pValue, int pid);
+int APC_API APC_PropertyPU_GetRange(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);
+int APC_API APC_PropertyCT_GetRange(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);
+int APC_API APC_PropertyPU_GetCurrent(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long *pCur, long *pCur2, long *pCapsFlag, int pid);
+int APC_API APC_PropertyCT_GetCurrent(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long *pCur, long *pCur2, long *pCapsFlag, int pid);
+int APC_API APC_PropertyPU_SetCurrent(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long nCur, long nCur2, long nCapsFlag, int pid);
+int APC_API APC_PropertyCT_SetCurrent(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long nCur, long nCur2, long nCapsFlag, int pid);
+int APC_API APC_PropertyItem_Write(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, REFGUID guid, int nPropertyItem, LONG nValue, int pid);
+int APC_API APC_PropertyItem_Read(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, REFGUID guid, int nPropertyItem, LONG *pValue, int pid);
 
-int ETRONDI_API EtronDI_ShowPropertyPage( void * pHandleEtronDI, PDEVSELINFO pDevSelInfo, int pid );
+int APC_API APC_ShowPropertyPage( void * pHandleApcDI, PDEVSELINFO pDevSelInfo, int pid );
 
 #ifdef __cplusplus
 }
