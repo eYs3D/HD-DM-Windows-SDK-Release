@@ -36,7 +36,7 @@ int FrameSyncManager::UnregisterDevice(void *hApcDI, DEVSELINFO devSelInfo)
 }
 
 int FrameSyncManager::SyncImageCallback(void *hApcDI, DEVSELINFO devSelInfo,
-	ApcDIImageType::Value imageType, int imageId,
+	APCImageType::Value imageType, int imageId,
 	int serailNumber, std::function<void()> &&imageCallback)
 {
 	std::lock_guard<std::mutex> locker(m_mutex);
@@ -49,14 +49,14 @@ int FrameSyncManager::SyncImageCallback(void *hApcDI, DEVSELINFO devSelInfo,
 
 	int nCallbackIndex;
 
-	if (ApcDIImageType::IsImageColor(imageType))
+	if (APCImageType::IsImageColor(imageType))
 	{
 		nCallbackIndex = 0;
 		m_mapSyncList[key]->syncConditionMask |= Condition_Color;
 		m_mapSyncList[key]->mapSyncObject[serailNumber].syncMask |= Condition_Color;
 		
 	}
-	else if (ApcDIImageType::IsImageDepth(imageType))
+	else if (APCImageType::IsImageDepth(imageType))
 	{
 		nCallbackIndex = 1;
 		m_mapSyncList[key]->syncConditionMask |= Condition_Depth;

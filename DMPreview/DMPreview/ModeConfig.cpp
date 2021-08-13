@@ -57,7 +57,7 @@ ModeConfig::IMU_TYPE ModeConfig::GetIMU_Type( const int iPID )
 
 void ModeConfig::ReadModeConfig()
 {
-    if ( SQLITE_OK != sqlite3_open_v2( ".\\ModeConfig.db", &m_sq3, SQLITE_OPEN_READONLY, NULL ) )
+    if ( SQLITE_OK != sqlite3_open_v2( ".\\cfg\\ModeConfig.db", &m_sq3, SQLITE_OPEN_READONLY, NULL ) )
     {
         return;
     }
