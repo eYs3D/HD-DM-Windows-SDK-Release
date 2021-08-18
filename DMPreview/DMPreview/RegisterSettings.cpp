@@ -482,7 +482,7 @@ int RegisterSettings::DM_Quality_Register_Setting_Slave(void* hApcDI, PDEVSELINF
 	}
 
 	CString filePrvName;
-	filePrvName.Format(_T(".\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"), modelName);
+	filePrvName.Format(_T(".\\cfg\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"), modelName);
 	//char *fileName = (char *)filePrvName.GetBuffer(0);
 	//fileName = ".\\DM_Quality_Cfg\\EX8054_DM_Quality_Register_Setting.cfg";
 	//TRACE("DM_Quality_Register_Setting::fileName =%s\n", fileName);
@@ -591,7 +591,7 @@ int RegisterSettings::DM_Quality_Register_Setting_For6cm(void* hApcDI, PDEVSELIN
 	}
 
 	CString filePrvName;
-	filePrvName.Format(_T(".\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"),modelName);
+	filePrvName.Format(_T(".\\cfg\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"),modelName);
 	//char *fileName = (char *)filePrvName.GetBuffer(0);
 	//fileName = ".\\DM_Quality_Cfg\\EX8054_DM_Quality_Register_Setting.cfg";
 	//TRACE("DM_Quality_Register_Setting::fileName =%s\n", fileName);
@@ -742,7 +742,7 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
 	}
 
 	CString filePrvName;
-	filePrvName.Format(_T(".\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"),modelName);
+	filePrvName.Format(_T(".\\cfg\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"),modelName);
 	//char *fileName = (char *)filePrvName.GetBuffer(0);
 	//fileName = ".\\DM_Quality_Cfg\\EX8054_DM_Quality_Register_Setting.cfg";
 	//TRACE("DM_Quality_Register_Setting::fileName =%s\n", fileName);
@@ -755,7 +755,7 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
 		::GetModuleFileName(NULL, buff, sizeof(buff));
 		CString strFolder = buff;
 		CString strPath_Application = strFolder.Left(strFolder.ReverseFind(_T('\\')) + 1);
-		filePrvName.Format(_T("DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"), modelName);
+		filePrvName.Format(_T("cfg\\DM_Quality_Cfg\\%s_DM_Quality_Register_Setting.cfg"), modelName);
 		CString filePrvName_FullPath = strPath_Application + filePrvName;
 		filePrvName = filePrvName_FullPath;
 

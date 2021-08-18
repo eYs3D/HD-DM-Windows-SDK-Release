@@ -283,12 +283,11 @@
       <Command>
         rmdir /s /q $(SolutionDir)..\bin
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
-        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -327,12 +326,11 @@
       <Command>
         rmdir /s /q $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
-        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\cfg\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -450,12 +448,11 @@
       <Command>
 
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
-        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -502,12 +499,11 @@
       <Command>
 
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
-        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -554,12 +550,11 @@
       <Command>
         rmdir /s /q $(SolutionDir)..\bin
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
-        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -604,12 +599,11 @@
       <Command>
         rmdir /s /q $(SolutionDir)..\bin
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
-        mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir).\DMPreview\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

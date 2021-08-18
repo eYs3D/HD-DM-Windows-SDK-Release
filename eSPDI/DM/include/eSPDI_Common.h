@@ -107,6 +107,10 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_Hypatia 0x0160
 #define APC_PID_SANDRA  0x0167
 
+// A general and temporary PID
+// for N customers who doesn't have the specify PID.
+#define APC_PID_RESERVE 0x0168
+
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
 #define BIT_FLIP(a,b) ((a) ^= (1<<(b)))
