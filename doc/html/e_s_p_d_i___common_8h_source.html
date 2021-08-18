@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="eYs3D_logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">eYs3D Windows SDK
-   &#160;<span id="projectnumber">1.5.0.0</span>
+   &#160;<span id="projectnumber">1.5.0.1</span>
    </div>
   </td>
  </tr>
@@ -424,7 +424,7 @@ $(function() {
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    BYTE      serial_number[256];</div>
 <div class="line"><a name="l00373"></a><span class="lineno"><a class="line" href="e_s_p_d_i___common_8h.html#a6bca9a237041aef8940bce7bd47fbd3f">  373</a></span>&#160;} <a class="code" href="e_s_p_d_i___common_8h.html#a6bca9a237041aef8940bce7bd47fbd3f">PARALUT</a>, *<a class="code" href="struct_para_l_u_t.html">PPARALUT</a>;</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="keyword">struct </span>ApcDIImageType</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="keyword">struct </span>APCImageType</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;{</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    <span class="keyword">enum</span> Value</div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    {</div>
@@ -438,17 +438,17 @@ $(function() {
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        DEPTH_14BITS</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    };</div>
 <div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> IsImageColor(ApcDIImageType::Value type)</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> IsImageColor(APCImageType::Value type)</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    {</div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;        <span class="keywordflow">return</span> (type == COLOR_YUY2 || type == COLOR_RGB24 || type == COLOR_MJPG);</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    }</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160; </div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> IsImageDepth(ApcDIImageType::Value type)</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> IsImageDepth(APCImageType::Value type)</div>
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    {</div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        <span class="keywordflow">return</span> (type != IMAGE_UNKNOWN &amp;&amp; !IsImageColor(type));</div>
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    }</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160; </div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    <span class="keyword">static</span> ApcDIImageType::Value DepthDataTypeToDepthImageType(WORD dataType)</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    <span class="keyword">static</span> APCImageType::Value DepthDataTypeToDepthImageType(WORD dataType)</div>
 <div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    {</div>
 <div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        <span class="keywordflow">switch</span> (dataType)</div>
 <div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        {</div>
@@ -460,7 +460,7 @@ $(function() {
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_8_BITS_RAW:</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS:</div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_RAW:</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;            <span class="keywordflow">return</span> ApcDIImageType::DEPTH_8BITS;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;            <span class="keywordflow">return</span> APCImageType::DEPTH_8BITS;</div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_8_BITS_x80:</div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_8_BITS_x80_RAW:</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_ILM_8_BITS_x80:</div>
@@ -469,7 +469,7 @@ $(function() {
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80_RAW:</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80:</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80_RAW:</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            <span class="keywordflow">return</span> ApcDIImageType::DEPTH_8BITS_0x80;</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            <span class="keywordflow">return</span> APCImageType::DEPTH_8BITS_0x80;</div>
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_11_BITS:</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_11_BITS_RAW:</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY:</div>
@@ -482,7 +482,7 @@ $(function() {
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS:</div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_RAW:</div>
 <div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_COMBINED_RECTIFY:</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            <span class="keywordflow">return</span> ApcDIImageType::DEPTH_11BITS;</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            <span class="keywordflow">return</span> APCImageType::DEPTH_11BITS;</div>
 <div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_14_BITS:</div>
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_14_BITS_RAW:</div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY:</div>
@@ -495,8 +495,8 @@ $(function() {
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS:</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_RAW:</div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        <span class="keywordflow">case</span> APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_COMBINED_RECTIFY:</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;            <span class="keywordflow">return</span> ApcDIImageType::DEPTH_14BITS;</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <span class="keywordflow">default</span>: <span class="keywordflow">return</span> ApcDIImageType::IMAGE_UNKNOWN;</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;            <span class="keywordflow">return</span> APCImageType::DEPTH_14BITS;</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <span class="keywordflow">default</span>: <span class="keywordflow">return</span> APCImageType::IMAGE_UNKNOWN;</div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        }</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    }</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;};</div>
@@ -515,7 +515,7 @@ $(function() {
 <div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keywordflow">return</span> ((target &amp; setting) != 0);</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    }</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;};</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="keyword">typedef</span> void(*APC_ImgCallbackFn)(ApcDIImageType::Value imgType, <span class="keywordtype">int</span> imgId, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* imgBuf, <span class="keywordtype">int</span> imgSize,</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="keyword">typedef</span> void(*APC_ImgCallbackFn)(APCImageType::Value imgType, <span class="keywordtype">int</span> imgId, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* imgBuf, <span class="keywordtype">int</span> imgSize,</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">int</span> serialNumber, <span class="keywordtype">void</span>* pParam);</div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    </div>
 <div class="line"><a name="l00483"></a><span class="lineno"><a class="line" href="e_s_p_d_i___common_8h.html#aa9dc63625f9014b01ef240a0e5bb4e4a">  483</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
@@ -930,7 +930,7 @@ $(function() {
 <div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160; </div>
 <div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;<span class="keywordtype">int</span> APC_API APC_TableToData(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">int</span> TableSize, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* Table, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* Src, <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>* Dst);</div>
 <div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160; </div>
-<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;<span class="keywordtype">int</span> APC_API APC_ColorFormat_to_RGB24( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgDst, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgSrc, <span class="keywordtype">int</span> SrcSize, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, ApcDIImageType::Value type );</div>
+<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;<span class="keywordtype">int</span> APC_API APC_ColorFormat_to_RGB24( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgDst, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgSrc, <span class="keywordtype">int</span> SrcSize, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, APCImageType::Value type );</div>
 <div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160; </div>
 <div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;<span class="keywordtype">int</span> APC_API APC_PropertyPU_GetRange(<span class="keywordtype">void</span> * pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">long</span> nProperty, <span class="keywordtype">long</span> * pMin, <span class="keywordtype">long</span> * pMax, <span class="keywordtype">long</span> * pStep, <span class="keywordtype">long</span> * pDefault, <span class="keywordtype">long</span> * pCapsFlag, <span class="keywordtype">int</span> pid);</div>
 <div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;<span class="keywordtype">int</span> APC_API APC_PropertyCT_GetRange(<span class="keywordtype">void</span> * pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">long</span> nProperty, <span class="keywordtype">long</span> * pMin, <span class="keywordtype">long</span> * pMax, <span class="keywordtype">long</span> * pStep, <span class="keywordtype">long</span> * pDefault, <span class="keywordtype">long</span> * pCapsFlag, <span class="keywordtype">int</span> pid);</div>

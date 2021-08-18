@@ -1,0 +1,95 @@
+\hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n}{}\doxysection{tag\+DEVINFORMATION}
+\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n}\index{tagDEVINFORMATION@{tagDEVINFORMATION}}
+
+
+DEVINFORMATION.  
+
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+unsigned short \mbox{\hyperlink{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_ad972ecb3701000133088042b09c32e4a}{w\+PID}}
+\item 
+unsigned short \mbox{\hyperlink{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a7749fa8bd8f0b7de6cf34eb0b9d4d5b9}{w\+VID}}
+\item 
+char $\ast$ \mbox{\hyperlink{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a31a6970a84fc0dd8b4a62e74f7945f0d}{str\+Dev\+Name}}
+\item 
+unsigned short \mbox{\hyperlink{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a4f15aa2b83c91b04b341ae25566a27c6}{n\+Chip\+ID}}
+\item 
+unsigned short \mbox{\hyperlink{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a7450d8ca7f32d1f9624059952990fb8e}{n\+Dev\+Type}}
+\item 
+unsigned short \mbox{\hyperlink{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a439b781791181f94542629dcf279867a}{w\+Usb\+Node}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+DEVINFORMATION. 
+
+device information 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a4f15aa2b83c91b04b341ae25566a27c6}\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a4f15aa2b83c91b04b341ae25566a27c6}} 
+\index{tagDEVINFORMATION@{tagDEVINFORMATION}!nChipID@{nChipID}}
+\index{nChipID@{nChipID}!tagDEVINFORMATION@{tagDEVINFORMATION}}
+\doxysubsubsection{\texorpdfstring{nChipID}{nChipID}}
+{\footnotesize\ttfamily unsigned short n\+Chip\+ID}
+
+chip ID, 0x18 for AXES1, 0x1C for KIWI, 0x15 for PUMA \mbox{\Hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a7450d8ca7f32d1f9624059952990fb8e}\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a7450d8ca7f32d1f9624059952990fb8e}} 
+\index{tagDEVINFORMATION@{tagDEVINFORMATION}!nDevType@{nDevType}}
+\index{nDevType@{nDevType}!tagDEVINFORMATION@{tagDEVINFORMATION}}
+\doxysubsubsection{\texorpdfstring{nDevType}{nDevType}}
+{\footnotesize\ttfamily unsigned short n\+Dev\+Type}
+
+chip enum value, \begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{e_s_p_d_i___common_8h_aa9dc63625f9014b01ef240a0e5bb4e4a}{APC\+\_\+\+DEVICE\+\_\+\+TYPE}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a31a6970a84fc0dd8b4a62e74f7945f0d}\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a31a6970a84fc0dd8b4a62e74f7945f0d}} 
+\index{tagDEVINFORMATION@{tagDEVINFORMATION}!strDevName@{strDevName}}
+\index{strDevName@{strDevName}!tagDEVINFORMATION@{tagDEVINFORMATION}}
+\doxysubsubsection{\texorpdfstring{strDevName}{strDevName}}
+{\footnotesize\ttfamily char$\ast$ str\+Dev\+Name}
+
+pointer to device name stored inside the SDK \mbox{\Hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_ad972ecb3701000133088042b09c32e4a}\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_ad972ecb3701000133088042b09c32e4a}} 
+\index{tagDEVINFORMATION@{tagDEVINFORMATION}!wPID@{wPID}}
+\index{wPID@{wPID}!tagDEVINFORMATION@{tagDEVINFORMATION}}
+\doxysubsubsection{\texorpdfstring{wPID}{wPID}}
+{\footnotesize\ttfamily unsigned short w\+PID}
+
+product ID \hypertarget{index_multi_row}{}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\caption{PID List}\label{index_multi_row}\\
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Chip Name }&\cellcolor{\tableheadbgcolor}\textbf{ Chip ID }&\cellcolor{\tableheadbgcolor}\textbf{ PID }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Chip Name }&\cellcolor{\tableheadbgcolor}\textbf{ Chip ID }&\cellcolor{\tableheadbgcolor}\textbf{ PID }\\\cline{1-3}
+\endhead
+\multirow{5}{*}{AXES1 }&\multirow{5}{*}{0x18 }&0x0568 \\\cline{3-3}
+&&0x0668 \\\cline{3-3}
+&&0x0113 \\\cline{3-3}
+&&0x0115 \\\cline{3-3}
+&&0x0116 \\\cline{1-3}
+KIWI &0x1C &0x0118 \\\cline{1-3}
+\multirow{2}{*}{PUMA }&\multirow{2}{*}{0x15 }&0x0112 \\\cline{3-3}
+&&0x0120 \\\cline{1-3}
+\end{longtabu}
+\mbox{\Hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a439b781791181f94542629dcf279867a}\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a439b781791181f94542629dcf279867a}} 
+\index{tagDEVINFORMATION@{tagDEVINFORMATION}!wUsbNode@{wUsbNode}}
+\index{wUsbNode@{wUsbNode}!tagDEVINFORMATION@{tagDEVINFORMATION}}
+\doxysubsubsection{\texorpdfstring{wUsbNode}{wUsbNode}}
+{\footnotesize\ttfamily unsigned short w\+Usb\+Node}
+
+USB Node \mbox{\Hypertarget{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a7749fa8bd8f0b7de6cf34eb0b9d4d5b9}\label{structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n_a7749fa8bd8f0b7de6cf34eb0b9d4d5b9}} 
+\index{tagDEVINFORMATION@{tagDEVINFORMATION}!wVID@{wVID}}
+\index{wVID@{wVID}!tagDEVINFORMATION@{tagDEVINFORMATION}}
+\doxysubsubsection{\texorpdfstring{wVID}{wVID}}
+{\footnotesize\ttfamily unsigned short w\+VID}
+
+vender ID, 0x1\+E4E for Apc\+DI device 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{e_s_p_d_i___common_8h}{e\+SPDI\+\_\+\+Common.\+h}}\end{DoxyCompactItemize}

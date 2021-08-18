@@ -1,8 +1,14 @@
 #pragma once
 
-typedef void (*FrameGrabberCallbackFn)(	std::vector<unsigned char>& bufDepth, int widthDepth, int heightDepth,
-										std::vector<unsigned char>& bufColor, int widthColor, int heightColor,
-										int serialNumber, void* pParam);
+typedef void (*FrameGrabberCallbackFn)( BOOL isDepthOnly,
+                                        std::vector<unsigned char>& bufDepth,
+                                        int widthDepth,
+                                        int heightDepth,
+                                        std::vector<unsigned char>& bufColor,
+                                        int widthColor,
+                                        int heightColor,
+                                        int serialNumber,
+                                        void* pParam);
 
 class std::thread;
 

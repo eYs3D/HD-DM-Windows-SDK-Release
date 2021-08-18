@@ -84,9 +84,9 @@ private:
     void PreparePreviewDlg();
     void InitPreviewDlgPos();
     void CloseDeviceAndStopPreview(CDialog* pCallerDlg);
-    static void ImgCallback(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+    static void ImgCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
         int width, int height, int serialNumber, void* pParam);
-	void ProcessImgCallback(ApcDIImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
+	void ProcessImgCallback(APCImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
 		int width, int height, int serialNumber);
 
     BOOL IsStream0ColorPlusDepth();
@@ -95,9 +95,15 @@ private:
 	void ChangeIRValue(WORD value);
     static void DepthFusionCallback(unsigned char* depthBuf, unsigned char* selectedIndex, int depthSize, 
         int width, int height, int serialNumber, void* pParam);
-	static void FrameGrabberCallback(	std::vector<unsigned char>& bufDepth, int widthDepth, int heightDepth,
-										std::vector<unsigned char>& bufColor, int widthColor, int heightColor,
-										int serialNumber, void* pParam);
+	static void FrameGrabberCallback(   BOOL isDepthOnly,
+                                        std::vector<unsigned char>& bufDepth,
+                                        int widthDepth,
+                                        int heightDepth,
+                                        std::vector<unsigned char>& bufColor,
+                                        int widthColor,
+                                        int heightColor,
+                                        int serialNumber,
+                                        void* pParam);
 	static void PointcloudViewerMessageCallback(CPointCloudViewer::MessageType msg, int value, void* pParam);
     static DWORD __stdcall Thread_Preview( void* pvoid );
     void UpdateUIForDemo();
@@ -120,12 +126,13 @@ private:
 	int getRectifyLogData(eSPCtrl_RectLogData* rectifyLog,int index);
 	int getRectifyLogDataSlave(eSPCtrl_RectLogData* rectifyLog, int index);
 
-	void SaveDepthYuv(std::vector<unsigned char> bufDepth, ApcDIImageType::Value depthImageType, int widthDepth, int heightDepth, const char* pFileName);
+	void SaveDepthYuv(std::vector<unsigned char> bufDepth, APCImageType::Value depthImageType, int widthDepth, int heightDepth, const char* pFileName);
 	void SaveDepthGrayBmp(int DepthNum, const char* pFileName);
 	void SaveDepthColorBmp(int DepthNum, const char* pFileName);
-	void DepthFusionBmp(ApcDIImageType::Value depthImageType);
-	//bool CPreviewImageDlg::usePlyFilter(ApcDIImageType::Value depthImageType);
+	void DepthFusionBmp(APCImageType::Value depthImageType);
+	//bool CPreviewImageDlg::usePlyFilter(APCImageType::Value depthImageType);
 	static UINT DoSnapshot(LPVOID lpParam);//CPreviewImageDlg* pThis, WORD irValue, float zFar);
+    static BOOL isDepthOnly(int depthWidth, int depthHeight, BOOL isColorBufEmpty);
 
 	void InitAutoModuleSync();
 
@@ -198,7 +205,7 @@ private:
     APC_STREAM_INFO m_pStreamDepthInfo[APC_MAX_STREAM_COUNT];
     CPreviewParams m_previewParams;
     std::pair<WORD, WORD> m_irRange;
-    void AdjustZDTableIndex(int *pzdTblIdx, int width, int height, ApcDIImageType::Value DImgType);
+    void AdjustZDTableIndex(int *pzdTblIdx, int width, int height, APCImageType::Value DImgType);
 	void AdjustColorResForDepth0(CPoint*colorRealRes);
 	void AdjustRegister();
     void AdjustNearFar( int& zFar, int& zNear, CDepthDlg* pDlg );

@@ -59,7 +59,7 @@ private:
     LPBITMAPINFO m_BmpInfo;  
     CPoint m_cpDepth;
     BOOL m_bRotate;
-    ApcDIImageType::Value m_eImageType;
+    APCImageType::Value m_eImageType;
 
     float UpdateAndGetFramerate();
     void Thread_ShowImage();

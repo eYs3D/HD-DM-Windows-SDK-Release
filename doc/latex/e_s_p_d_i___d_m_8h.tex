@@ -1,0 +1,341 @@
+\hypertarget{e_s_p_d_i___d_m_8h}{}\doxysection{e\+SPDI\+\_\+\+DM.\+h File Reference}
+\label{e_s_p_d_i___d_m_8h}\index{eSPDI\_DM.h@{eSPDI\_DM.h}}
+
+
+e\+Ys3D SDK API export functions, data structure and variable definition for depth map module  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a49d36b35f69bbbc6bf452ab6fbd08e12}{APC\+\_\+\+Get\+Slave\+YOffset}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em get Y offset data \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_aeb0903738b1ae9ccd69eb2482adb7986}{APC\+\_\+\+Get\+YOffset}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em get Y offset data \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_aa5afd728ca1025352486b4ce9308f19c}{APC\+\_\+\+Get\+Slave\+Rectify\+Table}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em get rectify values from flash \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a909c8053a80fd9379025f452468b69aa}{APC\+\_\+\+Get\+Rectify\+Table}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em get rectify values from flash \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a06862be18356543b3ac7ce6cfa9b7111}{APC\+\_\+\+Get\+ZDTable}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, PZDTABLEINFO p\+ZDTable\+Info)
+\begin{DoxyCompactList}\small\item\em get disparity and Z values from flash \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a88b649ea8441943a0e3eafdc23119182}{APC\+\_\+\+Set\+Slave\+YOffset}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em set Y offset data \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_ae486a072f7e928ce021a9a2ba082de59}{APC\+\_\+\+Set\+YOffset}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em set Y offset data \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a3cef9a10c57759a2d9fdd117618ba610}\label{e_s_p_d_i___d_m_8h_a3cef9a10c57759a2d9fdd117618ba610}} 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a3cef9a10c57759a2d9fdd117618ba610}{APC\+\_\+\+Set\+Slave\+Rectify\+Table}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em set rectify data to flash, see APC\+\_\+\+Set\+Rectify\+Table except set \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a347b8716a55052dde0b36e0072d6f1c8}\label{e_s_p_d_i___d_m_8h_a347b8716a55052dde0b36e0072d6f1c8}} 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a347b8716a55052dde0b36e0072d6f1c8}{APC\+\_\+\+Set\+Rectify\+Table}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, int index)
+\begin{DoxyCompactList}\small\item\em set rectify data to flash, see APC\+\_\+\+Set\+Rectify\+Table except set \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_abb3b94a5343f21ec85a1ca8108bca465}\label{e_s_p_d_i___d_m_8h_abb3b94a5343f21ec85a1ca8108bca465}} 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_abb3b94a5343f21ec85a1ca8108bca465}{APC\+\_\+\+Set\+ZDTable}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, BYTE $\ast$buffer, int Buffer\+Length, int $\ast$p\+Actual\+Length, PZDTABLEINFO p\+ZDTable\+Info)
+\begin{DoxyCompactList}\small\item\em set disparity and Z values to flash, see APC\+\_\+\+Get\+ZDTable except get \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_aca72614ec2f15d066649f1e423d6d0c5}{APC\+\_\+\+Get\+Rectify\+Mat\+Log\+Data}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, \mbox{\hyperlink{structe_s_p_ctrl___rect_log_data}{e\+SPCtrl\+\_\+\+Rect\+Log\+Data}} $\ast$p\+Data, int index)
+\begin{DoxyCompactList}\small\item\em get rectify log data from flash for Puma IC \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a5194f86b6ea0b84791d34ed295ed260f}{APC\+\_\+\+Set\+Depth\+Data\+Type}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, WORD w\+Type)
+\begin{DoxyCompactList}\small\item\em set depth data type, 11 bit for disparity data, 14 bit for Z data notice\+: only PUMA type IC can support this setting \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a26382a38dc38e0a6120f8b15e2620127}{APC\+\_\+\+Get\+Depth\+Data\+Type}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, WORD $\ast$pw\+Type)
+\begin{DoxyCompactList}\small\item\em get current depth data type setting \end{DoxyCompactList}\item 
+int APC\+\_\+\+API \mbox{\hyperlink{e_s_p_d_i___d_m_8h_a05e63360c4b14eddd961bcd7cf053be2}{APC\+\_\+\+Set\+HWPost\+Process}} (void $\ast$p\+Handle\+Apc\+DI, PDEVSELINFO p\+Dev\+Sel\+Info, bool enable)
+\begin{DoxyCompactList}\small\item\em enable or disable internal chip post processing function \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+e\+Ys3D SDK API export functions, data structure and variable definition for depth map module 
+
+\begin{DoxyCopyright}{Copyright}
+This file copyright (C) 2017 by e\+Ys3D company
+\end{DoxyCopyright}
+An unpublished work. All rights reserved. This file is proprietary information, and may not be disclosed or copied without the prior permission of e\+Ys3D company. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a26382a38dc38e0a6120f8b15e2620127}\label{e_s_p_d_i___d_m_8h_a26382a38dc38e0a6120f8b15e2620127}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetDepthDataType@{APC\_GetDepthDataType}}
+\index{APC\_GetDepthDataType@{APC\_GetDepthDataType}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetDepthDataType()}{APC\_GetDepthDataType()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Get\+Depth\+Data\+Type (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{WORD $\ast$}]{pw\+Type }\end{DoxyParamCaption})}
+
+
+
+get current depth data type setting 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em pw\+Type} & pointer of current depth data type in device \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+: APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_aca72614ec2f15d066649f1e423d6d0c5}\label{e_s_p_d_i___d_m_8h_aca72614ec2f15d066649f1e423d6d0c5}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetRectifyMatLogData@{APC\_GetRectifyMatLogData}}
+\index{APC\_GetRectifyMatLogData@{APC\_GetRectifyMatLogData}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetRectifyMatLogData()}{APC\_GetRectifyMatLogData()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Get\+Rectify\+Mat\+Log\+Data (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{\mbox{\hyperlink{structe_s_p_ctrl___rect_log_data}{e\+SPCtrl\+\_\+\+Rect\+Log\+Data}} $\ast$}]{p\+Data,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+get rectify log data from flash for Puma IC 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em p\+Data} & rectify log data, its buffer size is 4096 bytes ~\newline
+ see \mbox{\hyperlink{structe_s_p_ctrl___rect_log_data}{e\+SPCtrl\+\_\+\+Rect\+Log\+Data}} for detailed members \\
+\hline
+{\em index} & index to identify rectify log data for corresponding depth \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+: APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a909c8053a80fd9379025f452468b69aa}\label{e_s_p_d_i___d_m_8h_a909c8053a80fd9379025f452468b69aa}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetRectifyTable@{APC\_GetRectifyTable}}
+\index{APC\_GetRectifyTable@{APC\_GetRectifyTable}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetRectifyTable()}{APC\_GetRectifyTable()}}
+{\footnotesize\ttfamily APC\+\_\+\+Get\+Rectify\+Table (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+get rectify values from flash 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & buffer to store rectify table data \\
+\hline
+{\em Buffer\+Length} & input buffer length \\
+\hline
+{\em p\+Actual\+Length} & actual length has written to buffer \\
+\hline
+{\em index} & index to identify rectify table for corresponding depth \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+:APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_aa5afd728ca1025352486b4ce9308f19c}\label{e_s_p_d_i___d_m_8h_aa5afd728ca1025352486b4ce9308f19c}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetSlaveRectifyTable@{APC\_GetSlaveRectifyTable}}
+\index{APC\_GetSlaveRectifyTable@{APC\_GetSlaveRectifyTable}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetSlaveRectifyTable()}{APC\_GetSlaveRectifyTable()}}
+{\footnotesize\ttfamily APC\+\_\+\+Get\+Slave\+Rectify\+Table (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+get rectify values from flash 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & buffer to store rectify table data \\
+\hline
+{\em Buffer\+Length} & input buffer length \\
+\hline
+{\em p\+Actual\+Length} & actual length has written to buffer \\
+\hline
+{\em index} & index to identify rectify table for corresponding depth \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+:APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a49d36b35f69bbbc6bf452ab6fbd08e12}\label{e_s_p_d_i___d_m_8h_a49d36b35f69bbbc6bf452ab6fbd08e12}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetSlaveYOffset@{APC\_GetSlaveYOffset}}
+\index{APC\_GetSlaveYOffset@{APC\_GetSlaveYOffset}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetSlaveYOffset()}{APC\_GetSlaveYOffset()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Get\+Slave\+YOffset (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+get Y offset data 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & buffer to store \\
+\hline
+{\em Buffer\+Length} & length of buffer \\
+\hline
+{\em p\+Actual\+Length} & actual byte of reading \\
+\hline
+{\em index} & index of Y offset file ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+:APC\+\_\+\+OK, others\+:see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_aeb0903738b1ae9ccd69eb2482adb7986}\label{e_s_p_d_i___d_m_8h_aeb0903738b1ae9ccd69eb2482adb7986}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetYOffset@{APC\_GetYOffset}}
+\index{APC\_GetYOffset@{APC\_GetYOffset}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetYOffset()}{APC\_GetYOffset()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Get\+YOffset (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+get Y offset data 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & buffer to store \\
+\hline
+{\em Buffer\+Length} & length of buffer \\
+\hline
+{\em p\+Actual\+Length} & actual byte of reading \\
+\hline
+{\em index} & index of Y offset file ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+:APC\+\_\+\+OK, others\+:see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a06862be18356543b3ac7ce6cfa9b7111}\label{e_s_p_d_i___d_m_8h_a06862be18356543b3ac7ce6cfa9b7111}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_GetZDTable@{APC\_GetZDTable}}
+\index{APC\_GetZDTable@{APC\_GetZDTable}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_GetZDTable()}{APC\_GetZDTable()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Get\+ZDTable (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{PZDTABLEINFO}]{p\+ZDTable\+Info }\end{DoxyParamCaption})}
+
+
+
+get disparity and Z values from flash 
+
+
+\begin{DoxyEnumerate}
+\item if depth data type is APC\+\_\+\+DEPTH\+\_\+\+DATA\+\_\+14\+\_\+\+BITS then just get Z value from depth buffer
+\item if depth data type is APC\+\_\+\+ZD\+\_\+\+TABLE\+\_\+\+FILE\+\_\+\+SIZE\+\_\+11\+\_\+\+BITS then using depth buffer value as a index to get Z value inside ZD table
+\item see Get\+ZValue() of example.\+c to get Z value from different depth data type 
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & bufer to store ZD table \\
+\hline
+{\em Buffer\+Length} & input buffer length \\
+\hline
+{\em p\+Actual\+Length} & actual length has written to buffer \\
+\hline
+{\em p\+ZDTable\+Info} & index to identify ZD table and data type for corrresponding depth \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+: APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+
+\end{DoxyEnumerate}\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a5194f86b6ea0b84791d34ed295ed260f}\label{e_s_p_d_i___d_m_8h_a5194f86b6ea0b84791d34ed295ed260f}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_SetDepthDataType@{APC\_SetDepthDataType}}
+\index{APC\_SetDepthDataType@{APC\_SetDepthDataType}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_SetDepthDataType()}{APC\_SetDepthDataType()}}
+{\footnotesize\ttfamily APC\+\_\+\+Set\+Depth\+Data\+Type (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{WORD}]{w\+Type }\end{DoxyParamCaption})}
+
+
+
+set depth data type, 11 bit for disparity data, 14 bit for Z data notice\+: only PUMA type IC can support this setting 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em w\+Type} & depth data type you want to set, see APC\+\_\+\+DEPTH\+\_\+\+DATA\+\_\+xxx in APC\+\_\+\+O.\+h \textbackslash{}output success\+: APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a05e63360c4b14eddd961bcd7cf053be2}\label{e_s_p_d_i___d_m_8h_a05e63360c4b14eddd961bcd7cf053be2}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_SetHWPostProcess@{APC\_SetHWPostProcess}}
+\index{APC\_SetHWPostProcess@{APC\_SetHWPostProcess}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_SetHWPostProcess()}{APC\_SetHWPostProcess()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Set\+HWPost\+Process (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{bool}]{enable }\end{DoxyParamCaption})}
+
+
+
+enable or disable internal chip post processing function 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em enable} & set true to enable post-\/process, or set false to disable post-\/process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+: APC\+\_\+\+OK, others\+: see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_a88b649ea8441943a0e3eafdc23119182}\label{e_s_p_d_i___d_m_8h_a88b649ea8441943a0e3eafdc23119182}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_SetSlaveYOffset@{APC\_SetSlaveYOffset}}
+\index{APC\_SetSlaveYOffset@{APC\_SetSlaveYOffset}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_SetSlaveYOffset()}{APC\_SetSlaveYOffset()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Set\+Slave\+YOffset (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+set Y offset data 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & buffer to store \\
+\hline
+{\em Buffer\+Length} & length of buffer \\
+\hline
+{\em p\+Actual\+Length} & actual byte of reading \\
+\hline
+{\em index} & index of Y offset file ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+:APC\+\_\+\+OK, others\+:see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{e_s_p_d_i___d_m_8h_ae486a072f7e928ce021a9a2ba082de59}\label{e_s_p_d_i___d_m_8h_ae486a072f7e928ce021a9a2ba082de59}} 
+\index{eSPDI\_DM.h@{eSPDI\_DM.h}!APC\_SetYOffset@{APC\_SetYOffset}}
+\index{APC\_SetYOffset@{APC\_SetYOffset}!eSPDI\_DM.h@{eSPDI\_DM.h}}
+\doxysubsubsection{\texorpdfstring{APC\_SetYOffset()}{APC\_SetYOffset()}}
+{\footnotesize\ttfamily int APC\+\_\+\+Set\+YOffset (\begin{DoxyParamCaption}\item[{void $\ast$}]{p\+Handle\+Apc\+DI,  }\item[{PDEVSELINFO}]{p\+Dev\+Sel\+Info,  }\item[{BYTE $\ast$}]{buffer,  }\item[{int}]{Buffer\+Length,  }\item[{int $\ast$}]{p\+Actual\+Length,  }\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+set Y offset data 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p\+Handle\+Apc\+DI} & the pointer to the initilized Apc\+DI SDK instance \\
+\hline
+{\em p\+Dev\+Sel\+Info} & pointer of device select index \\
+\hline
+{\em buffer} & buffer to store \\
+\hline
+{\em Buffer\+Length} & length of buffer \\
+\hline
+{\em p\+Actual\+Length} & actual byte of reading \\
+\hline
+{\em index} & index of Y offset file ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success\+:APC\+\_\+\+OK, others\+:see \mbox{\hyperlink{e_s_p_d_i___err_code_8h}{e\+SPDI\+\_\+\+Err\+Code.\+h}} 
+\end{DoxyReturn}
