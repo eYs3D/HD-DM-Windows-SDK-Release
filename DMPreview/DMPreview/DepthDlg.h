@@ -50,7 +50,7 @@ public:
   virtual BOOL OnInitDialog();
 
   void SetImageParams(void* hApcDI, DEVSELINFO devSelInfo, unsigned short devType, 
-      APCImageType::Value depthImageType,
+      ApcDIImageType::Value depthImageType,
       int depthId, int zdTableIndex, int depthWidth, int depthHeight, int iUpdateZ_period,
       float camFocus = 0.0, float baselineDist = 0.0, std::vector<float> multiBaselineDist = std::vector<float>() );
   void SetHandle( void* hApcDI, const DEVSELINFO& devSelInfo );
@@ -58,7 +58,7 @@ public:
   void UpdateColorPalette( int zFar, int zNear );
   void GetDepthZValue( int& zFar, int& zNear );
   void SetDepthPos(const CPoint pos);
-  bool GetDepthData(std::vector<unsigned char>& depthBuf, APCImageType::Value& depthImageType, 
+  bool GetDepthData(std::vector<unsigned char>& depthBuf, ApcDIImageType::Value& depthImageType, 
       int& width, int& height, int& serialNumber);
 
   void UpdateFusionSelectedIndex(const std::vector<unsigned char>& selectedIndex);
@@ -159,7 +159,7 @@ private:
   
   DEPTHMAP_TYPE m_DepthMapType; 
   unsigned short m_DevType;
-  APCImageType::Value m_depthImageType;
+  ApcDIImageType::Value m_depthImageType;
  
   int m_Near;
   int m_Far;

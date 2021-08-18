@@ -138,7 +138,6 @@ DWORD FrameGrabber::CheckFrameReadyThreadFn( void* pvoid )
     int last_sn = -1;
     FramePool color;
     FramePool depth;
-    BOOL isDepthOnly = FALSE;
 
     while (pThis->m_threadStart)
     {
@@ -148,25 +147,6 @@ DWORD FrameGrabber::CheckFrameReadyThreadFn( void* pvoid )
             if ( pThis->m_depth.sn == last_sn || pThis->m_color.data.empty() )
             {
                 synchronized = FALSE;
-
-                if (   pThis->m_depth.data.empty() != TRUE // is the depth only mode ?
-                    && pThis->m_depth.m_height > 0
-                    && pThis->m_depth.m_width  > 0
-                    && pThis->m_color.data.empty() == TRUE
-                    && pThis->m_color.m_height == 0
-                    && pThis->m_color.m_width  == 0
-                    )
-                {
-                    isDepthOnly = TRUE;
-                    synchronized = TRUE;
-                    depth = pThis->m_depth;
-                    color.m_height = pThis->m_depth.m_height;
-                    color.m_width = pThis->m_depth.m_width;
-                    if (color.data.size() == 0)
-                    {
-                        color.data.resize(color.m_width * color.m_height * 3, 0);
-                    }
-                }
             }
             else
             {
@@ -181,7 +161,7 @@ DWORD FrameGrabber::CheckFrameReadyThreadFn( void* pvoid )
         }
         if ( synchronized )
         {
-            pThis->m_callbackFn(    isDepthOnly, depth.data, depth.m_width, depth.m_height,
+            pThis->m_callbackFn( depth.data, depth.m_width, depth.m_height,
                                     color.data, color.m_width, color.m_height,
                                     last_sn, pThis->m_callbackParam);
         }

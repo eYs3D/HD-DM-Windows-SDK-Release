@@ -76,7 +76,7 @@ public:
 	int UnregisterDevice(void *hApcDI, DEVSELINFO devSelInfo);
 
 	int SyncImageCallback(void *hApcDI, DEVSELINFO devSelInfo,
-						  APCImageType::Value imageType, int imageId,
+						  ApcDIImageType::Value imageType, int imageId,
 						  int serailNumber, std::function<void()> &&imageCallback);
 	int SyncIMUCallback(void *hApcDI, DEVSELINFO devSelInfo,
 						int serailNumber, std::function<void()> &&imuCallback);

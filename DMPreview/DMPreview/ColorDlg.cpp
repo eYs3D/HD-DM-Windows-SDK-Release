@@ -26,7 +26,7 @@ CColorDlg::CColorDlg(CWnd* pParent /*=NULL*/)
     m_bRotate = FALSE;
     m_bRun = FALSE;
     m_bImageArrival = FALSE;
-    m_eImageType = APCImageType::IMAGE_UNKNOWN;
+    m_eImageType = ApcDIImageType::IMAGE_UNKNOWN;
     m_pShowImage = nullptr;
 
     m_cpDepth.SetPoint( NULL, NULL );
@@ -154,13 +154,13 @@ void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutp
         {
             memcpy( &m_vecRGBImageBuf[ NULL ], pColorBuf, *dataSize );
 
-            m_eImageType = APCImageType::COLOR_RGB24;
+            m_eImageType = ApcDIImageType::COLOR_RGB24;
         }
         else
         {
             memcpy( &m_vecRawImageBuf[ NULL ], pColorBuf, *dataSize );
 
-            m_eImageType = bIsMJPEG ? APCImageType::COLOR_MJPG : APCImageType::COLOR_YUY2;
+            m_eImageType = bIsMJPEG ? ApcDIImageType::COLOR_MJPG : ApcDIImageType::COLOR_YUY2;
         }
         m_imgSerialNumber = nColorSerialNum;
 
@@ -176,7 +176,7 @@ void CColorDlg::Thread_ShowImage()
 {
     std::vector< BYTE > vecRawImageBuf;
 
-    APCImageType::Value eImageType = APCImageType::IMAGE_UNKNOWN;
+    ApcDIImageType::Value eImageType = ApcDIImageType::IMAGE_UNKNOWN;
 
     CDC* pDC = GetDC();
 

@@ -372,7 +372,7 @@ typedef struct ParaLUT
     BYTE      serial_number[256];
 } PARALUT, *PPARALUT;
 
-struct APCImageType
+struct ApcDIImageType
 {
     enum Value
     {
@@ -386,17 +386,17 @@ struct APCImageType
         DEPTH_14BITS
     };
 
-    static bool IsImageColor(APCImageType::Value type)
+    static bool IsImageColor(ApcDIImageType::Value type)
     {
         return (type == COLOR_YUY2 || type == COLOR_RGB24 || type == COLOR_MJPG);
     }
 
-    static bool IsImageDepth(APCImageType::Value type)
+    static bool IsImageDepth(ApcDIImageType::Value type)
     {
         return (type != IMAGE_UNKNOWN && !IsImageColor(type));
     }
 
-	static APCImageType::Value DepthDataTypeToDepthImageType(WORD dataType)
+	static ApcDIImageType::Value DepthDataTypeToDepthImageType(WORD dataType)
 	{
 		switch (dataType)
 		{
@@ -408,7 +408,7 @@ struct APCImageType
 		case APC_DEPTH_DATA_SCALE_DOWN_8_BITS_RAW:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_RAW:
-			return APCImageType::DEPTH_8BITS;
+			return ApcDIImageType::DEPTH_8BITS;
 		case APC_DEPTH_DATA_8_BITS_x80:
 		case APC_DEPTH_DATA_8_BITS_x80_RAW:
 		case APC_DEPTH_DATA_ILM_8_BITS_x80:
@@ -417,7 +417,7 @@ struct APCImageType
 		case APC_DEPTH_DATA_SCALE_DOWN_8_BITS_x80_RAW:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_8_BITS_x80_RAW:
-			return APCImageType::DEPTH_8BITS_0x80;
+			return ApcDIImageType::DEPTH_8BITS_0x80;
 		case APC_DEPTH_DATA_11_BITS:
 		case APC_DEPTH_DATA_11_BITS_RAW:
 		case APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY:
@@ -430,7 +430,7 @@ struct APCImageType
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_RAW:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS_COMBINED_RECTIFY:
-			return APCImageType::DEPTH_11BITS;
+			return ApcDIImageType::DEPTH_11BITS;
 		case APC_DEPTH_DATA_14_BITS:
 		case APC_DEPTH_DATA_14_BITS_RAW:
 		case APC_DEPTH_DATA_14_BITS_COMBINED_RECTIFY:
@@ -443,8 +443,8 @@ struct APCImageType
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_RAW:
 		case APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS_COMBINED_RECTIFY:
-			return APCImageType::DEPTH_14BITS;
-		default: return APCImageType::IMAGE_UNKNOWN;
+			return ApcDIImageType::DEPTH_14BITS;
+		default: return ApcDIImageType::IMAGE_UNKNOWN;
 		}
 	}
 };
@@ -463,7 +463,7 @@ struct ApcDIDepthSwitch
         return ((target & setting) != 0);
     }
 };
-/*! \fn void(*APC_ImgCallbackFn)(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+/*! \fn void(*APC_ImgCallbackFn)(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
     int width, int height, int serialNumber, void* pParam)
 \brief Callback function when video or data is ready
 \param pid	product id of the USB device
@@ -472,7 +472,7 @@ struct ApcDIDepthSwitch
 \param pData user defined data to pass to the callback function
 \return none
 */
-typedef void(*APC_ImgCallbackFn)(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+typedef void(*APC_ImgCallbackFn)(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
     int width, int height, int serialNumber, void* pParam);
 	
 /**
@@ -1818,7 +1818,7 @@ int APC_API APC_ResetFilters(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 */
 int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int width, int height, int TableSize, unsigned short* Table, unsigned short* Src, unsigned short* Dst);
 
-/*! \fn int APC_ColorFormat_to_RGB24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, APCImageType::Value type)
+/*! \fn int APC_ColorFormat_to_RGB24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, ApcDIImageType::Value type)
 	\brief get hardware post processing status
 	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
@@ -1829,7 +1829,7 @@ int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int wid
     \param type     input  image-format
 	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int APC_API APC_ColorFormat_to_RGB24( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type );
+int APC_API APC_ColorFormat_to_RGB24( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, ApcDIImageType::Value type );
 
 int APC_API APC_PropertyPU_GetRange(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);
 int APC_API APC_PropertyCT_GetRange(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);

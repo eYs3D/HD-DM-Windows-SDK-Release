@@ -84,9 +84,9 @@ CPreviewImageDlg::~CPreviewImageDlg()
     if ( m_previewParams.m_rectifyLogDataSlave ) free( m_previewParams.m_rectifyLogDataSlave );
 }
 
-//bool CPreviewImageDlg::usePlyFilter(APCImageType::Value depthImageType)
+//bool CPreviewImageDlg::usePlyFilter(ApcDIImageType::Value depthImageType)
 //{
-//	return (/*depthImageType == APCImageType::DEPTH_11BITS) && (*/ ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->GetCheck() == BST_CHECKED );
+//	return (/*depthImageType == ApcDIImageType::DEPTH_11BITS) && (*/ ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->GetCheck() == BST_CHECKED );
 //}
 
 void CPreviewImageDlg::DoDataExchange(CDataExchange* pDX)
@@ -221,7 +221,7 @@ CPoint CPreviewImageDlg::CurDepthImgRes()
 
         res.SetPoint( streamDepthInfo.nWidth, streamDepthInfo.nHeight );
 
-		if ( APCImageType::DEPTH_8BITS == APCImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+		if ( ApcDIImageType::DEPTH_8BITS == ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
 		{
             res.SetPoint( streamDepthInfo.nWidth * 2, streamDepthInfo.nHeight );
 		}
@@ -241,7 +241,7 @@ int CPreviewImageDlg::GetDepthStreamIndex(int depthIndex) const
 
 int CPreviewImageDlg::GetDepthStreamIndex(CPoint depthRes) const
 {
-    const BOOL bIs8bits = APCImageType::DEPTH_8BITS == APCImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType );
+    const BOOL bIs8bits = ApcDIImageType::DEPTH_8BITS == ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType );
 
     int iWidth = NULL;
 
@@ -900,9 +900,9 @@ LRESULT CPreviewImageDlg::OnUpdateMousePos(WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-void CPreviewImageDlg::SaveDepthYuv(std::vector<unsigned char> bufDepth, APCImageType::Value depthImageType,int widthDepth, int heightDepth, const char* pFileName)
+void CPreviewImageDlg::SaveDepthYuv(std::vector<unsigned char> bufDepth, ApcDIImageType::Value depthImageType,int widthDepth, int heightDepth, const char* pFileName)
 {
-	unsigned char DepthmapBits = (depthImageType == APCImageType::DEPTH_8BITS) ? 1 : 2;
+	unsigned char DepthmapBits = (depthImageType == ApcDIImageType::DEPTH_8BITS) ? 1 : 2;
 	SaveYuv(bufDepth, DepthmapBits, widthDepth, heightDepth, pFileName);
 }
 
@@ -923,7 +923,7 @@ void CPreviewImageDlg::SaveDepthColorBmp(int DepthNum, const char* pFileName)
 	SaveImage2(&bufferDepthToColor[0], bmiDepth, pFileName, Gdiplus::ImageFormatBMP);
 }
 
-void CPreviewImageDlg::DepthFusionBmp(APCImageType::Value depthImageType)
+void CPreviewImageDlg::DepthFusionBmp(ApcDIImageType::Value depthImageType)
 {
 	std::vector<unsigned char> bufDepth;
 	bufDepth.clear();
@@ -936,7 +936,7 @@ void CPreviewImageDlg::DepthFusionBmp(APCImageType::Value depthImageType)
 			bufDepth, depthImageType, widthDepth, heightDepth, snDepth))
 	{
 		int imgWidth = widthDepth;
-		if (depthImageType == APCImageType::DEPTH_8BITS)
+		if (depthImageType == ApcDIImageType::DEPTH_8BITS)
 		{// divide 16bits data into 8bits x 2
 			imgWidth = widthDepth * 2;
 		}
@@ -1097,17 +1097,6 @@ LRESULT CPreviewImageDlg::OnSnapshotComplete(WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-BOOL CPreviewImageDlg::isDepthOnly(int depthWidth, int depthHeight, BOOL isColorBufEmpty)
-{
-    if (depthWidth > 0
-        && depthHeight > 0
-        && isColorBufEmpty == TRUE)
-    {
-        return true;
-    }
-    return false;
-}
-
 UINT CPreviewImageDlg::DoSnapshot(LPVOID pParam)
 {
 	LPTHREAD_PARAM lpParam = (LPTHREAD_PARAM)pParam;
@@ -1163,7 +1152,7 @@ return 0;
 	};
 	std::vector<depth_data> depthDatas;
 
-	APCImageType::Value depthImageType = APCImageType::DEPTH_11BITS;
+	ApcDIImageType::Value depthImageType = ApcDIImageType::DEPTH_11BITS;
 
 	{
 		CAutoLock lock(pThis->m_previewParams.m_mutex);
@@ -1187,7 +1176,7 @@ return 0;
 
 						int bufSize = resampleWidthDepth * resampleHeightDepth * 2;
 						std::vector<unsigned char> dArrayResized(bufSize);
-                        if ( depthImageType == APCImageType::DEPTH_8BITS ) PlyWriter::MonoBilinearFineScaler( &bufDepth[0], &dArrayResized[0], widthDepth, heightDepth, resampleWidthDepth, resampleHeightDepth, 1);
+                        if ( depthImageType == ApcDIImageType::DEPTH_8BITS ) PlyWriter::MonoBilinearFineScaler( &bufDepth[0], &dArrayResized[0], widthDepth, heightDepth, resampleWidthDepth, resampleHeightDepth, 1);
                         else PlyWriter::MonoBilinearFineScaler_short( (USHORT*)&bufDepth[0], (USHORT*)&dArrayResized[0], widthDepth, heightDepth, resampleWidthDepth, resampleHeightDepth, 1 );
 						bufDepth.resize(bufSize);
 						bufDepth.assign(dArrayResized.begin(), dArrayResized.end());
@@ -1252,7 +1241,7 @@ return 0;
 		if (bUseFilter && bufColorRGB.empty() == false)
 		{
 			//PlyFilter::CF_FILTER(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
-            if (depthImageType == APCImageType::DEPTH_8BITS)
+            if (depthImageType == ApcDIImageType::DEPTH_8BITS)
 			{
 				//D8 TO D11 IMAGE +
 				std::vector< BYTE > bufDepthTmpout;
@@ -1267,7 +1256,7 @@ return 0;
 				//D8 TO D11 IMAGE -
 				PlyFilter::CF_FILTER(bufDepthTmpout, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 			}
-			else if (depthImageType == APCImageType::DEPTH_11BITS)
+			else if (depthImageType == ApcDIImageType::DEPTH_11BITS)
 			{
 				PlyFilter::UnavailableDisparityCancellation(bufDepth, widthDepth, heightDepth, 16383);
 
@@ -1280,7 +1269,7 @@ return 0;
 					PlyFilter::CF_FILTER(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 				}
 			}
-			else if (depthImageType == APCImageType::DEPTH_14BITS)
+			else if (depthImageType == ApcDIImageType::DEPTH_14BITS)
 			{
 				PlyFilter::CF_FILTER_Z14(bufDepth, bufColorRGB, widthDepth, heightDepth, widthColor, heightColor, imgFloatBufOut, pThis->m_previewParams.m_rectifyLogData[depthIndex]);
 			}
@@ -1316,15 +1305,10 @@ return 0;
 		/*save ply +*/
 		TRACE("save ply\n");
 
-        if ((pThis->m_previewParams.m_rectifyLogData[depthIndex] != nullptr
-            && bufDepth.empty() == false
-            && widthDepth > 0
-            && heightDepth > 0
-            && bufColorRGB.empty() == false
-            && widthColor > 0
-            && heightColor > 0)
-            || isDepthOnly(widthDepth, heightDepth, bufColorRGB.empty()))
-        {
+		if (pThis->m_previewParams.m_rectifyLogData[depthIndex] != nullptr &&
+			bufDepth.empty() == false && widthDepth > 0 && heightDepth > 0 &&
+			bufColorRGB.empty() == false && widthColor > 0 && heightColor > 0)
+		{
 			/* EX8038: get baseline distance from UI instead of rectify log */
 			//if (m_previewParams.m_camFocus > 0 && m_previewParams.m_baselineDist[i] > 0)
 			//{
@@ -1361,21 +1345,7 @@ return 0;
                 PlyWriter::etronFrameTo3D_8029(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
             }
 			else {
-                if (isDepthOnly(widthDepth, heightDepth, bufColorRGB.empty())) // For the depth only
-                {
-                    std::vector<unsigned char> bufOneColor(widthDepth * heightDepth * 3);
-                    for (int i = 0; i < (widthDepth * heightDepth * 3); i += 3)
-                    {
-                        bufOneColor[i] = 0x0;
-                        bufOneColor[i + 1] = 0xFF;
-                        bufOneColor[i + 2] = 0x0;
-                    }
-                    PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthDepth, heightDepth, bufOneColor, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, true, 1.0f);
-                }
-                else  // For other mode.
-                {
-                    PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
-                }
+				PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
 			}
 
 			std::ostringstream filename;
@@ -1767,17 +1737,6 @@ void CPreviewImageDlg::UpdatePreviewParams()
             {
                 m_previewParams.m_rectifyLogData[ i ]->ReProjectMat[11] = (m_previewParams.m_rectifyLogData[i]->OutImgHeight / 2) / tan(72/2 * 3.1415926 / 180);
             }
-
-            if (   ptRes.x == 0 // is the depth only mode ?
-                && ptRes.y == 0
-                && m_pStreamDepthInfo[m_previewParams.m_depthOption].nWidth  > 0
-                && m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight > 0
-                )
-            {
-                ptRes.x = m_pStreamDepthInfo[m_previewParams.m_depthOption].nWidth;
-                ptRes.y = m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight;
-            }
-
             const float ratio_Mat = (float)ptRes.y / m_previewParams.m_rectifyLogData[i]->OutImgHeight;      
 	        const float baseline  = 1.0f / m_previewParams.m_rectifyLogData[i]->ReProjectMat[14];
 	        const float diff      = m_previewParams.m_rectifyLogData[i]->ReProjectMat[15] * ratio_Mat;
@@ -1785,10 +1744,10 @@ void CPreviewImageDlg::UpdatePreviewParams()
 	        m_xPointCloudInfo.centerY       = -1.0f*m_previewParams.m_rectifyLogData[i]->ReProjectMat[7] * ratio_Mat;
 	        m_xPointCloudInfo.focalLength   = m_previewParams.m_rectifyLogData[i]->ReProjectMat[11] * ratio_Mat;
 
-            switch ( APCImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+            switch ( ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
             {
-            case APCImageType::DEPTH_14BITS: m_xPointCloudInfo.disparity_len = 0; break;
-            case APCImageType::DEPTH_11BITS:
+            case ApcDIImageType::DEPTH_14BITS: m_xPointCloudInfo.disparity_len = 0; break;
+            case ApcDIImageType::DEPTH_11BITS:
                 {
                     m_xPointCloudInfo.disparity_len = 2048;
 
@@ -1837,7 +1796,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 /// 影像 Callback Entry						 ///
 /// Jacky_Tag								 ///
 /// **************************************** ///
-void CPreviewImageDlg::ImgCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
+void CPreviewImageDlg::ImgCallback(ApcDIImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
     int width, int height, int serialNumber, void* pParam)
 {
     CPreviewImageDlg* pThis = (CPreviewImageDlg*)pParam;
@@ -1856,7 +1815,7 @@ void CPreviewImageDlg::ImgCallback(APCImageType::Value imgType, int imgId, unsig
 	}
 }
 
-void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
+void CPreviewImageDlg::ProcessImgCallback(ApcDIImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
 	int width, int height, int serialNumber)
 {
 	CAutoLock lock(m_previewParams.m_mutex);
@@ -1873,7 +1832,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 		m_frameGrabber->UpdateFrameData(FrameGrabber::FRAME_POOL_INDEX_COLOR, snColor, &bufColor[0], bufColor.size());
 	};
 #endif
-	if (APCImageType::IsImageColor(imgType))
+	if (ApcDIImageType::IsImageColor(imgType))
 	{
 		//debug log for serial-count-interval
 		//m_log.push_back( { CTime::GetTickCount().GetTime(),  serialNumber } );
@@ -1898,11 +1857,11 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			CColorDlg* pDlg = (CColorDlg*)m_previewParams.m_colorPreview.m_previewDlg;
 			if (pDlg != nullptr)
 			{
-				pDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber);
+				pDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == ApcDIImageType::COLOR_RGB24, imgType == ApcDIImageType::COLOR_MJPG, serialNumber);
 #ifndef ESPDI_EG
 				if (m_frameGrabber) PointCloud_ApplyImage(pDlg);
 
-				if (m_depthFusionHelper != nullptr && imgType == APCImageType::COLOR_YUY2)
+				if (m_depthFusionHelper != nullptr && imgType == ApcDIImageType::COLOR_YUY2)
 				{
 					m_depthFusionHelper->UpdateColorData(serialNumber, &imgBuf[0], imgSize);
 				}
@@ -1914,7 +1873,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			CColorDlg* pTrackDlg = (CColorDlg*)m_previewParams.m_trackPreview.m_previewDlg;
 			if (pTrackDlg)
 			{
-				pTrackDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber);
+				pTrackDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == ApcDIImageType::COLOR_RGB24, imgType == ApcDIImageType::COLOR_MJPG, serialNumber);
 			}
 		}
 		else if (imgId == APC_Stream_Kolor)
@@ -1922,14 +1881,14 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			CColorDlg* pKcolorDlg = (CColorDlg*)m_previewParams.m_kcolorPreview.m_previewDlg;
 			if (pKcolorDlg)
 			{
-				pKcolorDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber);
+				pKcolorDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == ApcDIImageType::COLOR_RGB24, imgType == ApcDIImageType::COLOR_MJPG, serialNumber);
 #ifndef ESPDI_EG
 				if (m_frameGrabber) PointCloud_ApplyImage(pKcolorDlg);
 #endif
 			}
 		}
 	}
-	else if (APCImageType::IsImageDepth(imgType))
+	else if (ApcDIImageType::IsImageDepth(imgType))
 	{
 		if (imgId == -1)// depth fusion
 		{
@@ -1996,7 +1955,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 							m_pAccuracyDlg->UpdateDepthMap(width, height, (CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg);
 						}
 					}
-					else m_pAccuracyDlg->UpdateDepthMap(imgType == APCImageType::DEPTH_8BITS ? width * 2 : width, height, (CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg);
+					else m_pAccuracyDlg->UpdateDepthMap(imgType == ApcDIImageType::DEPTH_8BITS ? width * 2 : width, height, (CDepthDlg*)m_previewParams.m_depthPreview[imgId].m_previewDlg);
 				}
 			}
 			if (m_frameGrabber)
@@ -2079,18 +2038,12 @@ void CPreviewImageDlg::DepthFusionCallback(unsigned char* depthBuf, unsigned cha
         memcpy(&pThis->m_previewParams.m_fusionTargetRgbImgBuf[0], &fusionTargetImgBuf[0], pixelCount * 3);
     }
 
-    CPreviewImageDlg::ImgCallback(APCImageType::DEPTH_11BITS, -1, depthBuf, depthSize, width, height, serialNumber, pParam);
+    CPreviewImageDlg::ImgCallback(ApcDIImageType::DEPTH_11BITS, -1, depthBuf, depthSize, width, height, serialNumber, pParam);
 }
 
-void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
-                                             std::vector<unsigned char>& bufDepth,
-                                             int widthDepth,
-                                             int heightDepth,
-                                             std::vector<unsigned char>& bufColor,
-                                             int widthColor,
-                                             int heightColor,
-                                             int serialNumber,
-                                             void* pParam)
+void CPreviewImageDlg::FrameGrabberCallback(std::vector<unsigned char>& bufDepth, int widthDepth, int heightDepth,
+	std::vector<unsigned char>& bufColor, int widthColor, int heightColor,
+	int serialNumber, void* pParam)
 {
 	CPreviewImageDlg* pThis = (CPreviewImageDlg*)pParam;
 
@@ -2161,7 +2114,7 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
             break;
         }
     }
-	APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType);
+	ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType);
 	/*Get RectLogData*/
 	eSPCtrl_RectLogData* rectifyLogData = NULL;
 
@@ -2182,23 +2135,11 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
 	float zFar = 1.0f*pThis->m_ZFar ? pThis->m_ZFar : 1000;
 	//std::vector<CloudPoint> pointCloud;
 
-    if (pThis->m_pointCloudDepth.size() != widthColor * heightColor * 3)
-    {
-        pThis->m_pointCloudDepth.resize(widthColor * heightColor * 3, 0.0f);
-    }
-    else 
-    {
-        std::fill(pThis->m_pointCloudDepth.begin(), pThis->m_pointCloudDepth.end(), 0.0f);
-    }
+    if ( pThis->m_pointCloudDepth.size() != widthColor * heightColor * 3 ) pThis->m_pointCloudDepth.resize( widthColor * heightColor * 3, 0.0f );
+    else                                                                   std::fill( pThis->m_pointCloudDepth.begin(), pThis->m_pointCloudDepth.end(), 0.0f );
     
-    if (pThis->m_pointCloudRGB.size() != widthColor * heightColor * 3)
-    {
-        pThis->m_pointCloudRGB.resize(widthColor * heightColor * 3, 0);
-    }
-    else
-    {
-        std::fill(pThis->m_pointCloudRGB.begin(), pThis->m_pointCloudRGB.end(), 0);
-    }
+    if ( pThis->m_pointCloudRGB.size() != widthColor * heightColor * 3 ) pThis->m_pointCloudRGB.resize( widthColor * heightColor * 3, 0 );
+    else                                                                 std::fill( pThis->m_pointCloudRGB.begin(), pThis->m_pointCloudRGB.end(), 0 );
     
     //if ( pThis->IsDevicePid( APC_PID_8029 ) ) APC_FlyingDepthCancellation_D8( pThis->m_hApcDI, &pThis->m_DevSelInfo, bufDepth.data(), widthDepth, heightDepth );
 
@@ -2232,17 +2173,6 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
     }
     else
     {
-        // For the depth only mode, set the point cloud in green.
-        if (isDepthOnly)
-        {
-            for (int i = 0; i < (widthDepth * heightDepth * 3); i += 3)
-            {
-                bufColor[i]     = 0x0;
-                bufColor[i + 1] = 0xFF;
-                bufColor[i + 2] = 0x0;
-            }
-        }
-
 		//PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, depthImageType, pointCloud, true, zNear, zFar, true, true, downsampleRatio);
         APC_GetPointCloud( pThis->m_hApcDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &pThis->m_xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
 	}
@@ -2299,7 +2229,7 @@ void CPreviewImageDlg::PointcloudViewerMessageCallback(CPointCloudViewer::Messag
 	}
 }
 
-void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height, APCImageType::Value DImgType)
+void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height, ApcDIImageType::Value DImgType)
 {
 	if (*pzdTblIdx == -1 && m_previewParams.m_depthSwitch % 2 == 1)	// if Setup Depth0
 	{
@@ -2425,9 +2355,9 @@ void CPreviewImageDlg::AdjustRegister()
 		}
 		if ( IsDevicePid( APC_PID_8053 ) )
 		{
-			APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
+			ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
 
-			if (depthImageType == APCImageType::DEPTH_8BITS)
+			if (depthImageType == ApcDIImageType::DEPTH_8BITS)
 			{
 				if (m_previewParams.m_colorOption >= 0 && m_previewParams.m_depthOption >=0)
 				{
@@ -2663,7 +2593,7 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
     }
     else return;
 
-    if ( APCImageType::DEPTH_11BITS != APCImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+    if ( ApcDIImageType::DEPTH_11BITS != ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
     {
         ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->SetCheck( BST_UNCHECKED );
     }
@@ -2695,8 +2625,8 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
 		int maxPoolSize = 1;		
 		int bytesPerPixelColor = 3;
 		int bytesPerPixelDepth;
-		APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
-		if (depthImageType == APCImageType::DEPTH_8BITS)  bytesPerPixelDepth = 1;
+		ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
+		if (depthImageType == ApcDIImageType::DEPTH_8BITS)  bytesPerPixelDepth = 1;
 		else bytesPerPixelDepth = 2;
 		
 		m_frameGrabber = new FrameGrabber(maxPoolSize, CPreviewImageDlg::FrameGrabberCallback, this);
@@ -2855,7 +2785,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
         }
 #endif
     }
-    APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
+    ApcDIImageType::Value depthImageType = ApcDIImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
 
     int zdTableIndex = GetDepthStreamIndex(cpDepthRes);
 	AdjustZDTableIndex(&zdTableIndex, cpDepthRes.x, cpDepthRes.y, depthImageType);
@@ -3588,7 +3518,7 @@ void CPreviewImageDlg::OnBnClickedSnapshotBtn()
 			colorBuffer.size(),
 			nColorWidth,
 			nColorHeight,
-			APCImageType::COLOR_YUY2))
+			ApcDIImageType::COLOR_YUY2))
 		{
 			TRACE("APC_ColorFormat_to_RGB24 fail\n");
 		}
@@ -3614,7 +3544,7 @@ void CPreviewImageDlg::OnBnClickedSnapshotBtn()
 		FileName_Depth << GetCurrentModuleFolder().c_str() << "\\Depth_TEST.yuv";
 		if (depthBuffer.empty() == false && nDepthWidth > 0 && nDepthHeight > 0)
 		{
-			SaveDepthYuv(depthBuffer, APCImageType::DEPTH_11BITS, nDepthWidth, nDepthHeight, FileName_Depth.str().c_str());
+			SaveDepthYuv(depthBuffer, ApcDIImageType::DEPTH_11BITS, nDepthWidth, nDepthHeight, FileName_Depth.str().c_str());
 		}
 	}
 #endif
@@ -3971,20 +3901,20 @@ void CPreviewImageDlg::SetFilterParam( DepthfilterParam& xDfParam )
 {
     xDfParam.bytesPerPixel = 2;
 
-    switch( APCImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
+    switch( ApcDIImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
     {
-    case APCImageType::DEPTH_8BITS:
+    case ApcDIImageType::DEPTH_8BITS:
         {
             xDfParam.type = 1;
             xDfParam.bytesPerPixel = 1;
         }
         break;
-    case APCImageType::DEPTH_11BITS:
+    case ApcDIImageType::DEPTH_11BITS:
         {
             xDfParam.type = 2;
         }
         break;
-    case APCImageType::DEPTH_14BITS:
+    case ApcDIImageType::DEPTH_14BITS:
         {
             xDfParam.type = 3;
         }
