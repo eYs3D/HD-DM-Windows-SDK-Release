@@ -448,7 +448,7 @@ void CPreviewImageDlg::UpdateUI()
 	UpdateDepthStreamUI(0);	
 	UpdateKcolorStreamUI(1);
 	UpdateTrackStreamUI(2);
-	GetDlgItem(IDC_COMBO_K_COLOR_STREAM)->EnableWindow( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) );
+	GetDlgItem(IDC_COMBO_K_COLOR_STREAM)->EnableWindow( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) || IsDevicePid(APC_PID_ORANGE));
 	GetDlgItem(IDC_COMBO_T_COLOR_STREAM)->EnableWindow(FALSE);
 
     GetDlgItem(IDC_CHECK_DEPTH0)->EnableWindow(FALSE);
@@ -649,6 +649,10 @@ bool CPreviewImageDlg::UpdateStreamInfo()
     if ( IsDevicePid( APC_PID_8054 ) )
     {
         GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8054_K );
+    }
+    if (IsDevicePid(APC_PID_ORANGE))
+    {
+        GetResolution(m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_ORANGE_K);
     }
     if ( IsDevicePid( APC_PID_8040S ) )
     {
@@ -1718,8 +1722,14 @@ void CPreviewImageDlg::UpdatePreviewParams()
 			index = 2; // EX8054: D1 640*640 is from 1280*1280 scale down
         else if ( ( IsDevicePid( APC_PID_8051 ) || IsDevicePid( APC_PID_8062 ) ) && USB_PORT_TYPE_2_0 == m_eUSB_Port_Type )
        	    index = 0; // EX8051 & YX8062: U2 is Binning mode
-		else if (IsDevicePid(APC_PID_8036) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 1)
-			index = 0; // EX8036: D1 640*360 is from 1280*720 scale down
+        else if (IsDevicePid(APC_PID_8036) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 1)
+        {
+#if 0 //REFINE_DATABASE_CODE
+            index = GetTableIndex(); // EX8036: D1 640*360 is from 1280*720 scale down
+#else
+            index = 0; // EX8036: D1 640*360 is from 1280*720 scale down
+#endif
+        }
         else
             index = ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel();
 
@@ -1742,7 +1752,11 @@ void CPreviewImageDlg::UpdatePreviewParams()
 
     m_previewParams.m_rectifyData = (((CButton*)GetDlgItem(IDC_RADIO_RECTIFY_DATA))->GetCheck() == BST_CHECKED);
 
-    m_previewParams.m_depthType = AdjDepthBitIndex( pDepthBitCbx->GetCurSel() > EOF ? pDepthBitCbx->GetItemData( pDepthBitCbx->GetCurSel() ) : NULL );
+#if 0 // REFINE_DATABASE_CODE
+    m_previewParams.m_depthType = GetVideoModeFWValue(); 
+#else
+    m_previewParams.m_depthType = AdjDepthBitIndex(pDepthBitCbx->GetCurSel() > EOF ? pDepthBitCbx->GetItemData(pDepthBitCbx->GetCurSel()) : NULL);
+#endif
     m_xPointCloudInfo.wDepthType = m_previewParams.m_depthType;
     SetFilterParam( *m_DfParam );
 
@@ -2763,7 +2777,9 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 
                 iFPS = pThis->GetDlgItemInt( IDC_DEPTH_FRAME_RATE ); // D+K use Depth-Fps
             }
-
+#if 0 //REFINE_DATABASE_CODE
+            APC_SetDepthDataType(pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType);
+#else
 			WORD depthDataTypeOffset = 0;
 			if ((pThis->IsDevicePid(APC_PID_8036) || pThis->IsDevicePid(APC_PID_8052)) && depthOption != EOF)
 			{
@@ -2774,6 +2790,7 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 			}
 
             APC_SetDepthDataType( pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType + depthDataTypeOffset);
+#endif
 
             if ( !OpenDevice( pThis->m_previewParams.m_colorOption,
                               depthOption,
@@ -2797,6 +2814,7 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
             {
             case APC_PID_8060:  iPid = APC_PID_8060_K;  break;
             case APC_PID_8054:  iPid = APC_PID_8054_K;  APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid  ); break;
+            case APC_PID_ORANGE:  iPid = APC_PID_ORANGE_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid); break;
             case APC_PID_8040S: iPid = APC_PID_8040S_K; APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x00, iPid  ); break;
             }
             if ( !OpenDevice( pThis->m_previewParams.m_kcolorOption,
@@ -2835,6 +2853,46 @@ void CPreviewImageDlg::ResetStreamTimeStamp()
 	m_mapDepthStreamTimeStamp.clear();
 }
 
+#if 0 //REFINE_DATABASE_CODE
+int CPreviewImageDlg::GetTableIndex()
+{
+    int tableIndex = 0;
+    const std::vector< ModeConfig::MODE_CONFIG >& vecModeConfig = g_ModeConfig.GetModeConfigList(m_devinfoEx.wPID);
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_MODE_CONFIG);
+    int iMode = pCbx->GetItemData(pCbx->GetCurSel());
+    for (auto& ModeConfig : vecModeConfig)
+    {
+        if (iMode == ModeConfig.iMode)
+        {
+            tableIndex = ModeConfig.tableIndex;
+            break;
+        }
+    }
+    return tableIndex;
+}
+
+WORD CPreviewImageDlg::GetVideoModeFWValue()
+{
+    int videoModefwValue = 0;
+
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_MODE_CONFIG);
+    int iMode = pCbx->GetItemData(pCbx->GetCurSel());
+    const std::vector< ModeConfig::MODE_CONFIG >& vecModeConfig = g_ModeConfig.GetModeConfigList(m_devinfoEx.wPID);
+    for (auto& ModeConfig : vecModeConfig)
+    {
+        // Get current video mode
+        if (iMode == ModeConfig.iMode)
+        {
+            CComboBox* pDepthBitCbx = (CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_BIT_SEL_CTRL);
+            int curIndex = pDepthBitCbx->GetCurSel();
+            videoModefwValue = ModeConfig.vecVideoMode.at(curIndex);
+            break;
+        }
+    }
+    return videoModefwValue;
+}
+#endif
+
 void CPreviewImageDlg::PreparePreviewDlg()
 {
     CAutoLock lock(m_previewParams.m_mutex);
@@ -2855,11 +2913,14 @@ void CPreviewImageDlg::PreparePreviewDlg()
         }
 #endif
     }
+
     APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
-
+#if 0 //REFINE_DATABASE_CODE
+    int zdTableIndex = GetTableIndex();
+#else
     int zdTableIndex = GetDepthStreamIndex(cpDepthRes);
-	AdjustZDTableIndex(&zdTableIndex, cpDepthRes.x, cpDepthRes.y, depthImageType);
-
+    AdjustZDTableIndex(&zdTableIndex, cpDepthRes.x, cpDepthRes.y, depthImageType);
+#endif
     BOOL bInitialZDValue = TRUE;
 
     const int iDepthPeriod = ( GetDlgItemInt( IDC_DEPTH_FRAME_RATE ) ? GetDlgItemInt( IDC_DEPTH_FRAME_RATE ) : GetDlgItemInt( IDC_COMBO_FRAME_RATE ) ) / 3;
@@ -3626,7 +3687,7 @@ void CPreviewImageDlg::OnBnClickedSnapshotBtn()
 
 BOOL CPreviewImageDlg::IsDevicePid( const int pid )
 {
-	return ( m_devinfoEx.wPID == pid && m_devinfoEx.wVID == APC_VID_0x1E4E );
+	return ( m_devinfoEx.wPID == pid && (m_devinfoEx.wVID == APC_VID_0x1E4E || m_devinfoEx.wVID == APC_VID_0x3438));
 }
 #ifndef ESPDI_EG
 void CPreviewImageDlg::GetDepthIndexFromColorStream()

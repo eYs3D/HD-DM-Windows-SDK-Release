@@ -735,6 +735,10 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
     {
         modelName = L"HYPATIA";
     }
+    else if (devinfo.wPID == APC_PID_ORANGE) // ORANGE (ITRI)
+    {
+        modelName = L"ORANGEITRI";
+    }
 	else
 	{
 		modelName = NULL;

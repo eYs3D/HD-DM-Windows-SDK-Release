@@ -7,7 +7,12 @@
 #define DEVICE_TABLE_IDX_TABLE_NAME     2
 #define DEVICE_TABLE_IDX_IMU_TYPE       3
 
+#if 0 //REFINE_DATABASE_CODE
+#define PID_TABLE_COLUMN                14
+#else
 #define PID_TABLE_COLUMN                12
+#endif
+
 #define PID_TABLE_IDX_MODE              0
 #define PID_TABLE_IDX_MODE_DESC         1
 #define PID_TABLE_IDX_L_RESOLUTION      2
@@ -20,6 +25,11 @@
 #define PID_TABLE_IDX_USB_TYPE          9
 #define PID_TABLE_IDX_RECTIFY_MODE      10
 #define PID_TABLE_IDX_INTER_LEAVE_MODE  11
+
+#if 0  //REFINE_DATABASE_CODE
+#define PID_TABLE_IDX_TABLE_INDEX       12 // this index is for the zd and rectify table.
+#define PID_TABLE_IDX_FW_VIDEO_MODE     13
+#endif
 
 ModeConfig& g_ModeConfig = ModeConfig::GetModeConfig();
 
@@ -172,6 +182,17 @@ void ModeConfig::ReadModeConfig()
             {
                 xModeConfig.iInterLeaveModeFPS = sqlite3_column_int(stmt, PID_TABLE_IDX_INTER_LEAVE_MODE );
             }
+#if 0 //REFINE_DATABASE_CODE
+            if (SQLITE_INTEGER == sqlite3_column_type(stmt, PID_TABLE_IDX_TABLE_INDEX))
+            {
+                xModeConfig.tableIndex = sqlite3_column_int(stmt, PID_TABLE_IDX_TABLE_INDEX);
+            }
+            if (SQLITE_TEXT == sqlite3_column_type(stmt, PID_TABLE_IDX_FW_VIDEO_MODE))
+            {
+                std::stringstream ssVideoMode((char*)sqlite3_column_text(stmt, PID_TABLE_IDX_FW_VIDEO_MODE));
+                for (std::string each; std::getline(ssVideoMode, each, ','); xModeConfig.vecVideoMode.push_back(atoi(each.c_str())));
+            }
+#endif
             Table.second.vecModeConfig.push_back( std::move( xModeConfig ) );
         }
         sqlite3_finalize( stmt );

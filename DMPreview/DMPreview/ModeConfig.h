@@ -40,6 +40,10 @@ public:
         std::vector< int > vecColorFps;
         std::vector< int > vecDepthFps;
         CString            csModeDesc;
+#if 0 //REFINE_DATABASE_CODE
+        int                tableIndex;
+        std::vector< int > vecVideoMode;
+#endif
 
         MODE_CONFIG() : eDecodeType_L( YUYV ), eDecodeType_K( YUYV ),  eDecodeType_T( YUYV ), iInterLeaveModeFPS( NULL ) {}
     };

@@ -8,6 +8,8 @@
  */
 #pragma once
 
+#include <windows.h>
+
 #ifndef APC_API
 #ifdef __WEYE__
 #define APC_API
@@ -70,46 +72,49 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_Stream_Kolor 5
 
 /* APC VID */
-#define APC_VID_0x1E4E 0x1E4E
+#define APC_VID_0x1E4E 0x1E4E  // old VID
+#define APC_VID_0x3438 0x3438
 
 /* APC PID */
-#define APC_PID_8029    0x0568
-#define APC_PID_8030    APC_PID_8029
-#define APC_PID_8039    APC_PID_8029
-#define APC_PID_8031    0x0117
-#define APC_PID_8032    0x0118
-#define APC_PID_8036    0x0120
-#define APC_PID_8037    0x0121
-#define APC_PID_8038    0x0124
-#define APC_PID_8038_M0 APC_PID_8038
-#define APC_PID_8038_M1 0x0147
-#define APC_PID_8040W   0x0130
-#define APC_PID_8040S   0x0131
-#define APC_PID_8040S_K 0x0149
-#define APC_PID_8041    0x0126
-#define APC_PID_8042    0x0127
-#define APC_PID_8043    0x0128
-#define APC_PID_8044    0x0129
-#define APC_PID_8045K   0x0134
-#define APC_PID_8046K   0x0135
-#define APC_PID_8051    0x0136
-#define APC_PID_8052    0x0137
-#define APC_PID_8053    0x0138
-#define APC_PID_8054    0x0139
-#define APC_PID_8054_K  0x0143
-#define APC_PID_8059    0x0146
-#define APC_PID_8060    0x0152
-#define APC_PID_8060_K  0x0150
-#define APC_PID_8060_T  0x0151
-#define APC_PID_AMBER   0x0112
-#define APC_PID_SALLY   0x0158
-#define APC_PID_8062    0x0162
-#define APC_PID_Hypatia 0x0160
-#define APC_PID_SANDRA  0x0167
+#define APC_PID_8029        0x0568
+#define APC_PID_8030        APC_PID_8029
+#define APC_PID_8039        APC_PID_8029
+#define APC_PID_8031        0x0117
+#define APC_PID_8032        0x0118
+#define APC_PID_8036        0x0120
+#define APC_PID_8037        0x0121
+#define APC_PID_8038        0x0124
+#define APC_PID_8038_M0     APC_PID_8038
+#define APC_PID_8038_M1     0x0147
+#define APC_PID_8040W       0x0130
+#define APC_PID_8040S       0x0131
+#define APC_PID_8040S_K     0x0149
+#define APC_PID_8041        0x0126
+#define APC_PID_8042        0x0127
+#define APC_PID_8043        0x0128
+#define APC_PID_8044        0x0129
+#define APC_PID_8045K       0x0134
+#define APC_PID_8046K       0x0135
+#define APC_PID_8051        0x0136
+#define APC_PID_8052        0x0137
+#define APC_PID_8053        0x0138
+#define APC_PID_8054        0x0139
+#define APC_PID_8054_K      0x0143
+#define APC_PID_8059        0x0146
+#define APC_PID_8060        0x0152
+#define APC_PID_8060_K      0x0150
+#define APC_PID_8060_T      0x0151
+#define APC_PID_AMBER       0x0112
+#define APC_PID_SALLY       0x0158
+#define APC_PID_8062        0x0162
+#define APC_PID_Hypatia     0x0160
+#define APC_PID_SANDRA      0x0167
+#define APC_PID_ORANGE      0x0189
+#define APC_PID_ORANGE_K    0x0199
 
 // A general and temporary PID
 // for N customers who doesn't have the specify PID.
-#define APC_PID_RESERVE 0x0168
+//#define APC_PID_RESERVE 0x0168
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))

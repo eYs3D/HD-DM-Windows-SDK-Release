@@ -78,6 +78,12 @@ void AEAWB_PropertyDlg::InitUI()
         m_pComboBox->SetItemData( m_pComboBox->AddString(L"Kolor"), APC_PID_8054_K );//0x0143 ); // AR1335
         }
         break;
+    case APC_PID_ORANGE://0x0189: //Orange
+        {
+            m_pComboBox->SetItemData(m_pComboBox->AddString(L"Color"), APC_PID_ORANGE);  //0x0189 ); // esp777
+            m_pComboBox->SetItemData(m_pComboBox->AddString(L"Kolor"), APC_PID_ORANGE_K);//0x0199 ); // AR1335
+        }
+    break;
     default: m_pComboBox->SetItemData( m_pComboBox->AddString(L"Color"), m_xDevinfoEx.wPID ); break;
     }
     m_pComboBox->SetCurSel(0);

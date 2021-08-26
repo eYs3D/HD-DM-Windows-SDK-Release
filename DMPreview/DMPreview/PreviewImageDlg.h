@@ -82,6 +82,10 @@ private:
     int EnableDenoise(bool enable);
     int InitEysov(LONG& outWidth, LONG& outHeight);
     void PreparePreviewDlg();
+#if 0 // REFINE_DATABASE_CODE
+    int GetTableIndex();
+    WORD GetVideoModeFWValue();
+#endif
     void InitPreviewDlgPos();
     void CloseDeviceAndStopPreview(CDialog* pCallerDlg);
     static void ImgCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
