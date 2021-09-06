@@ -25,7 +25,8 @@ public:
     void SetHandle( void* hApcDI, const DEVSELINFO& devSelInfo );
     bool GetImage(std::vector<unsigned char>& imgBuf, int& width, int& height, int& serialNumber);
     void EnableRotate( const BOOL bRotate );
-    void ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum);
+    void ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum, APCImageType::Value imageType);
+    void setImageType(APCImageType::Value imageType);
 
 private:
 	virtual void DoDataExchange(CDataExchange* pDX);

@@ -107,14 +107,12 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_AMBER       0x0112
 #define APC_PID_SALLY       0x0158
 #define APC_PID_8062        0x0162
-#define APC_PID_Hypatia     0x0160
+#define APC_PID_HYPATIA     0x0160  // XY8071
 #define APC_PID_SANDRA      0x0167
 #define APC_PID_ORANGE      0x0189
 #define APC_PID_ORANGE_K    0x0199
+#define APC_PID_GRAPE       0x0300
 
-// A general and temporary PID
-// for N customers who doesn't have the specify PID.
-//#define APC_PID_RESERVE 0x0168
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
@@ -387,6 +385,7 @@ struct APCImageType
     {
         IMAGE_UNKNOWN = -1,
         COLOR_YUY2 = 0,
+        COLOR_Y12Bits,
         COLOR_RGB24, 
         COLOR_MJPG, 
         DEPTH_8BITS = 100,
@@ -397,7 +396,7 @@ struct APCImageType
 
     static bool IsImageColor(APCImageType::Value type)
     {
-        return (type == COLOR_YUY2 || type == COLOR_RGB24 || type == COLOR_MJPG);
+        return (type == COLOR_YUY2 || type == COLOR_RGB24 || type == COLOR_MJPG || type == COLOR_Y12Bits);
     }
 
     static bool IsImageDepth(APCImageType::Value type)
@@ -493,7 +492,9 @@ typedef enum {
     OTHERS = 0,		/**< Other */
     AXES1,			/**< AXIS1 */
     PUMA,			/**< PUMA */
-    PLUM
+    PLUM,
+    GRAPE_FPGA
+
 }APC_DEVICE_TYPE;
 
 struct APC_SensorMode
@@ -1828,6 +1829,7 @@ int APC_API APC_ResetFilters(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int width, int height, int TableSize, unsigned short* Table, unsigned short* Src, unsigned short* Dst);
 
 /*! \fn int APC_ColorFormat_to_RGB24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, APCImageType::Value type)
+	\the byte order from the lowest address to the highest one is bgr
 	\brief get hardware post processing status
 	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
 	\param pDevSelInfo	pointer of device select index
@@ -1839,6 +1841,20 @@ int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int wid
 	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
 int APC_API APC_ColorFormat_to_RGB24( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type );
+
+/*! \fn int APC_ColorFormat_to_BGR24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, APCImageType::Value type)
+	\the byte order from the lowest address to the highest one is rgb
+	\brief get hardware post processing status
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\param pDevSelInfo	pointer of device select index
+	\param ImgDst 	output image buffer
+	\param ImgSrc	input  image buffer
+	\param width	input  image width
+	\param height	input  image height
+	\param type     input  image-format
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_ColorFormat_to_BGR24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type);
 
 int APC_API APC_PropertyPU_GetRange(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);
 int APC_API APC_PropertyCT_GetRange(void * pHandleApcDI, PDEVSELINFO pDevSelInfo, long nProperty, long * pMin, long * pMax, long * pStep, long * pDefault, long * pCapsFlag, int pid);

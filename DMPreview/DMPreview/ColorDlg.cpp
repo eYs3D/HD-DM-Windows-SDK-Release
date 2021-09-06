@@ -144,7 +144,29 @@ void CColorDlg::EnableRotate( const BOOL bRotate )
     m_bRotate = bRotate;
 }
 
-void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum) 
+void CColorDlg::setImageType(APCImageType::Value imageType)
+{
+    switch (imageType)
+    {
+    case APCImageType::COLOR_MJPG:
+        m_eImageType = APCImageType::COLOR_MJPG;
+        break;
+
+    case APCImageType::COLOR_YUY2:
+        m_eImageType = APCImageType::COLOR_YUY2;
+        break;
+
+    case APCImageType::COLOR_Y12Bits:
+        m_eImageType = APCImageType::COLOR_Y12Bits;
+        break;
+
+    default:
+        m_eImageType = APCImageType::COLOR_YUY2;
+        break;
+    }
+}
+
+void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum, APCImageType::Value imgType)
 { 
     std::lock_guard< std::mutex > lock( m_imgBufMutex );
 
@@ -159,8 +181,7 @@ void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutp
         else
         {
             memcpy( &m_vecRawImageBuf[ NULL ], pColorBuf, *dataSize );
-
-            m_eImageType = bIsMJPEG ? APCImageType::COLOR_MJPG : APCImageType::COLOR_YUY2;
+            setImageType(imgType);
         }
         m_imgSerialNumber = nColorSerialNum;
 
@@ -231,8 +252,17 @@ void CColorDlg::OnPaint()
 
 LRESULT CColorDlg::OnUpdateDlgTitle(WPARAM wParam, LPARAM lParam)
 {
-    m_csDialogTitle.Format( _T( "%s [RES] %d x %d [FPS] %.2f [SN] %d" ),
-                            m_dlgName, m_nColorResWidth, m_nColorResHeight, UpdateAndGetFramerate(), m_imgSerialNumber );
+    CString strFormat = (m_eImageType == APCImageType::COLOR_Y12Bits) ?
+                        _T("[MONO] %s [RES] %d x %d [FPS] %.2f [SN] %d") :
+                        _T("%s [RES] %d x %d [FPS] %.2f [SN] %d");
+
+    m_csDialogTitle.Format( strFormat,
+                            m_dlgName,
+                            m_nColorResWidth,
+                            m_nColorResHeight,
+                            UpdateAndGetFramerate(),
+                            m_imgSerialNumber );
+
     SetWindowText( m_csDialogTitle );
 
     return NULL;

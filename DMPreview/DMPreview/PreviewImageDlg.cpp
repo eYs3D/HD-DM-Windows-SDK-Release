@@ -42,6 +42,7 @@ IMPLEMENT_DYNAMIC(CPreviewImageDlg, CDialog)
 #define MAX_IR_DEFAULT 6
 #define MAX_IR_MAXIMUM 15
 #define MAX_IR_HYPATIA 96
+#define MAX_IR_HYPATIA_DEFAULT 60
 
 typedef struct plyThreadData
 {
@@ -672,7 +673,7 @@ void CPreviewImageDlg::UpdateIRConfig()
     APC_GetIRMinValue(m_hApcDI, &m_DevSelInfo, &m_irRange.first);
     APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_irRange.second);
 
-	if ( IsDevicePid( APC_PID_Hypatia  ) ) m_irRange.second = MAX_IR_HYPATIA;
+	if ( IsDevicePid( APC_PID_HYPATIA) )  m_irRange.second = MAX_IR_HYPATIA;
     if ( IsDevicePid( APC_PID_8060  ) ) m_irRange.second = 5;
     if ( IsDevicePid( APC_PID_8040S ) ) m_irRange.second = 4;
 }
@@ -962,7 +963,7 @@ void CPreviewImageDlg::DepthFusionBmp(APCImageType::Value depthImageType)
 void CPreviewImageDlg::InitIR()
 {
 	UpdateIRConfig();
-	if (IsDevicePid(APC_PID_Hypatia)) {
+	if (IsDevicePid(APC_PID_HYPATIA)) {
 		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
@@ -982,7 +983,7 @@ void CPreviewImageDlg::InitIR()
 	CSliderCtrl* irSliderCtrl = (CSliderCtrl*)GetDlgItem(IDC_SLIDER_IR);
 	irSliderCtrl->SetRange(m_irRange.first, m_irRange.second);
 
-	m_irValue = IsDevicePid(APC_PID_Hypatia) ? m_irRange.second / 2 : m_irRange.first + 3;	//Default IR value.
+	m_irValue = IsDevicePid(APC_PID_HYPATIA) ? /*m_irRange.second / 2*/MAX_IR_HYPATIA_DEFAULT : m_irRange.first + 3;	//Default IR value.
 	m_previewParams.m_IrPreState = m_irValue; // set initial value as IrState, and this value only change on OnHScroll();
 
 	irSliderCtrl->SetPos(m_irValue);
@@ -1206,7 +1207,7 @@ return 0;
 			}
 		}	//for
 	}
-    if ( !pThis->m_bIsInterLeaveMode && pThis->m_previewParams.m_kcolorOption == EOF )
+    if ( !pThis->m_bIsInterLeaveMode && pThis->m_previewParams.m_kcolorOption == EOF && pThis->m_devinfoEx.wPID != APC_PID_HYPATIA)
     {
 	    pThis->ChangeIRValue(pThis->m_irRange.first);
 
@@ -1218,7 +1219,7 @@ return 0;
         if ( pThis->m_previewParams.m_kcolorPreview.m_previewDlg )      ( ( CColorDlg* )pThis->m_previewParams.m_kcolorPreview.m_previewDlg )->GetImage(bufColor, widthColor, heightColor, snColor );
         else if ( pThis->m_previewParams.m_colorPreview.m_previewDlg  ) ( ( CColorDlg* )pThis->m_previewParams.m_colorPreview.m_previewDlg  )->GetImage(bufColor, widthColor, heightColor, snColor );
 	}
-    if ( !pThis->m_bIsInterLeaveMode && pThis->m_previewParams.m_kcolorOption == EOF )
+    if ( !pThis->m_bIsInterLeaveMode && pThis->m_previewParams.m_kcolorOption == EOF && pThis->m_devinfoEx.wPID != APC_PID_HYPATIA)
     {
 	    pThis->ChangeIRValue(irValue);
 
@@ -1235,6 +1236,7 @@ return 0;
 		int snDepth = depthDatas.at(i).snDepth;
 
 		std::vector<unsigned char> bufColorRGB( widthColor * heightColor * 3 );
+
 		//bgr to rgb
 		if ( bufColor.size() )
 		{
@@ -1912,7 +1914,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			CColorDlg* pDlg = (CColorDlg*)m_previewParams.m_colorPreview.m_previewDlg;
 			if (pDlg != nullptr)
 			{
-				pDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber);
+				pDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber, imgType);
 #ifndef ESPDI_EG
 				if (m_frameGrabber) PointCloud_ApplyImage(pDlg);
 
@@ -1928,7 +1930,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			CColorDlg* pTrackDlg = (CColorDlg*)m_previewParams.m_trackPreview.m_previewDlg;
 			if (pTrackDlg)
 			{
-				pTrackDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber);
+				pTrackDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber, imgType);
 			}
 		}
 		else if (imgId == APC_Stream_Kolor)
@@ -1936,7 +1938,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			CColorDlg* pKcolorDlg = (CColorDlg*)m_previewParams.m_kcolorPreview.m_previewDlg;
 			if (pKcolorDlg)
 			{
-				pKcolorDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber);
+				pKcolorDlg->ApplyImage(&imgBuf[0], &imgSize, imgType == APCImageType::COLOR_RGB24, imgType == APCImageType::COLOR_MJPG, serialNumber, imgType);
 #ifndef ESPDI_EG
 				if (m_frameGrabber) PointCloud_ApplyImage(pKcolorDlg);
 #endif
@@ -2833,6 +2835,24 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 
         if ( pThis->IsDevicePid( APC_PID_8029 ) ) { pThis->EnableIR( FALSE ); Sleep( 50 ); pThis->EnableIR( TRUE ); }// 8029 need enable IR after open-device
     
+        if (pThis->IsDevicePid( APC_PID_GRAPE ))
+        {
+            APC_STREAM_INFO *pStreamInfo = pThis->m_pStreamColorInfo;
+            int nColorWidth = pStreamInfo[pThis->m_previewParams.m_colorOption].nWidth;
+            int nColorHeight = pStreamInfo[pThis->m_previewParams.m_colorOption].nHeight;
+            bool bFormatMJPG = pStreamInfo[pThis->m_previewParams.m_colorOption].bFormatMJPG;
+
+            APC_SetHWRegister(pThis->m_hApcDI,
+                &pThis->m_DevSelInfo,
+                0xF100, 0x10,
+                FG_Address_2Byte | FG_Value_1Byte);
+
+            APC_SetHWRegister(pThis->m_hApcDI,
+                &pThis->m_DevSelInfo,
+                0xF6CE, 0x20,
+                FG_Address_2Byte | FG_Value_1Byte);
+        }
+
         return NULL;
     }while ( FALSE );
 
@@ -3961,10 +3981,11 @@ void CPreviewImageDlg::OnBnClickedChkMaster()
 
 void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
 {
-    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_Hypatia))
+    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA))
     {
         APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
     }
+
     UpdateIRConfig();
 
 	( ( CSliderCtrl* )GetDlgItem( IDC_SLIDER_IR ) )->SetRange( m_irRange.first, m_irRange.second, TRUE );
