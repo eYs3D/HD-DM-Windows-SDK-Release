@@ -42,6 +42,7 @@ IMPLEMENT_DYNAMIC(CPreviewImageDlg, CDialog)
 #define MAX_IR_DEFAULT 6
 #define MAX_IR_MAXIMUM 15
 #define MAX_IR_HYPATIA 96
+#define MAX_IR_NOVA    127
 #define MAX_IR_HYPATIA_DEFAULT 60
 
 typedef struct plyThreadData
@@ -967,6 +968,10 @@ void CPreviewImageDlg::InitIR()
 		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
+    else if (IsDevicePid(APC_PID_NOVA)) {
+        APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_NOVA);
+        GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(true);
+    }
     else if ( !IsDevicePid( APC_PID_SALLY ) &&
 			  !IsDevicePid( APC_PID_8040S ) )
     {
@@ -983,7 +988,20 @@ void CPreviewImageDlg::InitIR()
 	CSliderCtrl* irSliderCtrl = (CSliderCtrl*)GetDlgItem(IDC_SLIDER_IR);
 	irSliderCtrl->SetRange(m_irRange.first, m_irRange.second);
 
-	m_irValue = IsDevicePid(APC_PID_HYPATIA) ? /*m_irRange.second / 2*/MAX_IR_HYPATIA_DEFAULT : m_irRange.first + 3;	//Default IR value.
+    switch (m_devinfoEx.wPID)
+    {
+    case APC_PID_HYPATIA:
+        m_irValue = MAX_IR_HYPATIA_DEFAULT;
+        break;
+
+    case APC_PID_NOVA:
+        m_irValue = m_irRange.second / 2;
+        break;
+
+    default:
+        m_irValue = m_irRange.first + 3;
+        break;
+    }
 	m_previewParams.m_IrPreState = m_irValue; // set initial value as IrState, and this value only change on OnHScroll();
 
 	irSliderCtrl->SetPos(m_irValue);
@@ -3981,9 +3999,24 @@ void CPreviewImageDlg::OnBnClickedChkMaster()
 
 void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
 {
-    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA))
+    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NOVA))
     {
         APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
+    }
+
+    if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_CHK_IRMAX_EXT))->GetCheck())
+    {
+        if (IsDevicePid(APC_PID_NOVA))
+        {
+            APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, 0x7F);
+        }
+    }
+    else
+    {
+        if (IsDevicePid(APC_PID_NOVA))
+        {
+            APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_DEFAULT);
+        }
     }
 
     UpdateIRConfig();
