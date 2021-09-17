@@ -505,8 +505,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,5,0,6
- PRODUCTVERSION 1,5,0,6
+ FILEVERSION 1,5,0,7
+ PRODUCTVERSION 1,5,0,7
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -523,12 +523,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "eYs3D Microelectronics"
             VALUE "FileDescription", "DMPreview program"
-            VALUE "FileVersion", "1.5.0.6"
+            VALUE "FileVersion", "1.5.0.7"
             VALUE "InternalName", "DMPreview.exe"
             VALUE "LegalCopyright", " (c) eYs3D.  All rights reserved."
             VALUE "OriginalFilename", "DMPreview.exe"
             VALUE "ProductName", "eSPDI SDK for Windows"
-            VALUE "ProductVersion", "1.5.0.6"
+            VALUE "ProductVersion", "1.5.0.7"
         END
     END
     BLOCK "VarFileInfo"

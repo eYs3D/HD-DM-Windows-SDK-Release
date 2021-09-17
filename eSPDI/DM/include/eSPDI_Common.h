@@ -1167,6 +1167,27 @@ int APC_API APC_ReadFlashData   ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, F
 int APC_API APC_WriteFlashData  ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, FLASH_DATA_TYPE fdt, BYTE *pBuffer, 
 									      unsigned long int nLengthOfBuffer, BOOL bIsDataVerify, KEEP_DATA_CTRL kdc);
 
+/*! \fn int APC_GetStructLenOfSTI(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo
+    \return success: the structLen of firmware 'Storage Type Info (STI)', others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_GetStructLenOfSTI(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
+
+/*! \fn int APC_IsBPX4bitsClear(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo
+    \return success: if it cleared return APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_IsBPX4bitsClear(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
+
+/*! \fn int APC_UnprotectFlash(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo
+    \return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_UnprotectFlash(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
+
 /*! \fn int APC_OpenDevice(
 		void* pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,

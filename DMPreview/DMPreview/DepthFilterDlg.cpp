@@ -148,13 +148,13 @@ void DepthFilterDlg::OnBnClickedChkFilterEnable()
     {
         EnableControl( bEnable );
 
-        if ( APC_PID_8029 == m_PID )
-        {
-            ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck( BST_CHECKED );
-            ( ( CButton* )GetDlgItem( IDC_CHK_REMOVECURVE ) )->SetCheck( BST_CHECKED );
-            GetDlgItem( IDC_CHK_FILTER_ENABLE )->EnableWindow( FALSE );
-            GetDlgItem( IDC_CHK_REMOVECURVE )->EnableWindow( FALSE );
-        }
+        //if ( APC_PID_8029 == m_PID )
+        //{
+        //    ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck( BST_CHECKED );
+        //    ( ( CButton* )GetDlgItem( IDC_CHK_REMOVECURVE ) )->SetCheck( BST_CHECKED );
+        //    GetDlgItem( IDC_CHK_FILTER_ENABLE )->EnableWindow( FALSE );
+        //    GetDlgItem( IDC_CHK_REMOVECURVE )->EnableWindow( FALSE );
+        //}
         UpdateFilterParam();
     }
 }
@@ -234,13 +234,13 @@ void DepthFilterDlg::FullMinConfig( const BOOL bEnable, const BOOL bEnableRemove
 
     if ( bEnable ) DefaultSetting();
 
-    if ( APC_PID_8029 == m_PID )
-    {
-        ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck( BST_CHECKED );
-        ( ( CButton* )GetDlgItem( IDC_CHK_REMOVECURVE ) )->SetCheck( BST_CHECKED );
-        GetDlgItem( IDC_CHK_FILTER_ENABLE )->EnableWindow( FALSE );
-        GetDlgItem( IDC_CHK_REMOVECURVE )->EnableWindow( FALSE );
-    }
+    //if ( APC_PID_8029 == m_PID )
+    //{
+    //    ( ( CButton* )GetDlgItem( IDC_CHK_FILTER_ENABLE ) )->SetCheck(BST_UNCHECKED);
+    //    ( ( CButton* )GetDlgItem( IDC_CHK_REMOVECURVE ) )->SetCheck( BST_CHECKED );
+    //    //GetDlgItem( IDC_CHK_FILTER_ENABLE )->EnableWindow( FALSE );
+    //    GetDlgItem( IDC_CHK_REMOVECURVE )->EnableWindow( FALSE );
+    //}
     UpdateFilterParam();
 }
 
