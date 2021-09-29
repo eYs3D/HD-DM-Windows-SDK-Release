@@ -285,6 +285,16 @@ PDEVSELINFO pDevSelInfo)
 */
 int APC_API APC_EnableInterleave(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool enable);
 
+/*! \fn bool APC_IsInterleaveDevice(
+void *pHandleEYSD,
+PDEVSELINFO pDevSelInfo)
+\brief check module support interleave function or not
+\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+\param pDevSelInfo	pointer of device select index
+\return true: support interleave, false: not support
+*/
+bool APC_API APC_IsInterleaveDevice(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
+
 /*! \fn int APC_EnableSerialCount(
 void *pHandleApcDI,
 PDEVSELINFO pDevSelInfo)

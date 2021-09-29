@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="eYs3D_logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">eYs3D Windows SDK
-   &#160;<span id="projectnumber">1.5.0.7</span>
+   &#160;<span id="projectnumber">1.5.0.8</span>
    </div>
   </td>
  </tr>
@@ -150,50 +150,52 @@ $(function() {
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="keywordtype">int</span> APC_API APC_EnableInterleave(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">bool</span> enable);</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="keywordtype">int</span> APC_API APC_EnableSerialCount( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">bool</span> enable );</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="keyword">struct </span>PointCloudInfo</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;{</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="comment">//normal data</span></div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keywordtype">float</span> centerX;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keywordtype">float</span> centerY;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordtype">float</span> focalLength;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keywordtype">float</span> disparityToW[ 2048 ];</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="keywordtype">int</span>   disparity_len;</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    WORD  wDepthType;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="comment">//multi-lens data</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <span class="keywordtype">float</span> focalLength_K;</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordtype">float</span> baseline_K;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordtype">float</span> diff_K;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    PointCloudInfo() { memset( <span class="keyword">this</span>, NULL, <span class="keyword">sizeof</span>( PointCloudInfo ) ); }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;};</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="keywordtype">int</span> APC_API APC_GetPointCloud( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgColor, <span class="keywordtype">int</span> CW, <span class="keywordtype">int</span> CH,</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;                                                                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgDepth, <span class="keywordtype">int</span> DW, <span class="keywordtype">int</span> DH,</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                                                                                      PointCloudInfo* pPointCloudInfo,</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                                                                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pPointCloudRGB, <span class="keywordtype">float</span>* pPointCloudXYZ, <span class="keywordtype">float</span> Near, <span class="keywordtype">float</span> Far );</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="keywordtype">int</span> APC_API APC_FlyingDepthCancellation_D8( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pdepthD8, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height );</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="keywordtype">int</span> APC_API APC_FlyingDepthCancellation_D11( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pdepthD11, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height );</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160; </div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="keywordtype">int</span> APC_API APC_DepthMerge( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>** pDepthBufList, <span class="keywordtype">float</span> *pDepthMergeOut,</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *pDepthMergeFlag, <span class="keywordtype">int</span> nDWidth, <span class="keywordtype">int</span> nDHeight, <span class="keywordtype">float</span> fFocus, <span class="keywordtype">float</span> * pBaseline, <span class="keywordtype">float</span> * pWRNear, <span class="keywordtype">float</span> * pWRFar, <span class="keywordtype">float</span> * pWRFusion, <span class="keywordtype">int</span> nMergeNum );</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="keywordtype">int</span> APC_API APC_AdjustFocalLengthFromFlash(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="keywordtype">int</span> APC_API APC_AdjustFocalLength(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">int</span> pixelUnit);</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="keywordtype">int</span> APC_API APC_GetDeviceFocalLength(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo,</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <span class="keywordtype">int</span> *pLeftFx, <span class="keywordtype">int</span> *pLeftFy, <span class="keywordtype">int</span> *pRightFx, <span class="keywordtype">int</span> *pRightFy);</div>
+<div class="line"><a name="l00296"></a><span class="lineno"><a class="line" href="e_s_p_d_i___d_m_8h.html#af1efdbc4ac87c653fa26aee6eabafac7">  296</a></span>&#160;<span class="keywordtype">bool</span> APC_API <a class="code" href="e_s_p_d_i___d_m_8h.html#af1efdbc4ac87c653fa26aee6eabafac7">APC_IsInterleaveDevice</a>(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="keywordtype">int</span> APC_API APC_EnableSerialCount( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">bool</span> enable );</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="keyword">struct </span>PointCloudInfo</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;{</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="comment">//normal data</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordtype">float</span> centerX;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <span class="keywordtype">float</span> centerY;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keywordtype">float</span> focalLength;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordtype">float</span> disparityToW[ 2048 ];</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordtype">int</span>   disparity_len;</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    WORD  wDepthType;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="comment">//multi-lens data</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keywordtype">float</span> focalLength_K;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordtype">float</span> baseline_K;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordtype">float</span> diff_K;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    PointCloudInfo() { memset( <span class="keyword">this</span>, NULL, <span class="keyword">sizeof</span>( PointCloudInfo ) ); }</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;};</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="keywordtype">int</span> APC_API APC_GetPointCloud( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgColor, <span class="keywordtype">int</span> CW, <span class="keywordtype">int</span> CH,</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                                                                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* ImgDepth, <span class="keywordtype">int</span> DW, <span class="keywordtype">int</span> DH,</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;                                                                                      PointCloudInfo* pPointCloudInfo,</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;                                                                                      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pPointCloudRGB, <span class="keywordtype">float</span>* pPointCloudXYZ, <span class="keywordtype">float</span> Near, <span class="keywordtype">float</span> Far );</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="keywordtype">int</span> APC_API APC_FlyingDepthCancellation_D8( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pdepthD8, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height );</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160; </div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;<span class="keywordtype">int</span> APC_API APC_FlyingDepthCancellation_D11( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pdepthD11, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height );</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="keywordtype">int</span> APC_API APC_DepthMerge( <span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>** pDepthBufList, <span class="keywordtype">float</span> *pDepthMergeOut,</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *pDepthMergeFlag, <span class="keywordtype">int</span> nDWidth, <span class="keywordtype">int</span> nDHeight, <span class="keywordtype">float</span> fFocus, <span class="keywordtype">float</span> * pBaseline, <span class="keywordtype">float</span> * pWRNear, <span class="keywordtype">float</span> * pWRFar, <span class="keywordtype">float</span> * pWRFusion, <span class="keywordtype">int</span> nMergeNum );</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="keywordtype">int</span> APC_API APC_AdjustFocalLengthFromFlash(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height);</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160; </div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="keywordtype">int</span> APC_API APC_GetFlashFocalLength(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height,</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordtype">int</span> *pLeftFx, <span class="keywordtype">int</span> *pLeftFy, <span class="keywordtype">int</span> *pRightFx, <span class="keywordtype">int</span> *pRightFy, <span class="keywordtype">int</span> *pPixelUnit);</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160; </div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;}</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="keywordtype">int</span> APC_API APC_AdjustFocalLength(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, <span class="keywordtype">int</span> pixelUnit);</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160; </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="keywordtype">int</span> APC_API APC_GetDeviceFocalLength(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo,</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keywordtype">int</span> *pLeftFx, <span class="keywordtype">int</span> *pLeftFy, <span class="keywordtype">int</span> *pRightFx, <span class="keywordtype">int</span> *pRightFy);</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160; </div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;<span class="keywordtype">int</span> APC_API APC_GetFlashFocalLength(<span class="keywordtype">void</span> *pHandleApcDI, PDEVSELINFO pDevSelInfo, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height,</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    <span class="keywordtype">int</span> *pLeftFx, <span class="keywordtype">int</span> *pLeftFy, <span class="keywordtype">int</span> *pRightFx, <span class="keywordtype">int</span> *pRightFy, <span class="keywordtype">int</span> *pPixelUnit);</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160; </div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;}</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="ae_s_p_d_i___common_8h_html"><div class="ttname"><a href="e_s_p_d_i___common_8h.html">eSPDI_Common.h</a></div><div class="ttdoc">eYs3D SDK API export functions, data structure and variable definition</div></div>
 <div class="ttc" id="ae_s_p_d_i___d_m_8h_html_a05e63360c4b14eddd961bcd7cf053be2"><div class="ttname"><a href="e_s_p_d_i___d_m_8h.html#a05e63360c4b14eddd961bcd7cf053be2">APC_SetHWPostProcess</a></div><div class="ttdeci">int APC_API APC_SetHWPostProcess(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool enable)</div><div class="ttdoc">enable or disable internal chip post processing function</div></div>
 <div class="ttc" id="ae_s_p_d_i___d_m_8h_html_a06862be18356543b3ac7ce6cfa9b7111"><div class="ttname"><a href="e_s_p_d_i___d_m_8h.html#a06862be18356543b3ac7ce6cfa9b7111">APC_GetZDTable</a></div><div class="ttdeci">int APC_API APC_GetZDTable(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo)</div><div class="ttdoc">get disparity and Z values from flash</div></div>
@@ -209,6 +211,7 @@ $(function() {
 <div class="ttc" id="ae_s_p_d_i___d_m_8h_html_aca72614ec2f15d066649f1e423d6d0c5"><div class="ttname"><a href="e_s_p_d_i___d_m_8h.html#aca72614ec2f15d066649f1e423d6d0c5">APC_GetRectifyMatLogData</a></div><div class="ttdeci">int APC_API APC_GetRectifyMatLogData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, eSPCtrl_RectLogData *pData, int index)</div><div class="ttdoc">get rectify log data from flash for Puma IC</div></div>
 <div class="ttc" id="ae_s_p_d_i___d_m_8h_html_ae486a072f7e928ce021a9a2ba082de59"><div class="ttname"><a href="e_s_p_d_i___d_m_8h.html#ae486a072f7e928ce021a9a2ba082de59">APC_SetYOffset</a></div><div class="ttdeci">int APC_API APC_SetYOffset(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</div><div class="ttdoc">set Y offset data</div></div>
 <div class="ttc" id="ae_s_p_d_i___d_m_8h_html_aeb0903738b1ae9ccd69eb2482adb7986"><div class="ttname"><a href="e_s_p_d_i___d_m_8h.html#aeb0903738b1ae9ccd69eb2482adb7986">APC_GetYOffset</a></div><div class="ttdeci">int APC_API APC_GetYOffset(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</div><div class="ttdoc">get Y offset data</div></div>
+<div class="ttc" id="ae_s_p_d_i___d_m_8h_html_af1efdbc4ac87c653fa26aee6eabafac7"><div class="ttname"><a href="e_s_p_d_i___d_m_8h.html#af1efdbc4ac87c653fa26aee6eabafac7">APC_IsInterleaveDevice</a></div><div class="ttdeci">bool APC_API APC_IsInterleaveDevice(void *pHandleApcDI, PDEVSELINFO pDevSelInfo)</div><div class="ttdoc">enable or disable interleave function</div></div>
 <div class="ttc" id="astructe_s_p_ctrl___rect_log_data_html"><div class="ttname"><a href="structe_s_p_ctrl___rect_log_data.html">eSPCtrl_RectLogData</a></div><div class="ttdoc">eSPCtrl_RectLogData</div><div class="ttdef"><b>Definition:</b> eSPDI_Common.h:279</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

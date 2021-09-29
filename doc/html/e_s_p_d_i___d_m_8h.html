@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="eYs3D_logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">eYs3D Windows SDK
-   &#160;<span id="projectnumber">1.5.0.7</span>
+   &#160;<span id="projectnumber">1.5.0.8</span>
    </div>
   </td>
  </tr>
@@ -122,6 +122,9 @@ int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memitem:a05e63360c4b14eddd961bcd7cf053be2"><td class="memItemLeft" align="right" valign="top">int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#a05e63360c4b14eddd961bcd7cf053be2">APC_SetHWPostProcess</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool enable)</td></tr>
 <tr class="memdesc:a05e63360c4b14eddd961bcd7cf053be2"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable or disable internal chip post processing function  <a href="e_s_p_d_i___d_m_8h.html#a05e63360c4b14eddd961bcd7cf053be2">More...</a><br /></td></tr>
 <tr class="separator:a05e63360c4b14eddd961bcd7cf053be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1efdbc4ac87c653fa26aee6eabafac7"><td class="memItemLeft" align="right" valign="top">bool APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#af1efdbc4ac87c653fa26aee6eabafac7">APC_IsInterleaveDevice</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo)</td></tr>
+<tr class="memdesc:af1efdbc4ac87c653fa26aee6eabafac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">enable or disable interleave function  <a href="e_s_p_d_i___d_m_8h.html#af1efdbc4ac87c653fa26aee6eabafac7">More...</a><br /></td></tr>
+<tr class="separator:af1efdbc4ac87c653fa26aee6eabafac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>eYs3D SDK API export functions, data structure and variable definition for depth map module </p>
@@ -558,6 +561,54 @@ int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <dl class="section return"><dt>Returns</dt><dd>success: APC_OK, others: see <a class="el" href="e_s_p_d_i___err_code_8h.html" title="definition of eYs3D SDK error code Copyright: This file copyright (C) 2017 by">eSPDI_ErrCode.h</a> </dd></dl>
 </li>
 </ol>
+
+</div>
+</div>
+<a id="af1efdbc4ac87c653fa26aee6eabafac7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1efdbc4ac87c653fa26aee6eabafac7">&#9670;&nbsp;</a></span>APC_IsInterleaveDevice()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool APC_IsInterleaveDevice </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>pHandleEYSD</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PDEVSELINFO&#160;</td>
+          <td class="paramname"><em>pDevSelInfo</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>enable or disable interleave function </p>
+<p>check module support interleave function or not</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pHandleApcDI</td><td>the pointer to the initilized ApcDI SDK instance </td></tr>
+    <tr><td class="paramname">pDevSelInfo</td><td>pointer of device select index </td></tr>
+    <tr><td class="paramname">enable</td><td>set true to enable interleave, or set false to disable interleave </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>success: APC_OK, others: see <a class="el" href="e_s_p_d_i___err_code_8h.html" title="definition of eYs3D SDK error code Copyright: This file copyright (C) 2017 by">eSPDI_ErrCode.h</a></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pHandleApcDI</td><td>the pointer to the initilized ApcDI SDK instance </td></tr>
+    <tr><td class="paramname">pDevSelInfo</td><td>pointer of device select index </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true: support interleave, false: not support </dd></dl>
 
 </div>
 </div>
