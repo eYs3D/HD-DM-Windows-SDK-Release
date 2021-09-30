@@ -968,7 +968,7 @@ void CPreviewImageDlg::InitIR()
 		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
-    else if (IsDevicePid(APC_PID_NOVA)) {
+    else if (IsDevicePid(APC_PID_NORA)) {
         APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_NOVA);
         GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(true);
     }
@@ -994,7 +994,7 @@ void CPreviewImageDlg::InitIR()
         m_irValue = MAX_IR_HYPATIA_DEFAULT;
         break;
 
-    case APC_PID_NOVA:
+    case APC_PID_NORA:
         m_irValue = m_irRange.second / 2;
         break;
 
@@ -3999,21 +3999,21 @@ void CPreviewImageDlg::OnBnClickedChkMaster()
 
 void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
 {
-    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NOVA))
+    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NORA))
     {
         APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
     }
 
     if (BST_CHECKED == ((CButton*)GetDlgItem(IDC_CHK_IRMAX_EXT))->GetCheck())
     {
-        if (IsDevicePid(APC_PID_NOVA))
+        if (IsDevicePid(APC_PID_NORA))
         {
             APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, 0x7F);
         }
     }
     else
     {
-        if (IsDevicePid(APC_PID_NOVA))
+        if (IsDevicePid(APC_PID_NORA))
         {
             APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_DEFAULT);
         }

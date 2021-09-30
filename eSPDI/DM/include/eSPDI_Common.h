@@ -109,10 +109,12 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_8062        0x0162
 #define APC_PID_HYPATIA     0x0160  // XY8071
 #define APC_PID_SANDRA      0x0167
-#define APC_PID_NOVA        0x0168
+#define APC_PID_NORA        0x0168
+#define APC_PID_HELEN       0x0171
 #define APC_PID_ORANGE      0x0189
 #define APC_PID_ORANGE_K    0x0199
 #define APC_PID_GRAPE       0x0300
+
 
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
@@ -1409,6 +1411,9 @@ typedef enum
 	APC_SENSOR_TYPE_AR1335,		/**< AR1335 */
     APC_SENSOR_TYPE_H65,
     APC_SENSOR_TYPE_AR0522,
+    APC_SENSOR_TYPE_OV2740,
+    APC_SENSOR_TYPE_OC0SA10,
+    APC_SENSOR_TYPE_UNKOWN = 0xffff
 } SENSOR_TYPE_NAME; 
 
 //

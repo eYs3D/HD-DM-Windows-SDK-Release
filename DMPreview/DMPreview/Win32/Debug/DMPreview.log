@@ -1,121 +1,145 @@
 ﻿cl : 命令列 warning D9035: 選項 'Gm' 已被取代，在未來的發行版本中將會移除
-  APCUtility.cpp
+  PreviewImageDlg.cpp
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(134): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(164): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(268): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(825): warning C4018: '>': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1208): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1209): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1248): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1458): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1459): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1566): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1802): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2216): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2284): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2364): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2743): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(3456): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+  DepthFilterDlg.cpp
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthfilterdlg.cpp(280): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthfilterdlg.cpp(283): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
   正在產生程式碼...
   正在編譯...
   VideoDeviceDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\dmpreview\apc_testdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\apc_testdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+  RegisterSettings.cpp
   RegisterAccessDlg.cpp
-  PreviewImageDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(134): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(164): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(268): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(825): warning C4018: '>': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1208): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1209): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1248): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1458): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1459): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1566): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1802): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2216): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2284): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2364): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2743): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(3456): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+  PlyWriter.cpp
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(66): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(67): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(169): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(170): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(311): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(312): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(394): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(395): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(503): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(600): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(601): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(651): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(738): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(739): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(884): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(885): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\plywriter.cpp(996): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
   MeasureDistanceDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(178): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(186): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(201): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(209): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(225): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(233): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(249): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(255): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(261): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(178): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(186): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(201): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(209): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(225): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(233): warning C4244: '=': 將 'unsigned int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(249): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(255): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\measuredistancedlg.cpp(261): warning C4018: '<': signed/unsigned 不相符
   IMUTestDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp(922): warning C4018: '<=': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1022): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1178): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1179): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1180): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1181): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp(922): warning C4018: '<=': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1022): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1178): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1179): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1180): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.cpp(1181): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
   FrameSyncManager.cpp
   DistanceAccuracyDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(206): warning C4244: '=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(376): warning C4244: '=': 將 'double' 轉換為 '_Ty'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(206): warning C4244: '=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(376): warning C4244: '=': 將 'double' 轉換為 '_Ty'，由於類型不同，可能導致資料遺失
           with
           [
               _Ty=float
           ]
-d:\workspace\test20\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(400): warning C4244: '正在初始化': 將 'double' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(530): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-  DepthFilterDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthfilterdlg.cpp(280): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthfilterdlg.cpp(283): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(400): warning C4244: '正在初始化': 將 'double' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\distanceaccuracydlg.cpp(530): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
   DepthDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(21): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(24): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(48): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(51): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(75): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(78): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(108): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(111): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(138): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(141): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(197): warning C4244: '引數': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(252): warning C4244: '引數': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(420): warning C4305: '正在初始化': 從 'INT' 轉換為 'WORD'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\depthdlg.cpp(420): warning C4309: '正在初始化': 轉換導致常數值遭截斷; 可能需要使用較大的類型
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(21): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(24): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(48): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(51): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(75): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(78): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(108): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(111): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(138): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(141): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(197): warning C4244: '引數': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(252): warning C4244: '引數': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(420): warning C4305: '正在初始化': 從 'INT' 轉換為 'WORD'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\depthdlg.cpp(420): warning C4309: '正在初始化': 轉換導致常數值遭截斷; 可能需要使用較大的類型
   ColorDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
   AutoModuleSyncManager.cpp
   AutoModuelSyncDlg.cpp
   APC_TestDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\dmpreview\apc_testdlg.cpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\apc_testdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test20\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\apc_testdlg.cpp : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\apc_testdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
   APC_Test.cpp
-d:\workspace\test20\etronsdk\etrondi\dmpreview\apc_testdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test21\etronsdk\etrondi\dmpreview\apc_testdlg.h : warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
   AEAWB_PropertyDlg.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test20\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+  PlyFilter.cpp
+d:\workspace\test21\etronsdk\etrondi\utility\frameprocess\plyfilter.cpp(509): warning C4244: '引數': 將 'float' 轉換為 'const unsigned int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\frameprocess\plyfilter.cpp(510): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test21\etronsdk\etrondi\utility\frameprocess\plyfilter.cpp(628): warning C4244: '引數': 將 'float' 轉換為 'const unsigned int'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\frameprocess\plyfilter.cpp(629): warning C4018: '<': signed/unsigned 不相符
   FrameGrabber.cpp
   DepthFusionHelper.cpp
-d:\workspace\test20\etronsdk\etrondi\utility\depthfusionhelper.cpp(19): warning C4244: '引數': 將 'double' 轉換為 '_Ty'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\depthfusionhelper.cpp(19): warning C4244: '引數': 將 'double' 轉換為 '_Ty'，由於類型不同，可能導致資料遺失
           with
           [
               _Ty=float
           ]
-d:\workspace\test20\etronsdk\etrondi\utility\depthfusionhelper.cpp(20): warning C4244: '引數': 將 'double' 轉換為 '_Ty'，由於類型不同，可能導致資料遺失
+d:\workspace\test21\etronsdk\etrondi\utility\depthfusionhelper.cpp(20): warning C4244: '引數': 將 'double' 轉換為 '_Ty'，由於類型不同，可能導致資料遺失
           with
           [
               _Ty=float
           ]
+  APCUtility.cpp
   正在產生程式碼...
-d:\workspace\test20\etronsdk\etrondi\dmpreview\automodulesyncmanager.cpp(177): warning C4715: 'AutoModuleSyncManager::SaveConfig': 不是所有控制路徑都傳回值
-d:\workspace\test20\etronsdk\etrondi\dmpreview\automodulesyncmanager.cpp(235): warning C4715: 'AutoModuleSyncManager::GetIndex': 不是所有控制路徑都傳回值
-d:\workspace\test20\etronsdk\etrondi\dmpreview\framesyncmanager.cpp(169): warning C4715: 'FrameSyncManager::DoFrameSync': 不是所有控制路徑都傳回值
-     正在建立程式庫 D:\Workspace\test20\etronsdk\EtronDI\Win32\Debug\DMPreview.lib 和物件 D:\Workspace\test20\etronsdk\EtronDI\Win32\Debug\DMPreview.exp
+d:\workspace\test21\etronsdk\etrondi\dmpreview\automodulesyncmanager.cpp(177): warning C4715: 'AutoModuleSyncManager::SaveConfig': 不是所有控制路徑都傳回值
+d:\workspace\test21\etronsdk\etrondi\dmpreview\automodulesyncmanager.cpp(235): warning C4715: 'AutoModuleSyncManager::GetIndex': 不是所有控制路徑都傳回值
+d:\workspace\test21\etronsdk\etrondi\dmpreview\framesyncmanager.cpp(169): warning C4715: 'FrameSyncManager::DoFrameSync': 不是所有控制路徑都傳回值
+     正在建立程式庫 D:\Workspace\test21\etronsdk\EtronDI\Win32\Debug\DMPreview.lib 和物件 D:\Workspace\test21\etronsdk\EtronDI\Win32\Debug\DMPreview.exp
 libcmtd.lib(initializers.obj) : warning LNK4098: 預設的程式庫 'libcmt.lib' 與其他使用的程式庫衝突，請使用 /NODEFAULTLIB:library
 CIMUViewer.obj : warning LNK4217: 本機定義的符號 _glewInit@0 已匯入函式 "public: void __thiscall CIMUViewer::glInitialize(void)" (?glInitialize@CIMUViewer@@QAEXXZ)
 CIMUViewer.obj : warning LNK4049: 本機定義的符號 ___glewBindBuffer 已匯入
@@ -154,28 +178,28 @@ GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewUseProgram 已�
 GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewGetSubroutineIndex 已匯入
 GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewGetSubroutineUniformLocation 已匯入
 GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewUniformSubroutinesuiv 已匯入
-glew32s.lib(glew.obj) : warning LNK4099: 找不到 PDB 'vc120.pdb' (有 'glew32s.lib(glew.obj)' 或位於 'D:\Workspace\test20\etronsdk\EtronDI\Win32\Debug\vc120.pdb')，當做沒有偵錯資訊，連結物件
-  DMPreview.vcxproj -> D:\Workspace\test20\etronsdk\EtronDI\Win32\Debug\DMPreview.exe
-  D:\Workspace\test20\etronsdk\EtronDI\Win32\Debug\DMPreview.exe -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DMPreview.exe
+glew32s.lib(glew.obj) : warning LNK4099: 找不到 PDB 'vc120.pdb' (有 'glew32s.lib(glew.obj)' 或位於 'D:\Workspace\test21\etronsdk\EtronDI\Win32\Debug\vc120.pdb')，當做沒有偵錯資訊，連結物件
+  DMPreview.vcxproj -> D:\Workspace\test21\etronsdk\EtronDI\Win32\Debug\DMPreview.exe
+  D:\Workspace\test21\etronsdk\EtronDI\Win32\Debug\DMPreview.exe -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DMPreview.exe
   已複製 1 個檔案
-  D:\Workspace\test20\etronsdk\eSPDI\DM\Win32\eSPDI_DM.dll -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\eSPDI_DM.dll
+  D:\Workspace\test21\etronsdk\eSPDI\DM\Win32\eSPDI_DM.dll -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\eSPDI_DM.dll
   已複製 1 個檔案
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\ModeConfig.db -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\cfg\ModeConfig.db
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\ModeConfig.db -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\cfg\ModeConfig.db
   已複製 1 個檔案
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\APC_SdkConfig.ini -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\APC_SdkConfig.ini
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\APC_SdkConfig.ini -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\APC_SdkConfig.ini
   已複製 1 個檔案
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8036_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8036_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8037_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8037_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8040S_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8040S_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8052_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8052_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8053_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8053_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8054_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8054_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\SANDRA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\SANDRA_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8059_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8059_DM_Quality_Register_Setting.cfg
-  D:\Workspace\test20\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8062_DM_Quality_Register_Setting.cfg -> D:\Workspace\test20\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8062_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8036_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8036_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8037_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8037_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8040S_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8040S_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8052_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8052_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8053_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8053_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8054_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8054_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\SANDRA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\SANDRA_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8059_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8059_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test21\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8062_DM_Quality_Register_Setting.cfg -> D:\Workspace\test21\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8062_DM_Quality_Register_Setting.cfg
   已複製 14 個檔案
