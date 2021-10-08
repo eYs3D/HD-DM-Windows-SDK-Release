@@ -808,6 +808,7 @@ void CPreviewImageDlg::OnTimer(UINT_PTR nIDEvent)
                 KillTimer( CHECK_REGISTER_TIMER );
                 AdjustRegister();
                 OnBnClickedCheckPumaPostproc();
+                RegisterSettings::DM_Quality_Register_Setting(m_hApcDI, &m_DevSelInfo);
             }
         }
         break;
@@ -995,7 +996,7 @@ void CPreviewImageDlg::InitIR()
         break;
 
     case APC_PID_NORA:
-        m_irValue = m_irRange.second / 2;
+        m_irValue = 0;
         break;
 
     default:
@@ -2703,7 +2704,7 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
     }
     if (IsSupportHwPostProc())
     {
-        GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC)->EnableWindow(TRUE);
+        //GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC)->EnableWindow(TRUE); // Enable UI HWPP.
     }
     m_isPreviewed = true;
 #ifndef ESPDI_EG
