@@ -23,7 +23,7 @@
   <td id="projectlogo"><img alt="Logo" src="eYs3D_logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">eYs3D Windows SDK
-   &#160;<span id="projectnumber">1.5.0.10</span>
+   &#160;<span id="projectnumber">1.5.1.0</span>
    </div>
   </td>
  </tr>
@@ -98,6 +98,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae486a072f7e928ce021a9a2ba082de59"><td class="memItemLeft" align="right" valign="top">int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#ae486a072f7e928ce021a9a2ba082de59">APC_SetYOffset</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</td></tr>
 <tr class="memdesc:ae486a072f7e928ce021a9a2ba082de59"><td class="mdescLeft">&#160;</td><td class="mdescRight">set Y offset data  <a href="e_s_p_d_i___d_m_8h.html#ae486a072f7e928ce021a9a2ba082de59">More...</a><br /></td></tr>
 <tr class="separator:ae486a072f7e928ce021a9a2ba082de59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa29d9d2ed8e9bb08151f6388adcd6b10"><td class="memItemLeft" align="right" valign="top">int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#aa29d9d2ed8e9bb08151f6388adcd6b10">APC_SetYOffset_Advanced</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</td></tr>
+<tr class="memdesc:aa29d9d2ed8e9bb08151f6388adcd6b10"><td class="mdescLeft">&#160;</td><td class="mdescRight">set Y offset data in both Groups #1 and #2 when the firmware has the flash protection.  <a href="e_s_p_d_i___d_m_8h.html#aa29d9d2ed8e9bb08151f6388adcd6b10">More...</a><br /></td></tr>
+<tr class="separator:aa29d9d2ed8e9bb08151f6388adcd6b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cef9a10c57759a2d9fdd117618ba610"><td class="memItemLeft" align="right" valign="top"><a id="a3cef9a10c57759a2d9fdd117618ba610"></a>
 int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#a3cef9a10c57759a2d9fdd117618ba610">APC_SetSlaveRectifyTable</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</td></tr>
 <tr class="memdesc:a3cef9a10c57759a2d9fdd117618ba610"><td class="mdescLeft">&#160;</td><td class="mdescRight">set rectify data to flash, see APC_SetRectifyTable except set <br /></td></tr>
@@ -106,10 +109,18 @@ int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#a347b8716a55052dde0b36e0072d6f1c8">APC_SetRectifyTable</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</td></tr>
 <tr class="memdesc:a347b8716a55052dde0b36e0072d6f1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">set rectify data to flash, see APC_SetRectifyTable except set <br /></td></tr>
 <tr class="separator:a347b8716a55052dde0b36e0072d6f1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a995eda2e529734c181f8164d3b5c4a2c"><td class="memItemLeft" align="right" valign="top"><a id="a995eda2e529734c181f8164d3b5c4a2c"></a>
+int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#a995eda2e529734c181f8164d3b5c4a2c">APC_SetRectifyTable_Advanced</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)</td></tr>
+<tr class="memdesc:a995eda2e529734c181f8164d3b5c4a2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">set rectify data to flash, see APC_SetRectifyTable except set <br /></td></tr>
+<tr class="separator:a995eda2e529734c181f8164d3b5c4a2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb3b94a5343f21ec85a1ca8108bca465"><td class="memItemLeft" align="right" valign="top"><a id="abb3b94a5343f21ec85a1ca8108bca465"></a>
 int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#abb3b94a5343f21ec85a1ca8108bca465">APC_SetZDTable</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo)</td></tr>
 <tr class="memdesc:abb3b94a5343f21ec85a1ca8108bca465"><td class="mdescLeft">&#160;</td><td class="mdescRight">set disparity and Z values to flash, see APC_GetZDTable except get <br /></td></tr>
 <tr class="separator:abb3b94a5343f21ec85a1ca8108bca465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ad93b5ccbb22d421aa24448aa3a93fb"><td class="memItemLeft" align="right" valign="top"><a id="a2ad93b5ccbb22d421aa24448aa3a93fb"></a>
+int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#a2ad93b5ccbb22d421aa24448aa3a93fb">APC_SetZDTable_Advanced</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo)</td></tr>
+<tr class="memdesc:a2ad93b5ccbb22d421aa24448aa3a93fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">set disparity and Z values to flash, see APC_GetZDTable except get <br /></td></tr>
+<tr class="separator:a2ad93b5ccbb22d421aa24448aa3a93fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca72614ec2f15d066649f1e423d6d0c5"><td class="memItemLeft" align="right" valign="top">int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="e_s_p_d_i___d_m_8h.html#aca72614ec2f15d066649f1e423d6d0c5">APC_GetRectifyMatLogData</a> (void *pHandleApcDI, PDEVSELINFO pDevSelInfo, <a class="el" href="structe_s_p_ctrl___rect_log_data.html">eSPCtrl_RectLogData</a> *pData, int index)</td></tr>
 <tr class="memdesc:aca72614ec2f15d066649f1e423d6d0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">get rectify log data from flash for Puma IC  <a href="e_s_p_d_i___d_m_8h.html#aca72614ec2f15d066649f1e423d6d0c5">More...</a><br /></td></tr>
 <tr class="separator:aca72614ec2f15d066649f1e423d6d0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -826,6 +837,72 @@ int APC_API&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
     <tr><td class="paramname">BufferLength</td><td>length of buffer </td></tr>
     <tr><td class="paramname">pActualLength</td><td>actual byte of reading </td></tr>
     <tr><td class="paramname">index</td><td>index of Y offset file ID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>success:APC_OK, others:see <a class="el" href="e_s_p_d_i___err_code_8h.html" title="definition of eYs3D SDK error code Copyright: This file copyright (C) 2017 by">eSPDI_ErrCode.h</a> </dd></dl>
+
+</div>
+</div>
+<a id="aa29d9d2ed8e9bb08151f6388adcd6b10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa29d9d2ed8e9bb08151f6388adcd6b10">&#9670;&nbsp;</a></span>APC_SetYOffset_Advanced()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int APC_SetYOffset_Advanced </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>pHandleApcDI</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PDEVSELINFO&#160;</td>
+          <td class="paramname"><em>pDevSelInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BYTE *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>BufferLength</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>pActualLength</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>set Y offset data in both Groups #1 and #2 when the firmware has the flash protection. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">void</td><td>*pHandleApcDI the pointer to the initilized ApcDI SDK instance </td></tr>
+    <tr><td class="paramname">PDEVSELINFO</td><td>pDevSelInfo CApcDI handler </td></tr>
+    <tr><td class="paramname">BYTE</td><td>*buffer buffer to store </td></tr>
+    <tr><td class="paramname">int</td><td>BufferLength length of buffer </td></tr>
+    <tr><td class="paramname">int</td><td>*pActualLength actual byte of reading </td></tr>
+    <tr><td class="paramname">int</td><td>index index of Y offset file ID </td></tr>
   </table>
   </dd>
 </dl>

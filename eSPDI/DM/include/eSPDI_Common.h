@@ -9,6 +9,7 @@
 #pragma once
 
 #include <windows.h>
+#include <io.h>
 
 #ifndef APC_API
 #ifdef __WEYE__
@@ -199,8 +200,17 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_READ_FLASH_FW_PLUGIN_SIZE		104
 #define APC_WRITE_FLASH_TOTAL_SIZE			128
 #define APC_READ_FLASH_TOTAL_SIZE_256		256
-#define APC_WRITE_FLASH_TOTAL_SIZE_256	256
+#define APC_WRITE_FLASH_TOTAL_SIZE_256	    256
 
+/*
+    The group 1 is the factory settings which are calibrated before shipment.
+    The group 2 is the factory settings after post calibration.
+    FW Register 0xF6 is the offset.
+    The default offset is set as 5 which means 10 divided by 2 groups.
+*/
+#define FW_FID_GROUP_OFFSET                 5
+#define MD5_SIGNATURE_BYTE_SIZE             32
+#define FW_PROTECT_STRUCT_LEN_OF_STI        17
 
 // PlugIn data (size in bytes)
 #define APC_Y_OFFSET_FILE_ID_0				30
@@ -633,8 +643,9 @@ typedef enum
 {
     Total = 0,
     FW_PLUGIN,
-    Total_Slave,	/* total for first slave device */
-    FW_PLUGIN_Slave	/* fw_plugin for first slave device */
+    Total_Slave,	    /* total for first slave device */
+    FW_PLUGIN_Slave,	/* fw_plugin for first slave device */
+    UNP                 /* UNProtection Area */
 } FLASH_DATA_TYPE;
 
 typedef enum
@@ -1132,6 +1143,18 @@ int APC_API APC_SetSlaveLogData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYT
 	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
 int APC_API APC_SetLogData      ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
+/*! \fn int APC_SetLogData_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
+    \brief set log data to flash
+    \param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+    \param pDevSelInfo	pointer of device select index
+    \param buffer	buffer to store log data
+    \param BufferLength	input buffer length
+    \param pActualLength	actual length has written to buffer
+    \param index	index to identify log data for corresponding depth
+    \return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_SetLogData_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
 /*! \fn int  APC_SetUserData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, USERDATA_SECTION_INDEX usi)
 	\brief set user data to flash
@@ -1795,6 +1818,21 @@ int APC_API APC_SetQuantizationTableData(void *pHandleApcDI, PDEVSELINFO pDevSel
 \brief Set Plum Sensor AR0330.
 */
 int APC_API APC_SetPlumAR0330(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, bool bEnable);
+
+/*! \fn int APC_API APC_SetRootCipher(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, const char* cipher)
+\brief Set Root Cipher to write the file id 30/40/50/240.
+*/
+int APC_API APC_SetRootCipher(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, const char* cipher);
+
+/*! \fn int APC_ResetUNPData(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo)
+    \brief Reset the UNProtection area's datum
+    \param void *pHandleApcDI	CApcDI handler
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_ResetUNPData(void* pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
 /*! \fn int APC_API APC_GetDevicePortType(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, USB_PORT_TYPE* pUSB_Port_Type)
 \brief Get Device USB-port-type.

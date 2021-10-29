@@ -183,6 +183,24 @@ int APC_API APC_SetSlaveYOffset(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYT
 */
 int APC_API APC_SetYOffset(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
+/*! \fn int APC_SetYOffset_Advanced(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo,
+        BYTE *buffer,
+        int BufferLength,
+        int *pActualLength,
+        int index)
+    \brief set Y offset data in both Groups #1 and #2 when the firmware has the flash protection.
+    \param void *pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+    \param PDEVSELINFO pDevSelInfo	CApcDI handler
+    \param BYTE *buffer	buffer to store
+    \param int BufferLength	length of buffer
+    \param int *pActualLength	actual byte of reading
+    \param int index	index of Y offset file ID
+    \return success:APC_OK, others:see eSPDI_ErrCode.h
+*/
+int APC_API APC_SetYOffset_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
 /*! \fn int APC_SetSlaveRectifyTable(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
 	\brief set rectify data to flash, see APC_SetRectifyTable except set
 */
@@ -193,10 +211,20 @@ int APC_API APC_SetSlaveRectifyTable(void *pHandleApcDI, PDEVSELINFO pDevSelInfo
 */
 int APC_API APC_SetRectifyTable(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
 
+/*! \fn int APC_SetRectifyTable_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index)
+    \brief set rectify data to flash, see APC_SetRectifyTable except set
+*/
+int APC_API APC_SetRectifyTable_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, int index);
+
 /*! \fn APC_SetZDTable(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo)
 	\brief set disparity and Z values to flash, see APC_GetZDTable except get
 */
 int APC_API APC_SetZDTable(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo);
+
+/*! \fn APC_SetZDTable_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo)
+    \brief set disparity and Z values to flash, see APC_GetZDTable except get
+*/
+int APC_API APC_SetZDTable_Advanced(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, BYTE *buffer, int BufferLength, int *pActualLength, PZDTABLEINFO pZDTableInfo);
 
 /*! \fn int APC_GetRectifyMatLogData(
 		void *pHandleApcDI,
