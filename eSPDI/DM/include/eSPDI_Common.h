@@ -1446,45 +1446,7 @@ typedef enum
 #define ESPAEAWB_SENSOR_MODE_LEFT		0
 #define ESPAEAWB_SENSOR_MODE_RIGHT      1
 #define ESPAEAWB_SENSOR_MODE_BOTH		2
-//
-// PU Property ID
-//
-#define    PU_PROPERTY_ID_BRIGHTNESS                0
-#define    PU_PROPERTY_ID_CONTRAST                  1
-#define    PU_PROPERTY_ID_HUE                       2
-#define    PU_PROPERTY_ID_SATURATION                3
-#define    PU_PROPERTY_ID_SHARPNESS                 4
-#define    PU_PROPERTY_ID_GAMMA                     5
-#define    PU_PROPERTY_ID_COLORENABLE               6
-#define    PU_PROPERTY_ID_WHITEBALANCE              7
-#define    PU_PROPERTY_ID_BACKLIGHT_COMPENSATION    8
-#define    PU_PROPERTY_ID_GAIN                      9
-#define    PU_PROPERTY_ID_DIGITAL_MULTIPLIER        10
-#define    PU_PROPERTY_ID_DIGITAL_MULTIPLIER_LIMIT  11
-#define    PU_PROPERTY_ID_WHITEBALANCE_COMPONENT    12
-#define    PU_PROPERTY_ID_POWERLINE_FREQUENCY       13
-//
-// CT Property ID
-//
-#define    CT_PROPERTY_ID_PAN               		   0
-#define    CT_PROPERTY_ID_TILT                         1
-#define    CT_PROPERTY_ID_ROLL                         2
-#define    CT_PROPERTY_ID_ZOOM                         3
-#define    CT_PROPERTY_ID_EXPOSURE                     4
-#define    CT_PROPERTY_ID_IRIS                         5
-#define    CT_PROPERTY_ID_FOCUS                        6
-#define    CT_PROPERTY_ID_SCANMODE                     7
-#define    CT_PROPERTY_ID_PRIVACY                      8
-#define    CT_PROPERTY_ID_PANTILT                      9
-#define    CT_PROPERTY_ID_PAN_RELATIVE                 10
-#define    CT_PROPERTY_ID_TILT_RELATIVE                11
-#define    CT_PROPERTY_ID_ROLL_RELATIVE                12
-#define    CT_PROPERTY_ID_ZOOM_RELATIVE                13
-#define    CT_PROPERTY_ID_EXPOSURE_RELATIVE            14
-#define    CT_PROPERTY_ID_IRIS_RELATIVE                15
-#define    CT_PROPERTY_ID_FOCUS_RELATIVE               16
-#define    CT_PROPERTY_ID_PANTILT_RELATIVE             17
-#define    CT_PROPERTY_ID_AUTO_EXPOSURE_PRIORITY       19 
+
 
 /*! \fn int APC_SetSensorTypeName(
 		void *pHandleApcDI,
