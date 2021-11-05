@@ -95,6 +95,7 @@ private:
 
     BOOL IsStream0ColorPlusDepth();
     void UpdateIRConfig();
+    WORD m_maxIR;
     void SetIRValue(WORD value);
 	void ChangeIRValue(WORD value);
     static void DepthFusionCallback(unsigned char* depthBuf, unsigned char* selectedIndex, int depthSize, 

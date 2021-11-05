@@ -42,7 +42,6 @@ IMPLEMENT_DYNAMIC(CPreviewImageDlg, CDialog)
 #define MAX_IR_DEFAULT 6
 #define MAX_IR_MAXIMUM 15
 #define MAX_IR_HYPATIA 96
-#define MAX_IR_NOVA    127
 #define MAX_IR_HYPATIA_DEFAULT 60
 
 typedef struct plyThreadData
@@ -69,6 +68,7 @@ CPreviewImageDlg::CPreviewImageDlg(void*& hApcDI, DEVSELINFO& devSelInfo, const 
     m_i8038DepthIndex( NULL ),
     m_DfParam( new DepthfilterParam() )
 {
+    APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_maxIR);
 	m_pdlgVideoDeviceDlg = NULL;
 #ifndef ESPDI_EG
     m_depthFusionHelper = nullptr;
@@ -969,8 +969,11 @@ void CPreviewImageDlg::InitIR()
 		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
-    else if (IsDevicePid(APC_PID_NORA)) {
-        APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_NOVA);
+    else if (IsDevicePid(APC_PID_NORA))
+    {
+        WORD wTestMaxIR = NULL;
+        APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &wTestMaxIR);
+        APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, wTestMaxIR);
         GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(true);
     }
     else if ( !IsDevicePid( APC_PID_SALLY ) &&
@@ -4009,15 +4012,13 @@ void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
     {
         if (IsDevicePid(APC_PID_NORA))
         {
+            APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_maxIR);
             APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, 0x7F);
         }
     }
     else
     {
-        if (IsDevicePid(APC_PID_NORA))
-        {
-            APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_DEFAULT);
-        }
+        APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, m_maxIR);
     }
 
     UpdateIRConfig();
