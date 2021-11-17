@@ -739,6 +739,10 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
     {
         modelName = L"ORANGEITRI";
     }
+    else if (devinfo.wPID == APC_PID_NORA) // NORA
+    {
+        modelName = L"NORA";
+    }
 	else
 	{
 		modelName = NULL;

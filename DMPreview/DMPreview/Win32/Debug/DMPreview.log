@@ -297,8 +297,9 @@ glew32s.lib(glew.obj) : warning LNK4099: 找不到 PDB 'vc120.pdb' (有 'glew32s
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8053_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8053_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8054_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8054_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\NORA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\NORA_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\SANDRA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\SANDRA_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8059_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8059_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8062_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8062_DM_Quality_Register_Setting.cfg
-  已複製 14 個檔案
+  已複製 15 個檔案
