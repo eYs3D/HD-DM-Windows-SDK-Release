@@ -286,7 +286,8 @@ glew32s.lib(glew.obj) : warning LNK4099: 找不到 PDB 'vc120.pdb' (有 'glew32s
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\ModeConfig.db -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\cfg\ModeConfig.db
   已複製 1 個檔案
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\APC_SdkConfig.ini -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\APC_SdkConfig.ini
-  已複製 1 個檔案
+  D:\Workspace\test24\etronsdk\EtronDI\DMPreview\APC_UIConfig.ini -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\APC_UIConfig.ini
+  已複製 2 個檔案
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8036_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8036_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8037_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8037_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg

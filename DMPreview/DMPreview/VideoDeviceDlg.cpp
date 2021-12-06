@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "APC_Test.h"
 #include "VideoDeviceDlg.h"
@@ -40,7 +40,17 @@ BEGIN_MESSAGE_MAP(CVideoDeviceDlg, CDialog)
 END_MESSAGE_MAP()
 
 CVideoDeviceDlg::CVideoDeviceDlg(CWnd* pParent, bool enableSDKLog)
-	: CDialog(CVideoDeviceDlg::IDD, pParent), m_hApcDI(nullptr), m_pDevInfo( NULL ), m_bIMU_Device_Sync(false)
+                                :CDialog(CVideoDeviceDlg::IDD, pParent),
+                                m_hApcDI(nullptr),
+                                m_pDevInfo( NULL ),
+                                m_bIMU_Device_Sync(false),
+                                m_TabPage4DepthFilter(TRUE),
+                                m_TabPage4Property(TRUE),
+                                m_TabPage4Accuracy(TRUE),
+                                m_TabPage4RegisterSetting(TRUE),
+                                m_TabPage4IMU(TRUE),
+                                m_TabPage4Audio(TRUE)
+
 {
   /*APC_Init2 can enable the auto-restart function and register USB device events */
   APC_Init2(&m_hApcDI, enableSDKLog, false); 
@@ -80,6 +90,66 @@ void CVideoDeviceDlg::SetParams(int devIndex, const DEVINFORMATIONEX& devInfo)
     m_pDevInfo = &devInfo;
 }
 
+BOOL CVideoDeviceDlg::ReadUIConfig()
+{
+    BOOL bRet = TRUE;
+    TCHAR buff[MAX_PATH];
+    memset(buff, 0, MAX_PATH);
+    ::GetModuleFileName(NULL, buff, sizeof(buff));
+    CString strFolder = buff;
+    CString strPath_Application = strFolder.Left(strFolder.ReverseFind(_T('\\')) + 1);
+
+    CString profile_file = strPath_Application + _T("APC_UIConfig.ini");
+
+    CString strAppName, strKeyName;
+    CString strData;
+    strAppName = _T("Setting");
+
+    // Enable_TabPage_DepthFilter =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_DepthFilter");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4DepthFilter = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_TabPage_Property =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_Property");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4Property = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_TabPage_Accuracy =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_Accuracy");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4Accuracy = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_TabPage_RegisterSetting =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_RegisterSetting");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4RegisterSetting = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_TabPage_IMU =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_IMU");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4IMU = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_TabPage_Audio =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_IMU");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4Audio = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    return TRUE;
+}
+
 BOOL CVideoDeviceDlg::OnInitDialog() {
   
   CDialog::OnInitDialog();
@@ -99,6 +169,7 @@ BOOL CVideoDeviceDlg::OnInitDialog() {
   m_oTabPage.Create( CMFCTabCtrl::STYLE_3D_ROUNDED, rt, this, IDC_TAB_PAGE, CMFCTabCtrl::LOCATION_TOP );
   m_oTabPage.EnableTabSwap( FALSE );
 
+  BOOL readOK = ReadUIConfig();
   InitDefaultUI();
 
   return TRUE;
@@ -144,65 +215,65 @@ void CVideoDeviceDlg::InitChildDlg()
     DEVINFORMATIONEX xdevinfoEx;
     USB_PORT_TYPE eUSB_Port_Type = USB_PORT_TYPE_UNKNOW;
 
-    APC_GetDevicePortType( m_hApcDI, &m_DevSelInfo, &eUSB_Port_Type );
-    APC_GetDeviceInfoEx( m_hApcDI, &m_DevSelInfo , &xdevinfoEx );
+    APC_GetDevicePortType(m_hApcDI, &m_DevSelInfo, &eUSB_Port_Type);
+    APC_GetDeviceInfoEx(m_hApcDI, &m_DevSelInfo, &xdevinfoEx);
 
-	CPreviewImageDlg* previewDlg = new CPreviewImageDlg(m_hApcDI, m_DevSelInfo, m_pDevInfo->nDevType, eUSB_Port_Type);
-	previewDlg->m_pdlgVideoDeviceDlg = this;
+    CPreviewImageDlg* previewDlg = new CPreviewImageDlg(m_hApcDI, m_DevSelInfo, m_pDevInfo->nDevType, eUSB_Port_Type);
+    previewDlg->m_pdlgVideoDeviceDlg = this;
     DepthFilterDlg* depthfilterDlg = new DepthFilterDlg(xdevinfoEx.wPID, eUSB_Port_Type, previewDlg);
     const char* version = APC_GetDepthFilterVersion(m_hApcDI, &m_DevSelInfo);
     depthfilterDlg->setVersion(version);
 
     AEAWB_PropertyDlg* aeAwbCtrlDlg = new AEAWB_PropertyDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
 
-	previewDlg->SetDepthFilterDlg( depthfilterDlg );
-	previewDlg->SetPropertyDlg( aeAwbCtrlDlg );
+    previewDlg->SetDepthFilterDlg(depthfilterDlg);
+    previewDlg->SetPropertyDlg(aeAwbCtrlDlg);
 
     depthfilterDlg->Create(depthfilterDlg->IDD, &m_oTabPage);
-	previewDlg->Create(previewDlg->IDD, &m_oTabPage);
+    previewDlg->Create(previewDlg->IDD, &m_oTabPage);
     aeAwbCtrlDlg->Create(aeAwbCtrlDlg->IDD, &m_oTabPage);
 
-	m_childDlg.push_back(previewDlg);
+    m_childDlg.push_back(previewDlg);
     m_childDlg.push_back(depthfilterDlg);
     m_childDlg.push_back(aeAwbCtrlDlg);
 
-    m_oTabPage.AddTab( previewDlg, _T( "Preview" ) );
-    m_oTabPage.AddTab( depthfilterDlg, _T( "Depth Filter" ) );
-    m_oTabPage.AddTab( aeAwbCtrlDlg, _T( "Property" ) );
+    m_oTabPage.AddTab(previewDlg, _T("Preview"));
+    if (m_TabPage4DepthFilter)  m_oTabPage.AddTab(depthfilterDlg, _T("Depth Filter"));
+    if (m_TabPage4Property)     m_oTabPage.AddTab(aeAwbCtrlDlg, _T("Property"));
 
-    DistanceAccuracyDlg* DAlg = new DistanceAccuracyDlg(m_hApcDI, m_DevSelInfo, previewDlg );
-	DAlg->Create(DAlg->IDD, &m_oTabPage);
-    DAlg->EnableDepthList( xdevinfoEx.wPID == APC_PID_8038 );
-	m_childDlg.push_back(DAlg);
-    m_oTabPage.AddTab( DAlg, _T( "Accuracy" ) );
+    DistanceAccuracyDlg* DAlg = new DistanceAccuracyDlg(m_hApcDI, m_DevSelInfo, previewDlg);
+    DAlg->Create(DAlg->IDD, &m_oTabPage);
+    DAlg->EnableDepthList(xdevinfoEx.wPID == APC_PID_8038);
+    m_childDlg.push_back(DAlg);
+    if (m_TabPage4Accuracy) m_oTabPage.AddTab(DAlg, _T("Accuracy"));
 
-	previewDlg->SetAccuracyDlg( DAlg );
+    previewDlg->SetAccuracyDlg(DAlg);
 
-    if ( ModeConfig::IMU_NONE != g_ModeConfig.GetIMU_Type( xdevinfoEx.wPID ) )
+    if (ModeConfig::IMU_NONE != g_ModeConfig.GetIMU_Type(xdevinfoEx.wPID))
     {
-        wchar_t szBuf[ MAX_PATH ] = { NULL };
-        GetDlgItemText( IDC_EDIT_SN, szBuf, MAX_PATH );
-		//IMUTestDlg* pIMUTestDlg = new IMUTestDlg( szBuf, ModeConfig::IMU_9Axis == g_ModeConfig.GetIMU_Type( xdevinfoEx.wPID ), &m_oTabPage );
-		IMUTestDlg* pIMUTestDlg = new IMUTestDlg(szBuf, m_hApcDI, m_DevSelInfo, g_ModeConfig.GetIMU_Type(xdevinfoEx.wPID), &m_oTabPage, previewDlg);
-		pIMUTestDlg->Create(pIMUTestDlg->IDD, &m_oTabPage);
-		pIMUTestDlg->startGetImuData();
-		pIMUTestDlg->PauseGetImuData( true );
+        wchar_t szBuf[MAX_PATH] = { NULL };
+        GetDlgItemText(IDC_EDIT_SN, szBuf, MAX_PATH);
+        //IMUTestDlg* pIMUTestDlg = new IMUTestDlg( szBuf, ModeConfig::IMU_9Axis == g_ModeConfig.GetIMU_Type( xdevinfoEx.wPID ), &m_oTabPage );
+        IMUTestDlg* pIMUTestDlg = new IMUTestDlg(szBuf, m_hApcDI, m_DevSelInfo, g_ModeConfig.GetIMU_Type(xdevinfoEx.wPID), &m_oTabPage, previewDlg);
+        pIMUTestDlg->Create(pIMUTestDlg->IDD, &m_oTabPage);
+        pIMUTestDlg->startGetImuData();
+        pIMUTestDlg->PauseGetImuData(true);
 
         m_childDlg.push_back(pIMUTestDlg);
-        m_oTabPage.AddTab(pIMUTestDlg, _T( "IMU" ) );
+        if (m_TabPage4IMU) m_oTabPage.AddTab(pIMUTestDlg, _T("IMU"));
     }
-    if ( xdevinfoEx.wPID == APC_PID_8060 )
+    if (xdevinfoEx.wPID == APC_PID_8060)
     {
-	    AudioDlg* audioDlg = new AudioDlg(&m_oTabPage);
-	    audioDlg->Create(audioDlg->IDD, &m_oTabPage);
-	    m_childDlg.push_back(audioDlg);
-        m_oTabPage.AddTab( audioDlg, _T( "Audio" ) );
+        AudioDlg* audioDlg = new AudioDlg(&m_oTabPage);
+        audioDlg->Create(audioDlg->IDD, &m_oTabPage);
+        m_childDlg.push_back(audioDlg);
+        if (m_TabPage4Audio) m_oTabPage.AddTab(audioDlg, _T("Audio"));
     }
 
-	CRegisterAccessDlg* regAccessDlg = new CRegisterAccessDlg(m_hApcDI, m_DevSelInfo, &m_oTabPage);
-	regAccessDlg->Create(regAccessDlg->IDD, &m_oTabPage);
-	m_childDlg.push_back(regAccessDlg);
-    m_oTabPage.AddTab( regAccessDlg, _T( "Register" ) );
+    CRegisterAccessDlg* regAccessDlg = new CRegisterAccessDlg(m_hApcDI, m_DevSelInfo, &m_oTabPage);
+    regAccessDlg->Create(regAccessDlg->IDD, &m_oTabPage);
+    m_childDlg.push_back(regAccessDlg);
+    if (m_TabPage4RegisterSetting) m_oTabPage.AddTab(regAccessDlg, _T("Register"));
 
 }
 
