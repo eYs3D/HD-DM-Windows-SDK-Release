@@ -2432,6 +2432,20 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
             *pzdTblIdx = 0;
         }
     }
+    else if (IsDevicePid(APC_PID_NORA))
+    {
+        // Specially for height 768
+        if (height == 768)
+        {
+            *pzdTblIdx = 0;
+        }
+
+        // Specially for height 384
+        if (height == 384)
+        {
+            *pzdTblIdx = 1;
+        }
+    }
 }
 
 void CPreviewImageDlg::AdjustColorResForDepth0(CPoint*colorRealRes)
