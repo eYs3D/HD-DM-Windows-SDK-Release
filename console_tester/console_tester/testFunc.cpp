@@ -281,3 +281,20 @@ void Write24X()
     APC_Release(&pHandleApcDI);
 }
 
+void ResetUNPData()
+{
+    void* pHandleApcDI;
+    int ret_init = APC_Init(&pHandleApcDI, false);
+
+    DEVSELINFO devSelInfo;
+    devSelInfo.index = 0;
+
+    int isReset = APC_ResetUNPData(pHandleApcDI, &devSelInfo);
+    if (isReset != APC_OK)
+    {
+        printf("APC_ResetUNPData fail.\n");
+    }
+    APC_CloseDevice(pHandleApcDI, &devSelInfo);
+    APC_Release(&pHandleApcDI);
+}
+

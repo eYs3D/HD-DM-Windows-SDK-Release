@@ -28,4 +28,5 @@ void Read5X();
 void Write5X();
 void Read24X();
 void Write24X();
+void ResetUNPData();
 

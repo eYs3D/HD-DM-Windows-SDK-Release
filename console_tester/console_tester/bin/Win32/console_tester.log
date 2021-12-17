@@ -3,7 +3,7 @@ C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\
   複製了         1 個檔案。
   複製了         1 個檔案。
   main.cpp
-d:\workspace\test24\etronsdk\etrondi\console_tester\main.cpp(24): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+d:\workspace\test24\etronsdk\etrondi\console_tester\main.cpp(25): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.19041.0\ucrt\stdio.h(1276): note: 請參閱 'scanf' 的宣告
   testFunc.cpp
   正在產生程式碼...

@@ -19,6 +19,7 @@ int main(void)
         printf("6. Write5X\n");
         printf("7. Read24X\n");
         printf("8. Write24X\n");
+        printf("9. Reset UNPData\n");
 
         printf("\nPlease choose the testing item:\n");
         scanf("%d", &input);
@@ -76,6 +77,11 @@ int main(void)
             case 8: //8. Write24X
             {
                 Write24X();
+                break;
+            }
+            case 9: //9. ResetUNPData
+            {
+                ResetUNPData();
                 break;
             }
 
