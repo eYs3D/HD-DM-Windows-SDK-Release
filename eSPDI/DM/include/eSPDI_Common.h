@@ -109,6 +109,7 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_SALLY       0x0158
 #define APC_PID_8062        0x0162
 #define APC_PID_HYPATIA     0x0160  // XY8071
+#define APC_PID_HYPATIA2    0x0173
 #define APC_PID_SANDRA      0x0167
 #define APC_PID_NORA        0x0168
 #define APC_PID_HELEN       0x0171

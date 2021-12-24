@@ -1,23 +1,5 @@
 ﻿cl : 命令列 warning D9035: 選項 'Gm' 已被取代，在未來的發行版本中將會移除
-  PreviewImageDlg.cpp
-d:\workspace\test24\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(134): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(164): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(268): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(826): warning C4018: '>': signed/unsigned 不相符
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1212): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1213): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1252): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1462): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1463): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1559): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1806): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2220): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2285): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2368): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2761): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
-d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(3474): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+  RegisterSettings.cpp
   DMPreview.vcxproj -> D:\Workspace\test24\etronsdk\EtronDI\Win32\Debug\DMPreview.exe
   D:\Workspace\test24\etronsdk\EtronDI\Win32\Debug\DMPreview.exe -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DMPreview.exe
   已複製 1 個檔案
@@ -37,10 +19,11 @@ d:\workspace\test24\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(3474): warnin
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8052_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8052_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8053_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8053_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8054_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8054_DM_Quality_Register_Setting.cfg
+  D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA2_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA2_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\NORA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\NORA_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\SANDRA_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\SANDRA_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8059_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8059_DM_Quality_Register_Setting.cfg
   D:\Workspace\test24\etronsdk\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8062_DM_Quality_Register_Setting.cfg -> D:\Workspace\test24\etronsdk\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8062_DM_Quality_Register_Setting.cfg
-  已複製 15 個檔案
+  已複製 16 個檔案
