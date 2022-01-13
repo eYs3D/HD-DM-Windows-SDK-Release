@@ -656,6 +656,10 @@ bool CPreviewImageDlg::UpdateStreamInfo()
     {
         GetResolution(m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_ORANGE_K);
     }
+    if (IsDevicePid(APC_PID_8063))
+    {
+        GetResolution(m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8063_K);
+    }
     if ( IsDevicePid( APC_PID_8040S ) )
     {
         GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8040S_K );
@@ -2853,6 +2857,7 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
             case APC_PID_8060:  iPid = APC_PID_8060_K;  break;
             case APC_PID_8054:  iPid = APC_PID_8054_K;  APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid  ); break;
             case APC_PID_ORANGE:  iPid = APC_PID_ORANGE_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid); break;
+            case APC_PID_8063:  iPid = APC_PID_8063_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid); break;
             case APC_PID_8040S: iPid = APC_PID_8040S_K; APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x00, iPid  ); break;
             }
             if ( !OpenDevice( pThis->m_previewParams.m_kcolorOption,

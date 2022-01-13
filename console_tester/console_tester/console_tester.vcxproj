@@ -87,26 +87,26 @@
     <LinkIncremental>true</LinkIncremental>
     <EnableManagedIncrementalBuild>true</EnableManagedIncrementalBuild>
     <LibraryPath>$(SolutionDir)\eSPDI\DM\$(Platform);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)console_tester\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)console_tester\bin\$(Platform)</IntDir>
+    <OutDir>.\console_tester\bin\$(Platform)</OutDir>
+    <IntDir>.\console_tester\bin\$(Platform)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
-    <OutDir>$(SolutionDir)console_tester\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)console_tester\bin\$(Platform)</IntDir>
+    <OutDir>.\console_tester\bin\$(Platform)</OutDir>
+    <IntDir>.\console_tester\bin\$(Platform)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)console_tester\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)console_tester\bin\$(Platform)</IntDir>
+    <OutDir>.\console_tester\bin\$(Platform)</OutDir>
+    <IntDir>.\console_tester\bin\$(Platform)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
     <LibraryPath>$(SolutionDir)\eSPDI\DM\$(Platform);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)console_tester\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)console_tester\bin\$(Platform)</IntDir>
+    <OutDir>.\console_tester\bin\$(Platform)</OutDir>
+    <IntDir>.\console_tester\bin\$(Platform)</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -129,8 +129,8 @@
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -164,8 +164,8 @@ copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_t
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -194,8 +194,8 @@ copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_t
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -223,8 +223,8 @@ copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_t
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>

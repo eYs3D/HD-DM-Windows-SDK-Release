@@ -294,6 +294,10 @@ void ResetUNPData()
     {
         printf("APC_ResetUNPData fail.\n");
     }
+    else
+    {
+        printf("APC_ResetUNPData Success.\n");
+    }
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
