@@ -351,8 +351,26 @@ void CVideoDeviceDlg::GetFWVersion()
 
     char* pHasSecondFW = strchr( &szBuf[ 0 ], '\n' );
 
-    if ( !pHasSecondFW ) { strcat( &szBuf[ 0 ], "\n\n" ); } // 1-chip
-    else if ( !strchr( pHasSecondFW + 1, '\n' ) ) { strcat( &szBuf[ 0 ], "\n" ); } // 2-chip
+    if ( !pHasSecondFW ) // Only one chip, 1-chip
+    {
+        strcat( &szBuf[ 0 ], "\n\n" );
+    }
+    else if ( !strchr( pHasSecondFW + 1, '\n' ) ) // The module has two chips, 2-chip
+    {
+        std::vector<char> firstChipStr(256, 0);
+        std::vector<char> secondChipStr(256, 0);
+
+        int chip2StrLen = strlen(pHasSecondFW);
+        strncpy(&firstChipStr[0], &szBuf[0], (nActualLength - chip2StrLen));
+        strncpy(&secondChipStr[0], (pHasSecondFW + 1), chip2StrLen);
+
+        strcat(&firstChipStr[0], "\r\n");
+        strcat(&secondChipStr[0], "\r\n");
+
+        std::fill(szBuf.begin(), szBuf.end(), 0);
+        strcat(&szBuf[0], &firstChipStr[0]);
+        strcat(&szBuf[0], &secondChipStr[0]);
+    }
 
     SetDlgItemText( IDC_STATIC_FW_VER, CA2W( &szBuf[0] ) );
 }

@@ -13,6 +13,11 @@ const size_t maxFrameTimestampQueueSize = 31;
 
 IMPLEMENT_DYNAMIC(CColorDlg, CResizableDlg)
 
+#ifdef _DEBUG
+int debugDumpFlag = false;
+int isDump = false;
+#endif
+
 CColorDlg::CColorDlg(CWnd* pParent /*=NULL*/)
 	: CResizableDlg(CColorDlg::IDD, pParent)
 {
@@ -182,6 +187,23 @@ void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutp
         {
             memcpy( &m_vecRawImageBuf[ NULL ], pColorBuf, *dataSize );
             setImageType(imgType);
+
+#ifdef _DEBUG
+            unsigned char* pYUVBuf = new BYTE[(*dataSize)];
+            FILE *fp;
+            errno_t et;
+            if ((nColorSerialNum == 1) && (isDump == TRUE))
+            {
+                et = fopen_s(&fp, "test_yuyv_03.raw", "wb");
+                if (et == 0) {
+                    fseek(fp, 0, SEEK_SET);
+                    fwrite(pColorBuf, sizeof(BYTE), *dataSize, fp);
+                    fclose(fp);
+                }
+                debugDumpFlag = true;
+            }
+            if (pYUVBuf) free (pYUVBuf);
+#endif
         }
         m_imgSerialNumber = nColorSerialNum;
 
@@ -230,6 +252,20 @@ void CColorDlg::Thread_ShowImage()
                 {
                     TRACE( "APC_ColorFormat_to_RGB24 fail\n" );
                 }
+#ifdef _DEBUG
+                FILE *fp;
+                errno_t et;
+                if (debugDumpFlag == true)
+                {
+                    et = fopen_s(&fp, "test_yuyv_04.raw", "wb");
+                    if (et == 0) {
+                        fseek(fp, 0, SEEK_SET);
+                        fwrite(&vecRawImageBuf[0], sizeof(BYTE), (vecRawImageBuf.size()), fp);
+                        fclose(fp);
+                    }
+                    debugDumpFlag = false;
+                }
+#endif
             }
             ShowImage( *pDC );
         }
