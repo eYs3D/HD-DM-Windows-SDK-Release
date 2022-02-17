@@ -302,3 +302,32 @@ void ResetUNPData()
     APC_Release(&pHandleApcDI);
 }
 
+void GetUserData() // Issue 6882
+{
+    void* pHandleApcDI = NULL;
+    char buffer[1024];
+
+    int ret = APC_Init(&pHandleApcDI, false);
+    int deviceNumber = APC_GetDeviceNumber(pHandleApcDI);
+    for (int i = 0; i < deviceNumber; i++)
+    {
+        memset(buffer, 0, 1024);
+        DEVSELINFO devSelInfo;
+        devSelInfo.index = i;
+        USERDATA_SECTION_INDEX usi;
+     
+        if ((ret = APC_GetUserData(pHandleApcDI, &devSelInfo, (LPBYTE)buffer, 1024, usi)) == APC_OK)
+        {
+            //Retrieves correct data for each device
+            for (int loop = 0; loop < 1024; loop++)
+            {
+                printf("%02x ", buffer[loop]);
+            }
+            printf("Done.\n\n");
+        }
+        APC_CloseDevice(pHandleApcDI, &devSelInfo);
+    }
+    printf("Wenling debug\n");
+    APC_Release(&pHandleApcDI);
+}
+

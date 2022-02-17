@@ -366,6 +366,10 @@ struct PointCloudInfo
     float focalLength_K;
     float baseline_K;
     float diff_K;
+//slave data
+    float	CamMat1[9];
+    float	RotaMat[9];
+    float	TranMat[3];
 
     PointCloudInfo() { memset( this, NULL, sizeof( PointCloudInfo ) ); }
 };

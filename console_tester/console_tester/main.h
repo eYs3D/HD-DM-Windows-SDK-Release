@@ -29,4 +29,5 @@ void Write5X();
 void Read24X();
 void Write24X();
 void ResetUNPData();
+void GetUserData(); // Issue 6882
 

@@ -1720,6 +1720,27 @@ void CPreviewImageDlg::UpdatePreviewParams()
         }
 	}
 
+    if (IsDevicePid(APC_PID_8063) && ((CButton*)GetDlgItem(IDC_CHECK_K_COLOR_STREAM))->GetCheck() == BST_CHECKED)
+    {
+        int nRet;
+        int index = 0;
+        if (m_previewParams.m_rectifyLogDataSlave) free(m_previewParams.m_rectifyLogDataSlave);
+
+        m_previewParams.m_rectifyLogDataSlave = (eSPCtrl_RectLogData*)malloc(sizeof(eSPCtrl_RectLogData));
+
+        nRet = getRectifyLogDataSlave(m_previewParams.m_rectifyLogDataSlave, index);
+        if (nRet != APC_OK)
+        {
+            free(m_previewParams.m_rectifyLogDataSlave);
+            m_previewParams.m_rectifyLogDataSlave = nullptr;
+            TRACE("Get 'the slave rectify log data' from flash failed !");
+        } else {
+            memcpy(m_xPointCloudInfo.CamMat1, m_previewParams.m_rectifyLogDataSlave->CamMat1, 9 * sizeof(float));
+            memcpy(m_xPointCloudInfo.RotaMat, m_previewParams.m_rectifyLogDataSlave->RotaMat, 9 * sizeof(float));
+            memcpy(m_xPointCloudInfo.TranMat, m_previewParams.m_rectifyLogDataSlave->TranMat, 3 * sizeof(float));
+        }
+    }
+
     if (((CButton*)GetDlgItem(IDC_CHECK_DEPTH0))->GetCheck() == BST_CHECKED)
     {
 		int index = 0;
@@ -1852,7 +1873,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
             }
         }
     }
-    if ( m_previewParams.m_rectifyLogDataSlave )
+    if ( m_previewParams.m_rectifyLogDataSlave && !IsDevicePid(APC_PID_8063))
     {
         float ratio_Mat_K = (float)ptRes.y / m_previewParams.m_rectifyLogDataSlave->OutImgHeight;
         m_xPointCloudInfo.focalLength_K = m_previewParams.m_rectifyLogDataSlave->ReProjectMat[11] * ratio_Mat_K;
