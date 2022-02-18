@@ -43,6 +43,9 @@ IMPLEMENT_DYNAMIC(CPreviewImageDlg, CDialog)
 #define MAX_IR_MAXIMUM 15
 #define MAX_IR_HYPATIA 96
 #define MAX_IR_HYPATIA_DEFAULT 60
+#define MAX_IR_IVY 96
+#define MAX_IR_IVY_DEFAULT 60
+
 
 typedef struct plyThreadData
 {
@@ -679,6 +682,7 @@ void CPreviewImageDlg::UpdateIRConfig()
     APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_irRange.second);
 
 	if ( IsDevicePid( APC_PID_HYPATIA) )  m_irRange.second = MAX_IR_HYPATIA;
+	if ( IsDevicePid( APC_PID_IVY) )  m_irRange.second = MAX_IR_IVY;
     if ( IsDevicePid( APC_PID_8060  ) ) m_irRange.second = 5;
     if ( IsDevicePid( APC_PID_8040S ) ) m_irRange.second = 4;
 }
@@ -973,6 +977,10 @@ void CPreviewImageDlg::InitIR()
 		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
+    else if (IsDevicePid(APC_PID_IVY)) {
+		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_IVY);
+		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
+	}
     else if (IsDevicePid(APC_PID_NORA))
     {
         WORD wTestMaxIR = NULL;
@@ -1004,6 +1012,10 @@ void CPreviewImageDlg::InitIR()
 
     case APC_PID_NORA:
         m_irValue = 0;
+        break;
+
+    case APC_PID_IVY:
+        m_irValue = MAX_IR_IVY_DEFAULT;
         break;
 
     default:

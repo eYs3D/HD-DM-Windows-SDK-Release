@@ -12,22 +12,22 @@ d:\workspace\test29\etronsdk\etrondi\dmpreview\imutestdlg.h : warning C4819: 檔
   PreviewImageDlg.cpp
 d:\workspace\test29\etronsdk\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
 d:\workspace\test29\etronsdk\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(134): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(164): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(268): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(830): warning C4018: '>': signed/unsigned 不相符
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1216): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1217): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1256): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1466): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1467): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1556): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1810): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2224): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2288): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2372): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2765): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
-d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(3479): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(137): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(167): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(271): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(834): warning C4018: '>': signed/unsigned 不相符
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1228): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1229): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1268): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1478): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1479): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1547): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(1843): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2257): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2291): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2405): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(2798): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+d:\workspace\test29\etronsdk\etrondi\dmpreview\previewimagedlg.cpp(3512): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
   PlyWriter.cpp
 d:\workspace\test29\etronsdk\etrondi\dmpreview\plywriter.cpp(66): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
 d:\workspace\test29\etronsdk\etrondi\dmpreview\plywriter.cpp(67): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
@@ -280,11 +280,15 @@ GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewGetSubroutineUni
 GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewUniformSubroutinesuiv 已匯入
 glew32s.lib(glew.obj) : warning LNK4099: 找不到 PDB 'vc120.pdb' (有 'glew32s.lib(glew.obj)' 或位於 'D:\Workspace\test29\etronsdk\EtronDI\Win32\Debug\vc120.pdb')，當做沒有偵錯資訊，連結物件
   DMPreview.vcxproj -> D:\Workspace\test29\etronsdk\EtronDI\Win32\Debug\DMPreview.exe
-  系統找不到指定的路徑。
+  D:\Workspace\test29\etronsdk\EtronDI\..\bin\eSPDI_DM\Win32\cfg\ModeConfig.db - 程序無法存取檔案，因為檔案正由另一個程序使用。
+  D:\Workspace\test29\etronsdk\EtronDI\..\bin\eSPDI_DM\Win32\DMPreview.exe - 存取被拒。
+  D:\Workspace\test29\etronsdk\EtronDI\..\bin\eSPDI_DM\Win32\eSPDI_DM.dll - 存取被拒。
+  程序無法存取檔案，因為檔案正由另一個程序使用。
+  子目錄或檔案 D:\Workspace\test29\etronsdk\EtronDI\..\bin\eSPDI_DM\Win32 已經存在。
   D:\Workspace\test29\etronsdk\EtronDI\Win32\Debug\DMPreview.exe -> D:\Workspace\test29\etronsdk\bin\eSPDI_DM\Win32\DMPreview.exe
-  已複製 1 個檔案
+  共用違規
   D:\Workspace\test29\etronsdk\eSPDI\DM\Win32\eSPDI_DM.dll -> D:\Workspace\test29\etronsdk\bin\eSPDI_DM\Win32\eSPDI_DM.dll
-  已複製 1 個檔案
+  共用違規
   D:\Workspace\test29\etronsdk\EtronDI\DMPreview\cfg\ModeConfig.db -> D:\Workspace\test29\etronsdk\bin\eSPDI_DM\Win32\cfg\ModeConfig.db
   已複製 1 個檔案
   D:\Workspace\test29\etronsdk\EtronDI\DMPreview\APC_SdkConfig.ini -> D:\Workspace\test29\etronsdk\bin\eSPDI_DM\Win32\APC_SdkConfig.ini
