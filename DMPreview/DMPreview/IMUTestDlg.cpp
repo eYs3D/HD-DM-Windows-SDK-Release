@@ -30,10 +30,12 @@ USHORT current_imu_pid;	// Rem 0910
 #define IMU_9AXIS_8060     0x5711
 #define IMU_6AXIS_8040_NEW 0x0154
 #define IMU_9AXIS_8062     0x0163
+#define IMU_6AXIS_8063     0x0166
 
 /* IMU Etron VID */
 #define IMU_APC_VID_0x1E4E 0x1E4E	//9 Axis;//8062 / 8060;
 #define IMU_APC_VID_0x0483 0x0483	//6 Axis;//8040;
+#define IMU_APC_VID_0x3438 0x3438	//6 Axis;//8063;
 
 IMPLEMENT_DYNAMIC(IMUTestDlg, CDialog)
 BEGIN_MESSAGE_MAP(IMUTestDlg, CDialog)
@@ -136,7 +138,8 @@ void IMUTestDlg::InitIMU()
 {
     UninitIMU();
 
-    std::set< int > setIMU_ID = { IMU_6AXIS_8040, IMU_6AXIS_8040_NEW, IMU_9AXIS_8060, IMU_9AXIS_8062 };
+    std::set< int > setIMU_VID = { IMU_APC_VID_0x0483, IMU_APC_VID_0x1E4E, IMU_APC_VID_0x3438 };
+    std::set< int > setIMU_PID = { IMU_6AXIS_8040, IMU_6AXIS_8040_NEW, IMU_9AXIS_8060, IMU_9AXIS_8062, IMU_6AXIS_8063 };
 
     if ( 0 == hid_init() )
     {
@@ -146,7 +149,7 @@ void IMUTestDlg::InitIMU()
 
 		while ( cur_dev )
         {
-		    if ( (IMU_APC_VID_0x0483 == cur_dev->vendor_id || IMU_APC_VID_0x1E4E == cur_dev->vendor_id ) && setIMU_ID.find( cur_dev->product_id ) != setIMU_ID.end() )
+            if ( setIMU_VID.find( cur_dev->vendor_id ) != setIMU_VID.end() && setIMU_PID.find( cur_dev->product_id ) != setIMU_PID.end() )
             {
                 s_vecIMU.push_back( IMU_INFO() );
 

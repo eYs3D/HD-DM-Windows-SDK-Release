@@ -460,6 +460,17 @@ int RegisterSettings::ForEx8053Mode9(void* hApcDI, PDEVSELINFO pDevSelInfo)
     return APC_OK;
 }
 
+int RegisterSettings::For8063TriggerMode(void* hApcDI, PDEVSELINFO pDevSelInfo, bool off)
+{
+	unsigned short value = (off ? 0x01 : 0x00);
+	if (APC_SetFWRegister(hApcDI, pDevSelInfo, 0xf5, value, FG_Address_2Byte | FG_Value_1Byte) != APC_OK)
+	{
+		TRACE("SeT Register, set trigger mode %d failed", off);
+		return -1;
+	}
+	return APC_OK;
+}
+
 int RegisterSettings::DM_Quality_Register_Setting_Slave(void* hApcDI, PDEVSELINFO pDevSelInfo)
 {
 	DEVINFORMATIONEX devinfo;
@@ -746,6 +757,10 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
     else if (devinfo.wPID == APC_PID_NORA) // NORA
     {
         modelName = L"NORA";
+    }
+    else if (devinfo.wPID == APC_PID_IVY) // IVY
+    {
+        modelName = L"IVY";
     }
 	else
 	{

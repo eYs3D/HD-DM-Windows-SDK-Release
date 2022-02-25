@@ -1752,6 +1752,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
             memcpy(m_xPointCloudInfo.TranMat, m_previewParams.m_rectifyLogDataSlave->TranMat, 3 * sizeof(float));
         }
     }
+    if (IsDevicePid(APC_PID_8063)) m_registerSettings->For8063TriggerMode(m_hApcDI, &m_DevSelInfo, (m_previewParams.m_kcolorOption == EOF));
 
     if (((CButton*)GetDlgItem(IDC_CHECK_DEPTH0))->GetCheck() == BST_CHECKED)
     {
@@ -2850,7 +2851,7 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
             {
                 if ( pThis->IsDevicePid( APC_PID_8054 ) || pThis->IsDevicePid( APC_PID_8040S ) ) depthOption = EOF;
 
-                iFPS = pThis->GetDlgItemInt( IDC_DEPTH_FRAME_RATE ); // D+K use Depth-Fps
+                if (pThis->m_previewParams.m_depthOption > EOF) iFPS = pThis->GetDlgItemInt( IDC_DEPTH_FRAME_RATE ); // D+K use Depth-Fps
             }
 #if 0 //REFINE_DATABASE_CODE
             APC_SetDepthDataType(pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType);
@@ -2890,7 +2891,7 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
             case APC_PID_8060:  iPid = APC_PID_8060_K;  break;
             case APC_PID_8054:  iPid = APC_PID_8054_K;  APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid  ); break;
             case APC_PID_ORANGE:  iPid = APC_PID_ORANGE_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid); break;
-            case APC_PID_8063:  iPid = APC_PID_8063_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid); break;
+            case APC_PID_8063:  iPid = APC_PID_8063_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x05, iPid); break;
             case APC_PID_8040S: iPid = APC_PID_8040S_K; APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x00, iPid  ); break;
             }
             if ( !OpenDevice( pThis->m_previewParams.m_kcolorOption,
