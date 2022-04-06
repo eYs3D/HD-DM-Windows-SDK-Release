@@ -328,6 +328,7 @@ typedef struct eSPCtrl_RectLogData
             float	RECT_AvgErr;
             WORD	nLineBuffers;
             float ReProjectMat[16];
+            float K6Ratio; //Ratio for distortion K6
         };
     };
 } eSPCtrl_RectLogData;
@@ -1205,6 +1206,13 @@ int APC_API APC_WriteFlashData  ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, F
     \return success: the structLen of firmware 'Storage Type Info (STI)', others: see eSPDI_ErrCode.h
 */
 int APC_API APC_GetStructLenOfSTI(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
+
+/*! \fn int APC_GetUnpAreaStartSec(
+        void *pHandleApcDI,
+        PDEVSELINFO pDevSelInfo
+    \return success: the unpAreaStartSec of firmware 'Storage Type Info (STI)', others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_GetUnpAreaStartSec(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
 /*! \fn int APC_IsBPX4bitsClear(
         void *pHandleApcDI,
