@@ -2865,6 +2865,13 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 					depthDataTypeOffset = APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET;
 				}
 			}
+			if (pThis->IsDevicePid(APC_PID_HYPATIA2))
+			{
+				if ((pThis->m_pStreamColorInfo[pThis->m_previewParams.m_colorOption].nHeight / pThis->m_pStreamDepthInfo[depthOption].nHeight) == 2)
+				{
+					depthDataTypeOffset = APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET;
+				}
+			}
 
             APC_SetDepthDataType( pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType + depthDataTypeOffset);
 #endif
@@ -4057,7 +4064,7 @@ void CPreviewImageDlg::OnBnClickedChkMaster()
 
 void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
 {
-    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NORA))
+    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NORA) && !IsDevicePid(APC_PID_IVY))
     {
         APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
     }
@@ -4072,6 +4079,7 @@ void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
     }
     else
     {
+        if (IsDevicePid(APC_PID_IVY)) m_maxIR = MAX_IR_IVY;
         APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, m_maxIR);
     }
 

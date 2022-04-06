@@ -27,7 +27,7 @@ d:\workspace\ivy\etrondi\dmpreview\previewimagedlg.cpp(2258): warning C4244: '�
 d:\workspace\ivy\etrondi\dmpreview\previewimagedlg.cpp(2291): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
 d:\workspace\ivy\etrondi\dmpreview\previewimagedlg.cpp(2406): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
 d:\workspace\ivy\etrondi\dmpreview\previewimagedlg.cpp(2800): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
-d:\workspace\ivy\etrondi\dmpreview\previewimagedlg.cpp(3514): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+d:\workspace\ivy\etrondi\dmpreview\previewimagedlg.cpp(3521): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
   PlyWriter.cpp
 d:\workspace\ivy\etrondi\dmpreview\plywriter.cpp(66): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
 d:\workspace\ivy\etrondi\dmpreview\plywriter.cpp(67): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
