@@ -38,8 +38,9 @@ d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(885): warning C4244: 
 d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(996): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
   正在產生程式碼...
   正在略過... (未偵測到相關變更)
-  VideoDeviceDlg.cpp
   RegisterSettings.cpp
+  PlyFilter.cpp
+  VideoDeviceDlg.cpp
   RegisterAccessDlg.cpp
   MeasureDistanceDlg.cpp
   IMUTestDlg.cpp
@@ -53,7 +54,6 @@ d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(996): warning C4244: 
   APC_TestDlg.cpp
   APC_Test.cpp
   AEAWB_PropertyDlg.cpp
-  PlyFilter.cpp
   FrameGrabber.cpp
   DepthFusionHelper.cpp
   APCUtility.cpp
