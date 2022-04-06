@@ -112,6 +112,12 @@ void AEAWB_PropertyDlg::ReadProperty()
 
 	long max, min, step, default, capsflag, cur1, cur2;
 
+    if (m_xDevinfoEx.wPID == APC_PID_IVY)
+    {
+        APC_PropertyCT_SetCurrent(m_hApcDI, &m_DevSelInfo, CT_PROPERTY_ID_EXPOSURE, -10, 0, 2, pid);
+        APC_PropertyItem_Write(m_hApcDI, &m_DevSelInfo, PROPSETID_VIDCAP_CAMERACONTROL, KSPROPERTY_CAMERACONTROL_AUTO_EXPOSURE_PRIORITY, 0, pid);
+    }
+
     int hr = APC_DEVICE_NOT_SUPPORT;
 
     { // WB

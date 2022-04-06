@@ -2570,6 +2570,7 @@ int CPreviewImageDlg::AdjDepthBitIndex( const int depthType )
 	}
     else if (m_bIsInterLeaveMode)//( IsDevicePid( APC_PID_8052 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid(APC_PID_8062) )
     {
+        if (IsDevicePid(APC_PID_IVY)) return depthType;
         //if ( m_bIsInterLeaveMode )	//#6493;
         {
             switch ( depthType )
