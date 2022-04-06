@@ -25,6 +25,7 @@ public:
 	bool IsLowLight();
 	void SetLowLight(const BOOL IsLowLight);
     void LowLightEnable( const BOOL Enable );
+	void SetDefaultPropertyForIVY();
 
 	CPreviewImageDlg* m_pPreviewDlg;
 private:

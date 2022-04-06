@@ -21,6 +21,9 @@ int main(void)
         printf(" 8. Write24X\n");
         printf(" 9. Reset UNPData\n");
         printf("10. GetUserData\n"); //Issue 6882
+        printf("11. Get Color&Depth Image\n");
+        printf("12. Get Color&Depth Image - print all\n");
+        printf("13. Get Point Cloud\n");
 
         printf("\nPlease choose the testing item:\n");
         scanf("%d", &input);
@@ -88,6 +91,21 @@ int main(void)
             case 10: //10. GetUserData for Issue 6882
             {
                 GetUserData();
+                break;
+            }
+            case 11:
+            {
+                GetColorDepthImage(false);
+                break;
+            }
+            case 12:
+            {
+                GetColorDepthImage(true);
+                break;
+            }
+            case 13:
+            {
+                GetPointCloud();
                 break;
             }
 

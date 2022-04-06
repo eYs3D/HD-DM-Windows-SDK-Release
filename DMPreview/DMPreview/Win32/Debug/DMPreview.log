@@ -1,87 +1,52 @@
 ﻿cl : 命令列 warning D9035: 選項 'Gm' 已被取代，在未來的發行版本中將會移除
   PreviewImageDlg.cpp
-d:\workspace\etronsdk_0310\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(137): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(167): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(271): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(834): warning C4018: '>': signed/unsigned 不相符
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1228): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1229): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1268): warning C4018: '<': signed/unsigned 不相符
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1478): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1479): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1547): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(1844): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(2258): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(2291): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(2406): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(2800): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\previewimagedlg.cpp(3521): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
-  PlyWriter.cpp
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(66): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(67): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(169): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(170): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(311): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(312): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(394): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(395): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(503): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(600): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(601): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(651): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(738): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(739): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(884): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(885): warning C4244: '*=': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-d:\workspace\etronsdk_0310\etrondi\dmpreview\plywriter.cpp(996): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
-  正在產生程式碼...
-  正在略過... (未偵測到相關變更)
-  RegisterSettings.cpp
-  PlyFilter.cpp
-  VideoDeviceDlg.cpp
-  RegisterAccessDlg.cpp
-  MeasureDistanceDlg.cpp
-  IMUTestDlg.cpp
-  FrameSyncManager.cpp
-  DistanceAccuracyDlg.cpp
-  DepthFilterDlg.cpp
-  DepthDlg.cpp
-  ColorDlg.cpp
-  AutoModuleSyncManager.cpp
-  AutoModuelSyncDlg.cpp
-  APC_TestDlg.cpp
-  APC_Test.cpp
+d:\workspace\etronsdk_0324\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(137): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(167): warning C4244: '引數': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(271): warning C4805: '==': 作業中不安全的混用類型 'const BOOL' 和類型 'bool'
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(834): warning C4018: '>': signed/unsigned 不相符
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1245): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1246): warning C4244: '正在初始化': 將 'float' 轉換為 'int'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1285): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1495): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1496): warning C4244: '=': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1545): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(1861): warning C4244: '=': 將 'double' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(2275): warning C4244: '正在初始化': 將 'int' 轉換為 'float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(2303): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(2423): warning C4390: ';': 找到空白的控制陳述式，是正確的嗎?
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(2817): warning C4244: '引數': 將 'int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\dmpreview\previewimagedlg.cpp(3538): warning C4244: '引數': 將 'const int' 轉換為 'const float'，由於類型不同，可能導致資料遺失
   AEAWB_PropertyDlg.cpp
-  FrameGrabber.cpp
-  DepthFusionHelper.cpp
-  APCUtility.cpp
-  DMPreview.vcxproj -> D:\workspace\etronsdk_0310\EtronDI\Win32\Debug\DMPreview.exe
-  D:\workspace\etronsdk_0310\EtronDI\Win32\Debug\DMPreview.exe -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DMPreview.exe
+d:\workspace\etronsdk_0324\etrondi\utility\pointcloudviewer\oglbasic.h(15): warning C4305: '正在初始化': 從 'double' 轉換為 'const float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\etronsdk_0324\etrondi\utility\pointcloudviewer\pointcloudviewer.h(35): warning C4305: '正在初始化': 從 'double' 轉換為 'float'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+  正在產生程式碼...
+  DMPreview.vcxproj -> D:\workspace\etronsdk_0324\EtronDI\Win32\Debug\DMPreview.exe
+  D:\workspace\etronsdk_0324\EtronDI\Win32\Debug\DMPreview.exe -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DMPreview.exe
   已複製 1 個檔案
-  D:\workspace\etronsdk_0310\eSPDI\DM\Win32\eSPDI_DM.dll -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\eSPDI_DM.dll
+  D:\workspace\etronsdk_0324\eSPDI\DM\Win32\eSPDI_DM.dll -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\eSPDI_DM.dll
   已複製 1 個檔案
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\ModeConfig.db -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\cfg\ModeConfig.db
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\ModeConfig.db -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\cfg\ModeConfig.db
   已複製 1 個檔案
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\APC_SdkConfig.ini -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\APC_SdkConfig.ini
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\APC_UIConfig.ini -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\APC_UIConfig.ini
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\APC_SdkConfig.ini -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\APC_SdkConfig.ini
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\APC_UIConfig.ini -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\APC_UIConfig.ini
   已複製 2 個檔案
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8036_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8036_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8037_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8037_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8040S_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8040S_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8052_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8052_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8053_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8053_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8054_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8054_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA2_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA2_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\IVY_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\IVY_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\NORA_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\NORA_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\SANDRA_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\SANDRA_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8059_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8059_DM_Quality_Register_Setting.cfg
-  D:\workspace\etronsdk_0310\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8062_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0310\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8062_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8036_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8036_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8037_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8037_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL15cm_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL3cm_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8038_BL6cm_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8040S_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8040S_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8052_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8052_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8053_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8053_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\EX8054_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\EX8054_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA2_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA2_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\HYPATIA_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\HYPATIA_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\IVY_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\IVY_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\NORA_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\NORA_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\ORANGEITRI_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\SANDRA_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\SANDRA_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8059_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8059_DM_Quality_Register_Setting.cfg
+  D:\workspace\etronsdk_0324\EtronDI\DMPreview\cfg\DM_Quality_Cfg\YX8062_DM_Quality_Register_Setting.cfg -> D:\workspace\etronsdk_0324\bin\eSPDI_DM\Win32\DM_Quality_Cfg\cfg\YX8062_DM_Quality_Register_Setting.cfg
   已複製 17 個檔案

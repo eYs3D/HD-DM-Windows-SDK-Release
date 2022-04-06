@@ -106,17 +106,18 @@ void AEAWB_PropertyDlg::InitUI()
 	ReadProperty();
 }
 
+void AEAWB_PropertyDlg::SetDefaultPropertyForIVY()
+{
+    APC_PropertyCT_SetCurrent(m_hApcDI, &m_DevSelInfo, CT_PROPERTY_ID_EXPOSURE, -10, 0, 2, APC_PID_IVY);
+    APC_PropertyItem_Write(m_hApcDI, &m_DevSelInfo, PROPSETID_VIDCAP_CAMERACONTROL, KSPROPERTY_CAMERACONTROL_AUTO_EXPOSURE_PRIORITY, 0, APC_PID_IVY);
+    ReadProperty();
+}
+
 void AEAWB_PropertyDlg::ReadProperty()
 {
     const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
 
 	long max, min, step, default, capsflag, cur1, cur2;
-
-    if (m_xDevinfoEx.wPID == APC_PID_IVY)
-    {
-        APC_PropertyCT_SetCurrent(m_hApcDI, &m_DevSelInfo, CT_PROPERTY_ID_EXPOSURE, -10, 0, 2, pid);
-        APC_PropertyItem_Write(m_hApcDI, &m_DevSelInfo, PROPSETID_VIDCAP_CAMERACONTROL, KSPROPERTY_CAMERACONTROL_AUTO_EXPOSURE_PRIORITY, 0, pid);
-    }
 
     int hr = APC_DEVICE_NOT_SUPPORT;
 

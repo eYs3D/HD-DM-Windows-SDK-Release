@@ -1100,6 +1100,23 @@ void CPreviewImageDlg::InitModeConfig()
                 }
             }
         }
+        else if (IsDevicePid(APC_PID_IVY) && (eUSB_Port_Type == USB_PORT_TYPE_3_0))
+        {
+            int specifyDefaultMode = 11;
+            int modeNumber  = pCbx->GetCount();
+            for (int loop = 0 ; loop < modeNumber; loop ++)
+            {
+                if (pCbx->GetItemData(loop) == specifyDefaultMode)
+                {
+                    pCbx->SetCurSel(loop);
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
         else // Normal Path
         {
             pCbx->SetCurSel(0);
@@ -3971,6 +3988,11 @@ void CPreviewImageDlg::OnCbnSelchangeComboModeConfig()
 
     OnCbnSelchangeComboColorStream();
     OnCbnSelchangeComboFrameRate();
+
+    if (IsDevicePid(APC_PID_IVY) && m_iInterLeaveModeFPS > 0)
+    {
+        m_pPropertyDlg->SetDefaultPropertyForIVY();
+    }
 }
 
 void CPreviewImageDlg::OnBnClickedRadioRectifyAndRawData()

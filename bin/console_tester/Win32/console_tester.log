@@ -3,12 +3,14 @@ C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCT
   複製了         1 個檔案。
   複製了         1 個檔案。
   main.cpp
-d:\workspace\etronsdk_0310\etrondi\console_tester\main.cpp(26): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+d:\workspace\etronsdk_0324\etrondi\console_tester\main.cpp(29): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1274): note: 請參閱 'scanf' 的宣告
   testFunc.cpp
+d:\workspace\etronsdk_0324\etrondi\console_tester\testfunc.cpp(387): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1274): note: 請參閱 'scanf' 的宣告
+d:\workspace\etronsdk_0324\etrondi\console_tester\testfunc.cpp(414): warning C4018: '<': signed/unsigned 不相符
+d:\workspace\etronsdk_0324\etrondi\console_tester\testfunc.cpp(615): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1274): note: 請參閱 'scanf' 的宣告
   正在產生程式碼...
-d:\workspace\etronsdk_0310\etrondi\console_tester\testfunc.cpp(319): warning C4700: 使用了未初始化的區域變數 'usi'
-  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
-  main.obj : 受控碼存在時不支援 /DEBUG:FASTLINK; 正在以 /DEBUG:FULL 重新啟動連結
-  main.obj : 發現 MSIL 模組。MSIL 的累加連結已停用。正在執行完整連結
-  console_tester.vcxproj -> D:\workspace\etronsdk_0310\EtronDI\console_tester\.\console_tester\bin\Win32\console_tester.exe
+d:\workspace\etronsdk_0324\etrondi\console_tester\testfunc.cpp(322): warning C4700: 使用了未初始化的區域變數 'usi'
+  console_tester.vcxproj -> D:\workspace\etronsdk_0324\EtronDI\console_tester\.\console_tester\bin\Win32\console_tester.exe

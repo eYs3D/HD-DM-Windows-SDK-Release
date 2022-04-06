@@ -2,6 +2,7 @@
 #include <windows.h>
 //#include "stdafx.h"
 #include <stdio.h>
+#include <vector>
 
 #ifndef APC_API
 #ifdef __WEYE__
@@ -31,3 +32,24 @@ void Write24X();
 void ResetUNPData();
 void GetUserData(); // Issue 6882
 
+void GetColorDepthImage(bool printAll);
+void GetPointCloud();
+
+class FramePool
+{
+	public:
+		FramePool() : m_width(0), m_height(0), sn(-1) {}
+
+		int m_width;
+		int m_height;
+		int sn;
+		std::vector<unsigned char> data;
+};
+
+class PreviewParam
+{
+	public:
+		void* handleApcDI;
+		DEVSELINFO devSelInfo;
+		PointCloudInfo pointCloudInfo;
+};
