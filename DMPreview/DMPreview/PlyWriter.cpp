@@ -290,6 +290,177 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 	return 0;
 }
 
+int PlyWriter::etronFrameTo3D_8063(int depthWidth, int depthHeight, std::vector<unsigned char>& dArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray,
+									eSPCtrl_RectLogData* rectLogDataL, eSPCtrl_RectLogData* rectLogDataK, APCImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping,
+									float zNear,float zFar,bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f){
+	bool hasK = (rectLogDataK != nullptr);
+	float ratio_Mat = 1.0f;
+
+	int outputWidth = 0;
+	int outputHeight = 0;
+
+	if (useDepthResolution)
+	{
+		outputWidth = depthWidth;
+		outputHeight = depthHeight;
+	}
+	else
+	{
+		outputWidth = colorWidth;
+		outputHeight = colorHeight;
+	}
+
+	outputWidth *= scale_ratio;
+	outputHeight *= scale_ratio;
+
+	//ratio_Mat = (float)outputHeight / rectLogDataL->OutImgHeight; // 8063 doesn't scale down
+
+	output.clear();
+	std::vector<CloudPoint> tempPointCloud;
+	std::vector<unsigned char> colorArrayResized(outputWidth * outputHeight * 3);
+	std::vector<unsigned char> dArrayResized(outputWidth * outputHeight * 2);
+
+	if (depthHeight != outputHeight) {
+        if ( depthType == APCImageType::DEPTH_8BITS ) MonoBilinearFineScaler( &dArray[0], &dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+        else MonoBilinearFineScaler_short( (USHORT*)&dArray[0], (USHORT*)&dArrayResized[0], depthWidth, depthHeight, outputWidth, outputHeight, 1 );
+	}
+	else
+	{
+		dArrayResized.assign(dArray.begin(), dArray.end());
+	}
+
+	if (colorHeight != outputHeight) {
+		resampleImage(colorWidth, colorHeight, &colorArray[0], outputWidth, outputHeight, &colorArrayResized[0], 3);
+	}
+	else
+	{
+		colorArrayResized.assign(colorArray.begin(), colorArray.end());
+	}
+
+	int count = 0;
+
+	float centerX = -1.0f*rectLogDataL->ReProjectMat[3] * ratio_Mat;
+	float centerY = -1.0f*rectLogDataL->ReProjectMat[7] * ratio_Mat;
+	float focalLength = rectLogDataL->ReProjectMat[11] * ratio_Mat;
+	float baseline = 1.0f / rectLogDataL->ReProjectMat[14];
+	float diff = rectLogDataL->ReProjectMat[15] * ratio_Mat;
+
+
+	/*Generate table for disparity to W ( W = disparity / baseline)*/
+	float disparityToW[2048];
+	int tableSize;
+	switch (depthType)
+	{
+		case APCImageType::DEPTH_8BITS_0x80:
+		case APCImageType::DEPTH_8BITS:
+			tableSize = 1 << 8;
+			for (int i = 0; i < tableSize; i++)
+				disparityToW[i] = (i * ratio_Mat) / baseline + diff;
+			break;
+		case APCImageType::DEPTH_11BITS:
+			tableSize = 1 << 11;
+			for (int i = 0; i < tableSize; i++)
+				disparityToW[i] = (i * ratio_Mat / 8.0f) / baseline + diff;
+			break;
+		case APCImageType::DEPTH_14BITS:
+			break;
+	}
+
+	unsigned char *colorBuf = &colorArrayResized[0]; // used if there is no K color
+	unsigned char *dArrayBuf = &dArrayResized[0];
+
+	for (int j = 0; j < outputHeight; j++) {
+		for (int i = 0; i < outputWidth; i++) {
+			int disparity = 0;
+			float W = 0.0f;
+			float X = 0.0f;
+			float Y = 0.0f;
+			float Z = 0.0f;
+
+			switch (depthType)
+			{
+			case APCImageType::DEPTH_8BITS_0x80:
+			case APCImageType::DEPTH_11BITS:
+				disparity = *(WORD*)dArrayBuf;
+				dArrayBuf = dArrayBuf + sizeof(WORD);
+				W = disparityToW[disparity];
+				if (W > 0)
+				{
+					Z = focalLength / W;
+				}
+				break;
+			case APCImageType::DEPTH_8BITS:
+				disparity = *(dArrayBuf++);
+				W = disparityToW[disparity];
+				if (W > 0)
+				{
+					Z = focalLength / W;
+				}
+				break;
+			case APCImageType::DEPTH_14BITS:
+				Z = *(WORD*)dArrayBuf;
+				dArrayBuf = dArrayBuf + sizeof(WORD);
+				if (Z > 0)
+				{
+					W = focalLength / Z;
+				}
+				break;
+			}
+
+			if (!(removeINF && W == 0.0f)) {
+				X = (i - centerX) / W;
+				Y = (j - centerY) / W;
+
+				if (!(clipping && (Z > zFar || Z < zNear))) {
+					CloudPoint point;
+					point.x = X;
+					point.y = -Y;
+					point.z = -Z;
+					if (!hasK) {
+						point.r = *(colorBuf++);
+						point.g = *(colorBuf++);
+						point.b = *(colorBuf++);
+					}
+					else {
+						// K color/Depth Mapping for 8063 start
+						float Xd = 0, Yd = 0, Zd = 0;
+						float u = 0, v = 0;
+						Xd = rectLogDataK->RotaMat[0] * X + rectLogDataK->RotaMat[1] * Y + rectLogDataK->RotaMat[2] * Z + rectLogDataK->TranMat[0];
+						Yd = rectLogDataK->RotaMat[3] * X + rectLogDataK->RotaMat[4] * Y + rectLogDataK->RotaMat[5] * Z + rectLogDataK->TranMat[1];
+						Zd = rectLogDataK->RotaMat[6] * X + rectLogDataK->RotaMat[7] * Y + rectLogDataK->RotaMat[8] * Z + rectLogDataK->TranMat[2];
+
+						float Z_div = 1.0f / Zd;
+
+						Xd *= Z_div;
+						Yd *= Z_div;
+
+						u = rectLogDataK->CamMat2[0] * Xd + rectLogDataK->CamMat2[2];
+						v = rectLogDataK->CamMat2[4] * Yd + rectLogDataK->CamMat2[5];
+						u = (int)(u + 0.5);
+						v = (int)(v + 0.5);
+
+						if ((u >= 0) && (v >= 0) && (u < depthWidth) && (v < depthHeight)) {
+							int colorIdx = (depthWidth * v + u) * 3;
+							point.r = colorArrayResized[colorIdx];
+							point.g = colorArrayResized[colorIdx + 1];
+							point.b = colorArrayResized[colorIdx + 2];
+						}
+						// K color/Depth Mapping for 8063 end
+					}
+					tempPointCloud.push_back(point);
+					count++;
+					continue;
+				}
+				colorBuf += 3; // used if there is no K color
+			}
+		}
+	}
+
+	output.assign(tempPointCloud.begin(), tempPointCloud.begin()+count);
+
+	return 0;
+}
+
 int PlyWriter::etronFrameTo3D_PlyFilterFloat(int depthWidth, int depthHeight, std::vector<float>& dFloatArray, int colorWidth, int colorHeight, std::vector<unsigned char>& colorArray, eSPCtrl_RectLogData* rectLogData, APCImageType::Value depthType, std::vector<CloudPoint>& output, bool clipping, float zNear, float zFar, bool removeINF = true, bool useDepthResolution = true, float scale_ratio = 1.0f) {
 
 	float ratio_Mat = 1.0f;

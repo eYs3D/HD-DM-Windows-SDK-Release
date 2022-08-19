@@ -335,12 +335,12 @@ void GetUserData() // Issue 6882
 }
 
 int last_color_sn, last_depth_sn;
-void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize, int width, int height, int serialNumber, void* pParam)
+void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize, int width, int height, int serialNumber, LONGLONG timestamp, void* pParam)
 {
 	int printAll = (int)pParam;
 	if (imgType == APCImageType::COLOR_YUY2) {
 		if (printAll)
-			CT_DEBUG("[Color] SN: %d\n", serialNumber);
+			CT_DEBUG("[Color] SN: %d, timestamp: %lld\n", serialNumber, timestamp);
 
 		if ((serialNumber - last_color_sn) != 1)
 			CT_DEBUG("[Color] Lost Frame: %d - %d\n", last_color_sn, serialNumber);
@@ -349,7 +349,7 @@ void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* i
 	}
 	else if (imgType == APCImageType::DEPTH_11BITS) {
 		if (printAll)
-			CT_DEBUG("[Depth] SN: %d\n", serialNumber);
+			CT_DEBUG("[Depth] SN: %d, timestamp: %lld\n", serialNumber, timestamp);
 
 		if ((serialNumber - last_depth_sn) != 1)
 			CT_DEBUG("[Depth] Lost Frame: %d - %d\n", last_depth_sn, serialNumber);
@@ -404,7 +404,7 @@ bool isStart = false;
 std::mutex m_mutex_pointcloud;
 clock_t starttime;
 
-void ColorDepthCallbackForPointCloud(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize, int width, int height, int serialNumber, void* pParam)
+void ColorDepthCallbackForPointCloud(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize, int width, int height, int serialNumber, LONGLONG timestamp, void* pParam)
 {
 	int printAll = (int)pParam;
 

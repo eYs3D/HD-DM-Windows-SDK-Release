@@ -896,8 +896,15 @@ BOOL IMUTestDlg::OnInitDialog()
 	// Create OpenGL Control window  
 	m_imuViewer.glCreate(rect, this);
 
-	// Setup the OpenGL Window's timer to render  
-	m_imuViewer.m_unpTimer = m_imuViewer.SetTimer(1, 1, 0);
+	if (m_bIs9axis)
+	{
+		// Setup the OpenGL Window's timer to render
+		m_imuViewer.m_unpTimer = m_imuViewer.SetTimer(1, 1, 0);
+	}
+	else
+	{
+		GetDlgItem(IDC_IMU_3D_RESET)->ShowWindow(SW_HIDE);
+	}
 
     return TRUE;
 }
@@ -1206,13 +1213,12 @@ void IMUTestDlg::IMUDataCallback(IMUData imu)
 	else if (m_outputDataSize == 27) 
 	{
 		float g = sqrt((imu._accelX * imu._accelX) + (imu._accelY*imu._accelY) + (imu._accelZ*imu._accelZ));
-		snprintf(textBuff, sizeof(textBuff), "%s:%d\nTime:%2d:%2d:%2d:%4d\nAccel X:%01.3f\t\t  Y:%01.3f  \tZ:%01.3f\t  Total:%01.3f\nGyro X:%04.0f\t\t  Y:%04.0f  \tZ:%04.0f \nCompass X:%.2f  \t  Y:%.2f  \tZ:%.2f\n\n",
+		snprintf(textBuff, sizeof(textBuff), "%s:%d\nTime:%2d:%2d:%2d:%4d\nAccel X:%1.3f Y:%1.3f Z:%1.3f Total:%1.3f\nGyro X:%4.2f Y:%4.2f Z:%4.2f\n",
 			m_chText_FrameCount,
 			imu._frameCount,
 			imu._module_id, imu._min, imu._sec, imu._subSecond,
 			imu._accelX, imu._accelY, imu._accelZ, g,
-			imu._gyroScopeX, imu._gyroScopeY, imu._gyroScopeZ,
-			imu._compassX, imu._compassY, imu._compassZ);
+			imu._gyroScopeX, imu._gyroScopeY, imu._gyroScopeZ);
 	}
 	else if (m_outputDataSize == 58) 
 	{

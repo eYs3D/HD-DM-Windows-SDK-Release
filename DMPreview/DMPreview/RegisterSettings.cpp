@@ -762,6 +762,18 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
     {
         modelName = L"IVY";
     }
+    else if (devinfo.wPID == APC_PID_8063) // YX8063
+    {
+        modelName = L"YX8063";
+    }
+    else if (devinfo.wPID == APC_PID_8076) // YX8076
+    {
+        modelName = L"YX8076";
+    }
+    else if (devinfo.nDevType == PUMA) // IRIS use Default Quality Register Setting
+    {
+        modelName = L"DEFAULT";
+    }
 	else
 	{
 		modelName = NULL;

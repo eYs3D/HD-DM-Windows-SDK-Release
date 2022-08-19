@@ -311,6 +311,9 @@
 #define IDC_EDIT_STATIC_VID             1396
 #define ID_SELECT_MASTER                1396
 #define IDC_CHECK_FRAME_SYNC            1398
+#define IDC_STATIC_TEMPERATURE          1399
+#define IDC_TEMPERATURE_GET             1400
+#define IDC_EDIT_TEMPERATURE            1401
 
 // Next default values for new objects
 // 

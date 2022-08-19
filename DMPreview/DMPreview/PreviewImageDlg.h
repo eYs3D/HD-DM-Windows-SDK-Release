@@ -89,7 +89,7 @@ private:
     void InitPreviewDlgPos();
     void CloseDeviceAndStopPreview(CDialog* pCallerDlg);
     static void ImgCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
-        int width, int height, int serialNumber, void* pParam);
+        int width, int height, int serialNumber, LONGLONG timestamp, void* pParam);
 	void ProcessImgCallback(APCImageType::Value imgType, int imgId, std::vector<unsigned char> imgBuf, int imgSize,
 		int width, int height, int serialNumber);
 

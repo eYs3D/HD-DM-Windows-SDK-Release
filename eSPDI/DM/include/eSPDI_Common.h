@@ -119,9 +119,10 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_ORANGE_K    0x0199
 #define APC_PID_GRAPE       0x0300
 #define APC_PID_IVY         0x0177
-
-
-
+#define APC_PID_8076        0x0181
+#define APC_PID_8077        0x0182
+#define APC_PID_IRIS        0x0184
+#define APC_PID_MARY        0x0174
 
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
@@ -327,8 +328,11 @@ typedef struct eSPCtrl_RectLogData
             BYTE	RECT_Scale_Row_N;
             float	RECT_AvgErr;
             WORD	nLineBuffers;
-            float ReProjectMat[16];
-            float K6Ratio; //Ratio for distortion K6
+            float 	ReProjectMat[16];
+            float 	ParameterRatio[2]; // Ratio for distortion K6
+			long 	Date; // Calibration Date
+			char	type; // Calibartion type
+			char	version[4]; // Calibration Version
         };
     };
 } eSPCtrl_RectLogData;
@@ -502,7 +506,7 @@ struct ApcDIDepthSwitch
 \return none
 */
 typedef void(*APC_ImgCallbackFn)(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
-    int width, int height, int serialNumber, void* pParam);
+    int width, int height, int serialNumber, LONGLONG timestamp, void* pParam);
 	
 /**
  * \enum APC_DEVICE_TYPE
@@ -1882,7 +1886,7 @@ int APC_API APC_TableToData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int wid
     \param type     input  image-format
 	\return success: APC_OK, others: see eSPDI_ErrCode.h	
 */
-int APC_API APC_ColorFormat_to_RGB24( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type );
+int APC_API APC_ColorFormat_to_RGB24( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int SrcSize, int width, int height, APCImageType::Value type, int colorNum=0 );
 
 /*! \fn int APC_ColorFormat_to_BGR24(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned char* ImgDst, unsigned char* ImgSrc, int width, int height, APCImageType::Value type)
 	\the byte order from the lowest address to the highest one is rgb

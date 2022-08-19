@@ -27,6 +27,7 @@ public:
     void EnableRotate( const BOOL bRotate );
     void ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum, APCImageType::Value imageType);
     void setImageType(APCImageType::Value imageType);
+    void setColorNum(int colorNum);
 
 private:
 	virtual void DoDataExchange(CDataExchange* pDX);
@@ -52,6 +53,7 @@ private:
     std::mutex m_imgBufMutex;
     int m_nColorResWidth;
     int m_nColorResHeight; 
+    int m_colorNum = 0;
 
     volatile BOOL m_bRun;
     volatile BOOL m_bImageArrival;

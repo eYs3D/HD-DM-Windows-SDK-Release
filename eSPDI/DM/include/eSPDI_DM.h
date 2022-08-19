@@ -367,7 +367,7 @@ struct PointCloudInfo
     float baseline_K;
     float diff_K;
 //slave data
-    float	CamMat1[9];
+    float	CamMat2[9];
     float	RotaMat[9];
     float	TranMat[3];
 

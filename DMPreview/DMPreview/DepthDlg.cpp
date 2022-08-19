@@ -44,16 +44,27 @@ void CDepthDlg::UpdateD11DisplayImage_DIB24( const RGBQUAD* pColorPalette, const
 	BYTE* pDL    = pResult + ( m_nDepthResHeight - 1 ) * nBPS;
     BYTE* pD     = NULL;
 	const RGBQUAD* pClr = NULL;
+	WORD colorPaletteSize = (1 << 14);
 
 	for ( int y = 0; y < m_nDepthResHeight; y++ )
     {
 		pD = pDL;
 		for ( int x = 0; x < m_nDepthResWidth; x++ )
         {
-			pClr = &( pColorPalette[ ( ( WORD* )m_zdTable )[ pDepth[ x ] ] ] );
-			pD[0] = pClr->rgbBlue; //B
-			pD[1] = pClr->rgbGreen; //G
-			pD[2] = pClr->rgbRed; //R
+			WORD z = ((WORD*)m_zdTable)[pDepth[x]];
+			if (z < colorPaletteSize)
+			{
+				pClr = &( pColorPalette[z] );
+				pD[0] = pClr->rgbBlue; //B
+				pD[1] = pClr->rgbGreen; //G
+				pD[2] = pClr->rgbRed; //R
+			}
+			else
+			{
+				pD[0] = 0; //B
+				pD[1] = 0; //G
+				pD[2] = 0; //R
+			}
 			pD += 3;
 		}
 		pDepth += m_nDepthResWidth;

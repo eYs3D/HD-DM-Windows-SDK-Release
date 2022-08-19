@@ -127,6 +127,9 @@ BEGIN
     EDITTEXT        IDC_EDIT_SN,70,36,85,12,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
     EDITTEXT        IDC_EDIT_STATIC_FW_VER_TITLE,10,48,28,12,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
     EDITTEXT        IDC_STATIC_FW_VER,40,48,172,24,ES_MULTILINE | ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    GROUPBOX        "Temperature",IDC_STATIC_TEMPERATURE,5,115,210,30,NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_TEMPERATURE,48,128,100,8,ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    PUSHBUTTON      "Read",IDC_TEMPERATURE_GET,133,127,50,14
 END
 
 IDD_COLOR_DLG DIALOGEX 0, 0, 317, 182
@@ -505,8 +508,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,5,2,8
- PRODUCTVERSION 1,5,2,8
+ FILEVERSION 1,5,3,7
+ PRODUCTVERSION 1,5,3,7
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -523,12 +526,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "eYs3D Microelectronics"
             VALUE "FileDescription", "DMPreview program"
-            VALUE "FileVersion", "1.5.2.8"
+            VALUE "FileVersion", "1.5.3.7"
             VALUE "InternalName", "DMPreview.exe"
             VALUE "LegalCopyright", " (c) eYs3D.  All rights reserved."
             VALUE "OriginalFilename", "DMPreview.exe"
             VALUE "ProductName", "eSPDI SDK for Windows"
-            VALUE "ProductVersion", "1.5.2.8"
+            VALUE "ProductVersion", "1.5.3.7"
         END
     END
     BLOCK "VarFileInfo"
@@ -818,7 +821,7 @@ BEGIN
     IDS_ERTON_DI_CLASS_NAME "ApcDITestDlg"
 END
 
-#endif    // ���� (�c��A�x�W) resources
+#endif    // Chinese (Traditional, Taiwan) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

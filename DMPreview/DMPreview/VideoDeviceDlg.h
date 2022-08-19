@@ -70,6 +70,7 @@ private:
     //afx_msg void    OnBnClickedFlashdataRead();
     //afx_msg void    OnBnClickedFlashdataWrite();
     afx_msg void    OnBnClickedRectifylogGet();
+    afx_msg void    OnBnClickedTemperatureGet();
     afx_msg void    OnClose();
     afx_msg LRESULT OnChangeActiveTab( WPARAM wparam,LPARAM lparam );
     afx_msg void    OnPaint();

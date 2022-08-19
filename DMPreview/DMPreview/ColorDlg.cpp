@@ -171,6 +171,11 @@ void CColorDlg::setImageType(APCImageType::Value imageType)
     }
 }
 
+void CColorDlg::setColorNum(int colorNum)
+{
+	m_colorNum = colorNum;
+}
+
 void CColorDlg::ApplyImage(unsigned char *pColorBuf, int *dataSize, BOOL bIsOutputRGB, BOOL bIsMJPEG, int nColorSerialNum, APCImageType::Value imgType)
 { 
     std::lock_guard< std::mutex > lock( m_imgBufMutex );
@@ -248,7 +253,7 @@ void CColorDlg::Thread_ShowImage()
                                                                  vecRawImageBuf.size(),
                                                                  m_nColorResWidth,
                                                                  m_nColorResHeight,
-                                                                 eImageType ) )
+                                                                 eImageType, m_colorNum ) )
                 {
                     TRACE( "APC_ColorFormat_to_RGB24 fail\n" );
                 }

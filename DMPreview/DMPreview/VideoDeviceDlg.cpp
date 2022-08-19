@@ -34,6 +34,7 @@ BEGIN_MESSAGE_MAP(CVideoDeviceDlg, CDialog)
     //ON_BN_CLICKED(IDC_FLASHDATA_READ, &CVideoDeviceDlg::OnBnClickedFlashdataRead)
     //ON_BN_CLICKED(IDC_FLASHDATA_WRITE, &CVideoDeviceDlg::OnBnClickedFlashdataWrite)
     ON_BN_CLICKED(IDC_RECTIFYLOG_GET, &CVideoDeviceDlg::OnBnClickedRectifylogGet)
+    ON_BN_CLICKED(IDC_TEMPERATURE_GET, &CVideoDeviceDlg::OnBnClickedTemperatureGet)
     ON_MESSAGE(WM_MSG_AUTO_PREVIEW, OnAutoPreview)
     ON_WM_CLOSE()
     ON_WM_PAINT()
@@ -201,6 +202,10 @@ void CVideoDeviceDlg::OnPaint()
     };
     DrawF( IDC_STATIC_MODULE_INFO );
     DrawF( IDC_STATIC_FLASH_RW );
+    if (m_pDevInfo->wPID == APC_PID_8063)
+    {
+        DrawF(IDC_STATIC_TEMPERATURE);
+    }
 }
 
 LRESULT CVideoDeviceDlg::OnAutoPreview(WPARAM wParam, LPARAM lParam)
@@ -274,7 +279,16 @@ void CVideoDeviceDlg::InitChildDlg()
     regAccessDlg->Create(regAccessDlg->IDD, &m_oTabPage);
     m_childDlg.push_back(regAccessDlg);
     if (m_TabPage4RegisterSetting) m_oTabPage.AddTab(regAccessDlg, _T("Register"));
-
+    if (m_pDevInfo->wPID == APC_PID_8063)
+    {
+        GetDlgItem(IDC_TEMPERATURE_GET)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_EDIT_TEMPERATURE)->ShowWindow(SW_SHOW);
+    }
+    else
+    {
+        GetDlgItem(IDC_TEMPERATURE_GET)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_EDIT_TEMPERATURE)->ShowWindow(SW_HIDE);
+    }
 }
 
 void CVideoDeviceDlg::InitDefaultUI() 
@@ -746,6 +760,16 @@ void CVideoDeviceDlg::OnBnClickedRectifylogGet()
     else {
     
       int i = 0;
+      if (data.type == 1){
+          fprintf(fl, "Calibration Type : Manual Calibration\n");
+      }else if (data.type == 2)
+      {
+          fprintf(fl, "Calibration Type : OEM Calibration\n");
+      }else{
+          fprintf(fl, "Calibration Type : User Calibration\n");
+      }
+      fprintf(fl, "Calibration Version : v%d,%d,%d,%d\n", data.version[0], data.version[1], data.version[2], data.version[3]);
+      fprintf(fl, "Calibration Date : %d\n", data.Date);
     
       fprintf(fl, "InImgWidth = %d\n", data.InImgWidth);
       fprintf(fl, "InImgHeight = %d\n", data.InImgHeight);
@@ -767,6 +791,8 @@ void CVideoDeviceDlg::OnBnClickedRectifylogGet()
       }
       fprintf(fl, "\n");
       //
+      fprintf(fl,"ParameterRatio1 = %.8f\n",data.ParameterRatio[0]);
+      //
       fprintf(fl, "CamMat2 = ");
       for (i=0; i<9; i++) {
       fprintf(fl, "%.8f, ",  data.CamMat2[i]);
@@ -778,6 +804,8 @@ void CVideoDeviceDlg::OnBnClickedRectifylogGet()
       fprintf(fl, "%.8f, ",  data.CamDist2[i]);
       }
       fprintf(fl, "\n");
+      //
+      fprintf(fl,"ParameterRatio2 = %.8f\n",data.ParameterRatio[1]);
       //
       fprintf(fl, "RotaMat = ");
       for (i=0; i<9; i++) {
@@ -856,6 +884,75 @@ void CVideoDeviceDlg::OnBnClickedRectifylogGet()
   else AfxMessageBox(_T("APC_GetRectifyLogData Failed !!"));
 #endif
 }
+
+void CVideoDeviceDlg::OnBnClickedTemperatureGet()
+{
+	CString csText;
+
+	if (m_pDevInfo->wPID == APC_PID_8063)
+	{
+		float temp = 0.0f;
+
+		unsigned char device_id_reg = 0x0F;
+		unsigned short device_id_reg_val = 0x00;
+		unsigned char temperature_reg = 0x00;
+		unsigned short temperature_reg_val = 0x00;
+		unsigned char nID = 0x90;
+		int nSensorMode = 2;
+		unsigned short temperature_reg_val_tmp = 0;
+		bool is_negtive = false;
+		int ret = APC_GetSensorRegister(m_hApcDI, &m_DevSelInfo, nID, (unsigned short)device_id_reg, &device_id_reg_val, FG_Address_1Byte | FG_Value_2Byte, nSensorMode);
+		if (ret != APC_OK) {
+			csText.Format(L"did error!");
+			SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
+			return;
+		}
+		unsigned short device_id_reg_val_reverse = ((((unsigned char*)&device_id_reg_val)[0]) << 8) + ((unsigned char*)&device_id_reg_val)[1];
+		if (device_id_reg_val_reverse != 0x7500) {
+			csText.Format(L"wrong did %04x", device_id_reg_val_reverse);
+			SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
+			return;
+		}
+
+		ret = APC_GetSensorRegister(m_hApcDI, &m_DevSelInfo, nID, (unsigned short)temperature_reg, &temperature_reg_val, FG_Address_1Byte | FG_Value_2Byte, nSensorMode);
+		if (ret != APC_OK) {
+			csText.Format(L"temp error!");
+			SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
+			return;
+		}
+
+		unsigned short temperature_reg_val_reverse = ((((unsigned char*)&temperature_reg_val)[0]) << 8) + ((unsigned char*)&temperature_reg_val)[1];
+		temperature_reg_val_tmp = temperature_reg_val_reverse;
+		if (temperature_reg_val_reverse & 0x8000) {
+			temperature_reg_val_tmp = ~temperature_reg_val_tmp + 0x0010;
+			is_negtive = true;
+		}
+
+		temp = (temperature_reg_val_tmp >> 8);
+		if ((temperature_reg_val_tmp & 0x00f0) & 0x80) {
+			temp += 0.5;
+		}
+
+		if ((temperature_reg_val_tmp & 0x00f0) & 0x40) {
+			temp += 0.25;
+		}
+
+		if ((temperature_reg_val_tmp & 0x00f0) & 0x20) {
+			temp += 0.125;
+		}
+
+		if ((temperature_reg_val_tmp & 0x00f0) & 0x10) {
+			temp += 0.0625;
+		}
+
+		if (is_negtive) {
+			temp = 0.0 - temp;
+		}
+		csText.Format(L"%f", temp);
+		SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
+	}
+}
+
 void CVideoDeviceDlg::OnClose()
 {
     m_oTabPage.DestroyWindow();
