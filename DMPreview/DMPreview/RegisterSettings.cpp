@@ -766,7 +766,7 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
     {
         modelName = L"YX8063";
     }
-    else if (devinfo.wPID == APC_PID_8076) // YX8076
+    else if (devinfo.wPID == APC_PID_80362) // YX8076
     {
         modelName = L"YX8076";
     }

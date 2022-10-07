@@ -24,6 +24,7 @@ int main(void)
         printf("11. Get Color&Depth Image\n");
         printf("12. Get Color&Depth Image - print all\n");
         printf("13. Get Point Cloud\n");
+		printf("14. Copy from G1 to G2\n");
 
         printf("\nPlease choose the testing item:\n");
         scanf("%d", &input);
@@ -108,6 +109,11 @@ int main(void)
                 GetPointCloud();
                 break;
             }
+			case 14:
+			{
+				CopyFromG1ToG2();
+				break;
+			}
 
             default:
             {

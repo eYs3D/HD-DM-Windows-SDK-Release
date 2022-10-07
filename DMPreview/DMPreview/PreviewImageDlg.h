@@ -50,6 +50,7 @@ public:
 	BOOL IsDevicePid(const int pid);
 
     afx_msg LRESULT OnSnapshot(WPARAM wParam, LPARAM lParam);
+    afx_msg LRESULT OnGrabFrames(WPARAM wParam, LPARAM lParam);
     afx_msg void OnBnClickedPreviewBtn();
 
 	BOOL IsInterLeaveMode();
@@ -137,6 +138,7 @@ private:
 	void DepthFusionBmp(APCImageType::Value depthImageType);
 	//bool CPreviewImageDlg::usePlyFilter(APCImageType::Value depthImageType);
 	static UINT DoSnapshot(LPVOID lpParam);//CPreviewImageDlg* pThis, WORD irValue, float zFar);
+    static UINT DoGrabFrames(LPVOID lpParam);
     static BOOL isDepthOnly(int depthWidth, int depthHeight, BOOL isColorBufEmpty);
 
 	void InitAutoModuleSync();
@@ -239,7 +241,11 @@ private:
     std::vector<float> m_pointCloudDepth;
     std::vector<BYTE> m_pointCloudRGB;
     std::unique_ptr< DepthfilterParam > m_DfParam;
-    
+
+    bool isGrabFrames = false;
+    std::map<int, std::vector<BYTE>> m_ColorFrameQueue;
+    std::map<int, std::vector<BYTE>> m_DepthFrameQueue;
+
     volatile BOOL m_bPCV_NoColorStream;
     volatile BOOL m_bPCV_SingleColor;
 
@@ -272,6 +278,7 @@ private:
     afx_msg void OnBnClickedCheckFusionSwpp();
     afx_msg void OnBnClickedCheckInterleaveMode();
 	afx_msg void OnBnClickedSnapshotBtn();
+	afx_msg void OnBnClickedGrabFramesBtn();
 	afx_msg void OnBnClickedCheckRotateImg();
 	afx_msg void OnBnClickedCheckPointcloudViewer();
 	afx_msg void OnBnClickedFrameSync();

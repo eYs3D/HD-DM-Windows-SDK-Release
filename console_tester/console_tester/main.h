@@ -34,6 +34,7 @@ void GetUserData(); // Issue 6882
 
 void GetColorDepthImage(bool printAll);
 void GetPointCloud();
+void CopyFromG1ToG2();
 
 class FramePool
 {

@@ -1,14 +1,20 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(376,5): warning MSB8004: Intermediate 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Intermediate 目錄。
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Output 目錄。
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(376,5): warning MSB8004: Intermediate 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Intermediate 目錄。
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Output 目錄。
   複製了         1 個檔案。
   複製了         1 個檔案。
   main.cpp
-c1xx : warning C4199: 不支援 C++/CLI、C++/CX 或 OpenMP 的兩階段名稱查閱; 請使用 /Zc:twoPhase-
-d:\workspace\test24\etronsdk\etrondi\console_tester\main.cpp(24): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.19041.0\ucrt\stdio.h(1276): note: 請參閱 'scanf' 的宣告
+d:\workspace\etronsdk_0729\etrondi\console_tester\main.cpp(30): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1274): note: 請參閱 'scanf' 的宣告
   testFunc.cpp
-c1xx : warning C4199: 不支援 C++/CLI、C++/CX 或 OpenMP 的兩階段名稱查閱; 請使用 /Zc:twoPhase-
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(341): warning C4311: '類型轉換': 指標值由 'void *' 指派至 'int' 時會遭截斷
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(341): warning C4302: '類型轉換': 從 'void *' 轉換為 'int'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(388): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1274): note: 請參閱 'scanf' 的宣告
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(410): warning C4311: '類型轉換': 指標值由 'void *' 指派至 'int' 時會遭截斷
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(410): warning C4302: '類型轉換': 從 'void *' 轉換為 'int'，是由較大的類型轉換為較小的類型，可能導致資料遺失
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(453): warning C4267: '引數': 將 'size_t' 轉換為 'int'，資料可能遺失
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(616): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1274): note: 請參閱 'scanf' 的宣告
   正在產生程式碼...
-  main.obj : 受控碼存在時不支援 /DEBUG:FASTLINK; 正在以 /DEBUG:FULL 重新啟動連結
-  main.obj : 發現 MSIL 模組。MSIL 的累加連結已停用。正在執行完整連結
-  console_tester.vcxproj -> D:\Workspace\test24\etronsdk\EtronDI\console_tester\bin\x64\console_tester.exe
+d:\workspace\etronsdk_0729\etrondi\console_tester\testfunc.cpp(323): warning C4700: 使用了未初始化的區域變數 'usi'
+  console_tester.vcxproj -> D:\workspace\etronsdk_0729\EtronDI\console_tester\.\console_tester\bin\x64\console_tester.exe

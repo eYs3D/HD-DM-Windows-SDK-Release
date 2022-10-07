@@ -1,6 +1,7 @@
 #include "main.h"
 #include <mutex>
-
+#define APC_USER_SETTING_OFFSET 5
+#define APC_ZD_TABLE_FILE_SIZE_11_BITS 4096
 #define CT_DEBUG(format, ...) printf("[%s][%d]" format, __func__, __LINE__, ##__VA_ARGS__)
 
 void Read3X()
@@ -620,4 +621,213 @@ finish:
 	if (rectifyData) free(rectifyData);
 	APC_CloseDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo);
 	APC_Release(&mPreviewParam.handleApcDI);
+}
+static void copy_file_to_g2(void* openedHandle, DEVSELINFO gsDevSelInfo, int fileIndex) {
+
+	if (fileIndex > APC_USER_SETTING_OFFSET) return;
+
+	auto bufferYOffset = new BYTE[APC_Y_OFFSET_FILE_SIZE];
+	auto bufferYOffsetBackup = new BYTE[APC_Y_OFFSET_FILE_SIZE];
+	auto EYSD = openedHandle;
+	auto devSelInfo = &gsDevSelInfo;
+	int actualYOffsetBufLen = 0;
+
+	int ret = APC_GetYOffset(EYSD, devSelInfo, bufferYOffset, APC_Y_OFFSET_FILE_SIZE, &actualYOffsetBufLen, fileIndex);
+
+	if (APC_OK != ret || actualYOffsetBufLen != APC_Y_OFFSET_FILE_SIZE) {
+		CT_DEBUG("### [Stage-YOffset] Read error \n");
+	}
+	else {
+		CT_DEBUG("### [Stage-YOffset] Read actualYOffsetBufLen %d file 3%d ret=%d\n", actualYOffsetBufLen, fileIndex, ret);
+
+		memcpy(bufferYOffsetBackup, bufferYOffset, actualYOffsetBufLen);
+#ifdef COPY_CLEAN
+		memset(bufferYOffset, 0x0, APC_Y_OFFSET_FILE_SIZE);
+#endif
+		ret = APC_SetYOffset(EYSD, devSelInfo, bufferYOffset, APC_Y_OFFSET_FILE_SIZE, &actualYOffsetBufLen,
+			fileIndex + APC_USER_SETTING_OFFSET);
+
+		if (ret != APC_OK || actualYOffsetBufLen != APC_Y_OFFSET_FILE_SIZE) {
+			CT_DEBUG("### [Stage-YOffset] Write error \n");
+		}
+		else {
+			CT_DEBUG("### [Stage-YOffset] Write actualYOffsetBufLen %d file %d ret=%d\n", actualYOffsetBufLen,
+				APC_Y_OFFSET_FILE_ID_0 + fileIndex + APC_USER_SETTING_OFFSET,
+				ret);
+
+			memset(bufferYOffset, 0xff, APC_Y_OFFSET_FILE_SIZE);
+			ret = APC_GetYOffset(EYSD, devSelInfo, bufferYOffset, APC_Y_OFFSET_FILE_SIZE, &actualYOffsetBufLen,
+				fileIndex + APC_USER_SETTING_OFFSET);
+
+			if (ret != APC_OK || actualYOffsetBufLen != APC_Y_OFFSET_FILE_SIZE ||
+				memcmp(bufferYOffset, bufferYOffsetBackup, actualYOffsetBufLen)) {
+				CT_DEBUG("### [Stage-YOffset] Verify error. Please check. \n");
+			}
+			else {
+				CT_DEBUG("### [Stage-YOffset] Verify successfully. \n");
+			}
+		}
+	}
+
+	delete[] bufferYOffset;
+	delete[] bufferYOffsetBackup;
+
+	auto bufferRectifyTable = new BYTE[APC_RECTIFY_FILE_SIZE];
+	auto bufferRectifyTableBackup = new BYTE[APC_RECTIFY_FILE_SIZE];
+	int actualRectifyBufLen = 0;
+	ret = APC_GetRectifyTable(EYSD, devSelInfo, bufferRectifyTable, APC_RECTIFY_FILE_SIZE,
+		&actualRectifyBufLen, fileIndex);
+	if (ret != APC_OK || actualRectifyBufLen != APC_RECTIFY_FILE_SIZE) {
+		CT_DEBUG("### [Stage-Rectify] Read error \n");
+	}
+	else {
+		CT_DEBUG("### [Stage-Rectify] Read actualRectifyBufLen %d file 4%d ret=%d\n", actualRectifyBufLen,
+			fileIndex, ret);
+
+		memcpy(bufferRectifyTableBackup, bufferRectifyTable, actualRectifyBufLen);
+#ifdef COPY_CLEAN
+		memset(bufferRectifyTable, 0x0, APC_RECTIFY_FILE_SIZE);
+#endif
+		ret = APC_SetRectifyTable(EYSD, devSelInfo, bufferRectifyTable, APC_RECTIFY_FILE_SIZE,
+			&actualRectifyBufLen, fileIndex + APC_USER_SETTING_OFFSET);
+
+		if (ret != APC_OK || actualRectifyBufLen != APC_RECTIFY_FILE_SIZE) {
+			CT_DEBUG("### [Stage-Rectify] Write error \n");
+		}
+		else {
+			CT_DEBUG("### [Stage-Rectify] Write actualRectifyBufLen %d file %d ret=%d\n", actualRectifyBufLen,
+				APC_RECTIFY_FILE_ID_0 + fileIndex + APC_USER_SETTING_OFFSET, ret);
+
+			memset(bufferRectifyTable, 0xff, APC_RECTIFY_FILE_SIZE);
+
+			ret = APC_GetRectifyTable(EYSD, devSelInfo, bufferRectifyTable, APC_RECTIFY_FILE_SIZE,
+				&actualRectifyBufLen, fileIndex + APC_USER_SETTING_OFFSET);
+
+			if (ret != APC_OK || actualRectifyBufLen != APC_RECTIFY_FILE_SIZE ||
+				memcmp(bufferRectifyTable, bufferRectifyTableBackup, actualRectifyBufLen)) {
+				CT_DEBUG("### [Stage-Rectify] Verify error. Please check. \n");
+			}
+			else {
+				CT_DEBUG("### [Stage-Rectify] Verify successfully. \n");
+			}
+		}
+	}
+
+	delete[] bufferRectifyTable;
+	delete[] bufferRectifyTableBackup;
+
+	auto bufferZDTable = new BYTE[APC_ZD_TABLE_FILE_SIZE_11_BITS];
+	auto bufferZDTableBackup = new BYTE[APC_ZD_TABLE_FILE_SIZE_11_BITS];
+	int actualZDBufLen = 0;
+	ZDTABLEINFO tableInfo;
+	tableInfo.nDataType = APC_DEPTH_DATA_11_BITS;
+	tableInfo.nIndex = fileIndex;
+
+	ret = APC_GetZDTable(EYSD, devSelInfo, bufferZDTable, APC_ZD_TABLE_FILE_SIZE_11_BITS,
+		&actualZDBufLen, &tableInfo);
+
+	if (ret != APC_OK || actualZDBufLen != APC_ZD_TABLE_FILE_SIZE_11_BITS) {
+		CT_DEBUG("### [Stage-ZD] Read error \n");
+	}
+	else {
+		CT_DEBUG("### [Stage-ZD] Read actualZDBufLen %d file 5%d ret=%d\n", actualZDBufLen,
+			fileIndex, ret);
+
+		memcpy(bufferZDTableBackup, bufferZDTable, APC_ZD_TABLE_FILE_SIZE_11_BITS);
+#ifdef COPY_CLEAN
+		memset(bufferZDTable, 0x0, APC_ZD_TABLE_FILE_SIZE_11_BITS);
+#endif
+		tableInfo.nIndex = fileIndex + APC_USER_SETTING_OFFSET;
+		ret = APC_SetZDTable(EYSD, devSelInfo, bufferZDTable, APC_ZD_TABLE_FILE_SIZE_11_BITS,
+			&actualZDBufLen, &tableInfo);
+
+		if (ret != APC_OK || actualZDBufLen != APC_ZD_TABLE_FILE_SIZE_11_BITS) {
+			CT_DEBUG("### [Stage-ZD] Write error \n");
+		}
+		else {
+			CT_DEBUG("### [Stage-ZD] Write actualZDBufLen %d file %d ret=%d\n", actualZDBufLen,
+				APC_ZD_TABLE_FILE_ID_0 + fileIndex + APC_USER_SETTING_OFFSET, ret);
+
+			memset(bufferZDTable, 0xff, APC_ZD_TABLE_FILE_SIZE_11_BITS);
+			tableInfo.nIndex = fileIndex + APC_USER_SETTING_OFFSET;
+			ret = APC_GetZDTable(EYSD, devSelInfo, bufferZDTable, APC_ZD_TABLE_FILE_SIZE_11_BITS,
+				&actualZDBufLen, &tableInfo);
+
+			if (ret != APC_OK || actualZDBufLen != APC_ZD_TABLE_FILE_SIZE_11_BITS ||
+				memcmp(bufferZDTable, bufferZDTableBackup, APC_ZD_TABLE_FILE_SIZE_11_BITS)) {
+				CT_DEBUG("### [Stage-ZD] Verify error. Please check. \n");
+			}
+			else {
+				CT_DEBUG("### [Stage-ZD] Verify successfully. \n");
+			}
+		}
+	}
+
+	delete[] bufferZDTable;
+	delete[] bufferZDTableBackup;
+
+	auto bufferCalibrationLogData = new BYTE[APC_CALIB_LOG_FILE_SIZE];
+	auto bufferCalibrationLogDataBackup = new BYTE[APC_CALIB_LOG_FILE_SIZE];
+	int actualCalibrationLogDataBufLen = 0;
+
+	ret = APC_GetLogData(EYSD, devSelInfo, bufferCalibrationLogData, APC_CALIB_LOG_FILE_SIZE,
+		&actualCalibrationLogDataBufLen, fileIndex);
+
+	if (APC_OK != ret || actualCalibrationLogDataBufLen != APC_CALIB_LOG_FILE_SIZE) {
+		CT_DEBUG("### [Stage-LOG] Read error \n");
+	}
+	else {
+		CT_DEBUG("### [Stage-LOG] Read actualCalibrationLogDataBufLen %d file 24%d ret=%d\n",
+			actualCalibrationLogDataBufLen, fileIndex, ret);
+
+		memcpy(bufferCalibrationLogDataBackup, bufferCalibrationLogData, APC_CALIB_LOG_FILE_SIZE);
+#ifdef COPY_CLEAN
+		memset(bufferCalibrationLogData, 0x0, APC_CALIB_LOG_FILE_SIZE);
+#endif
+		ret = APC_SetLogData(EYSD, devSelInfo, bufferCalibrationLogData, APC_CALIB_LOG_FILE_SIZE,
+			&actualCalibrationLogDataBufLen, fileIndex + APC_USER_SETTING_OFFSET);
+
+		if (actualCalibrationLogDataBufLen != APC_CALIB_LOG_FILE_SIZE || ret != APC_OK) {
+			CT_DEBUG("### [Stage-LOG] Write error \n");
+		}
+		else {
+			CT_DEBUG("### [Stage-LOG] Write actualCalibrationLogDataBufLen %d file %d ret=%d\n",
+				actualCalibrationLogDataBufLen, APC_CALIB_LOG_FILE_ID_0 + fileIndex + APC_USER_SETTING_OFFSET, ret);
+
+			memset(bufferCalibrationLogData, 0xff, APC_CALIB_LOG_FILE_SIZE);
+			ret = APC_GetLogData(EYSD, devSelInfo, bufferCalibrationLogData, APC_CALIB_LOG_FILE_SIZE,
+				&actualCalibrationLogDataBufLen, fileIndex + APC_USER_SETTING_OFFSET);
+
+			if (ret != APC_OK || actualCalibrationLogDataBufLen != APC_CALIB_LOG_FILE_SIZE ||
+				memcmp(bufferCalibrationLogData, bufferCalibrationLogDataBackup, APC_CALIB_LOG_FILE_SIZE)) {
+				CT_DEBUG("### [Stage-LOG] Verify error. Please check. \n");
+			}
+			else {
+				CT_DEBUG("### [Stage-LOG] Verify successfully. \n");
+			}
+		}
+	}
+
+	delete[] bufferCalibrationLogData;
+	delete[] bufferCalibrationLogDataBackup;
+}
+void CopyFromG1ToG2() {
+	void* pHandleApcDI;
+	int ret = APC_Init(&pHandleApcDI, false);
+	if (ret != APC_OK) {
+		CT_DEBUG("APC_Init error\n");
+		return;
+	}
+
+	DEVSELINFO devSelInfo;
+	devSelInfo.index = 0;
+	for (int index = 0; index < APC_USER_SETTING_OFFSET; ++index) {
+		copy_file_to_g2(pHandleApcDI, devSelInfo, index);
+	}
+
+	APC_Release(&pHandleApcDI);
+	if (ret != APC_OK) {
+		CT_DEBUG("APC_Release error\n");
+		return;
+	}
 }

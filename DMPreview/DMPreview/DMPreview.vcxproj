@@ -273,7 +273,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -284,11 +284,11 @@
         rmdir /s /q $(SolutionDir)..\bin
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
-      </Command>
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -316,7 +316,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -327,10 +327,11 @@
         rmdir /s /q $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\cfg\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -437,7 +438,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\;$(SolutionDir)..\eSPDI\DM\$(PlatformName);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\;$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences />
@@ -451,10 +452,11 @@
 
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -486,7 +488,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>
@@ -502,11 +504,11 @@
 
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
-        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
-      </Command>
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Win32|x64'">

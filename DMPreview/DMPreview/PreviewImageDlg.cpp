@@ -332,6 +332,7 @@ void CPreviewImageDlg::UpdateUIForDemo()
     }
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_SNAPSHOT_BTN)->EnableWindow(FALSE);
+	GetDlgItem(IDC_GRAB_FRAMES_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_FRAME_SYNC)->EnableWindow(FALSE);
 }
 
@@ -625,7 +626,10 @@ void CPreviewImageDlg::UpdateUI()
 
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_SNAPSHOT_BTN)->EnableWindow(FALSE);
+	GetDlgItem(IDC_GRAB_FRAMES_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_FRAME_SYNC)->EnableWindow(FALSE);
+	if (!IsDevicePid(APC_PID_IVY))
+		GetDlgItem(IDC_GRAB_FRAMES_BTN)->ShowWindow(SW_HIDE);
 }
 
 bool CPreviewImageDlg::IsSupportHwPostProc() const
@@ -849,6 +853,7 @@ BEGIN_MESSAGE_MAP(CPreviewImageDlg, CDialog)
     ON_MESSAGE(WM_MSG_SNAPSHOT, &CPreviewImageDlg::OnSnapshot)
 	ON_MESSAGE(WM_MSG_SNAPSHOT_ALL, &CPreviewImageDlg::OnSnapshotAll)
     ON_MESSAGE(WM_MSG_SNAPSHOT_COMPLETE, &CPreviewImageDlg::OnSnapshotComplete)
+	ON_MESSAGE(WM_MSG_GRAB_FRAMES, &CPreviewImageDlg::OnGrabFrames)
     ON_BN_CLICKED(IDC_CHECK_COLOR_STREAM, &CPreviewImageDlg::OnBnClickedCheckColorStream)
     ON_BN_CLICKED(IDC_CHECK_360MODE, &CPreviewImageDlg::OnBnClickedCheck360mode)
     ON_BN_CLICKED(IDC_PREVIEW_BTN, &CPreviewImageDlg::OnBnClickedPreviewBtn)
@@ -865,6 +870,7 @@ BEGIN_MESSAGE_MAP(CPreviewImageDlg, CDialog)
     ON_BN_CLICKED(IDC_CHECK_FUSION_SWPP, &CPreviewImageDlg::OnBnClickedCheckFusionSwpp)
     ON_BN_CLICKED(IDC_CHECK_INTERLEAVE_MODE, &CPreviewImageDlg::OnBnClickedCheckInterleaveMode)
 	ON_BN_CLICKED(IDC_SNAPSHOT_BTN, &CPreviewImageDlg::OnBnClickedSnapshotBtn)
+	ON_BN_CLICKED(IDC_GRAB_FRAMES_BTN, &CPreviewImageDlg::OnBnClickedGrabFramesBtn)
 	ON_BN_CLICKED(IDC_CHECK_ROTATE_IMG, &CPreviewImageDlg::OnBnClickedCheckRotateImg)
 	ON_BN_CLICKED(IDC_CHECK_POINTCLOUD_VIEWER, &CPreviewImageDlg::OnBnClickedCheckPointcloudViewer)
 	ON_BN_CLICKED(IDC_FRAME_SYNC, &CPreviewImageDlg::OnBnClickedFrameSync)
@@ -1516,6 +1522,109 @@ LRESULT CPreviewImageDlg::OnSnapshot(WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+UINT CPreviewImageDlg::DoGrabFrames(LPVOID pParam)
+{
+    LPTHREAD_PARAM lpParam = (LPTHREAD_PARAM)pParam;
+    CPreviewImageDlg* pThis = lpParam->pDlg;
+    delete lpParam;
+
+    pThis->m_ColorFrameQueue.clear();
+    pThis->m_DepthFrameQueue.clear();
+    pThis->isGrabFrames = true;
+
+    DWORD timestamp = GetTickCount();
+    DWORD treadID = ::GetCurrentThreadId();
+    TRACE("timestamp = %d\n", timestamp);
+    TRACE("treadID = %d\n", treadID);
+
+    const int frame_number = 30;
+    int colorFrameRequired = ((pThis->m_previewParams.m_kcolorOption == EOF && (pThis->m_previewParams.m_colorOption == EOF) ? 0 : frame_number));
+    int depthFrameNumRequired = ((pThis->m_previewParams.m_depthOption == EOF) ? 0 : frame_number);
+
+    while (pThis->m_ColorFrameQueue.size() < colorFrameRequired || pThis->m_DepthFrameQueue.size() < depthFrameNumRequired)
+        Sleep(1);
+
+    APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType);
+    {
+        CAutoLock lock(pThis->m_previewParams.m_mutex);
+
+        pThis->isGrabFrames = false;
+
+        for (const auto& depthFrame : pThis->m_DepthFrameQueue) {
+            int sn = depthFrame.first;
+            std::vector<BYTE> frame = depthFrame.second;
+
+            //+++ save depth raw data
+            std::ostringstream depthFilename;
+            depthFilename << GetCurrentModuleFolder().c_str() << "\\Depth" << "_" << timestamp << "_" << sn << ".bin";
+            if (!frame.empty())
+            {
+                pThis->SaveDepthYuv(frame, depthImageType, pThis->CurDepthImgRes().x, pThis->CurDepthImgRes().y, depthFilename.str().c_str());
+            }
+            //--- save depth raw data
+        }
+
+        for (const auto& colorFrame : pThis->m_ColorFrameQueue) {
+            int sn = colorFrame.first;
+            std::vector<BYTE> frame = colorFrame.second;
+
+            APC_STREAM_INFO *pStreamInfo = (pThis->m_previewParams.m_kcolorOption > EOF) ? pThis->m_pStreamKColorInfo : pThis->m_pStreamColorInfo;
+            int option = (pThis->m_previewParams.m_kcolorOption > EOF) ? pThis->m_previewParams.m_kcolorOption : pThis->m_previewParams.m_colorOption;
+            int nColorWidth = pStreamInfo[option].nWidth;
+            int nColorHeight = pStreamInfo[option].nHeight;
+            bool bFormatMJPG = pStreamInfo[option].bFormatMJPG;
+
+            //+++ save color raw data
+            std::ostringstream colorFilename;
+            colorFilename << GetCurrentModuleFolder().c_str() << "\\Color" << "_" << timestamp << "_" << sn << (bFormatMJPG ? ".jpg" : ".yuv");
+            if (!frame.empty())
+            {
+                FILE * pFile;
+                pFile = fopen(colorFilename.str().c_str(), "wb");
+                fwrite(&frame[0], 1, frame.size(), pFile);
+                fclose(pFile);
+            }
+            //--- save color raw data
+
+            //+++ save color bmp data
+            APCImageType::Value eImageType = bFormatMJPG ? APCImageType::COLOR_MJPG : APCImageType::COLOR_YUY2;
+            std::ostringstream colorBmpFilename;
+            colorBmpFilename << GetCurrentModuleFolder().c_str() << "\\Color" << "_" << timestamp << "_" << sn << ".bmp";
+            std::vector<unsigned char> m_vecRGBImageBuf(nColorWidth * nColorHeight * 3);
+            if (!frame.empty() && APC_OK == APC_ColorFormat_to_RGB24(pThis->m_hApcDI, &pThis->m_DevSelInfo,
+                &m_vecRGBImageBuf[0],
+                &frame[0],
+                frame.size(),
+                nColorWidth,
+                nColorHeight,
+                eImageType, 0))
+            {
+                SaveImage(m_vecRGBImageBuf, nColorWidth, nColorHeight, 24, colorBmpFilename.str().c_str(), false, Gdiplus::ImageFormatBMP);
+            }
+            //--- save color bmp data
+        }
+    }
+    pThis->PostMessage(WM_MSG_SNAPSHOT_COMPLETE);
+    return 0;
+}
+
+LRESULT CPreviewImageDlg::OnGrabFrames(WPARAM wParam, LPARAM lParam)
+{
+	LPTHREAD_PARAM lpParam = new THREAD_PARAM;
+	lpParam->pDlg = this;
+	lpParam->irValue = m_previewParams.m_IrPreState;
+	lpParam->zFar  = m_ZFar  ? m_ZFar  : 1000;
+    lpParam->zNear = m_ZNear ? m_ZNear : 0;
+    lpParam->bUseFilter = ( ( ( CButton* )GetDlgItem( IDC_CHK_PLY_FILTER ) )->GetCheck() == BST_CHECKED );
+
+    AfxBeginThread(CPreviewImageDlg::DoGrabFrames, (LPVOID)lpParam, THREAD_PRIORITY_ABOVE_NORMAL);
+
+    m_pWaitDlg->SetText( L"Start to grab frames, please wait......" );
+    m_pWaitDlg->DoModal();
+
+    return 0;
+}
+
 void CPreviewImageDlg::OnBnClickedCheckTColorStream()
 {
 	OnCbnSelchangeComboTColorStream();
@@ -1831,7 +1940,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 			index = 2; // EX8054: D1 640*640 is from 1280*1280 scale down
         else if ( ( IsDevicePid( APC_PID_8051 ) || IsDevicePid( APC_PID_8062 ) ) && USB_PORT_TYPE_2_0 == m_eUSB_Port_Type )
        	    index = 0; // EX8051 & YX8062: U2 is Binning mode
-        else if ((IsDevicePid(APC_PID_8052) || IsDevicePid(APC_PID_8036) || IsDevicePid(APC_PID_IRIS)) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 1)
+        else if ((IsDevicePid(APC_PID_8052) || IsDevicePid(APC_PID_8036) || IsDevicePid(APC_PID_IRIS) || IsDevicePid(APC_PID_FRANK)) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 1)
         {
 #if 0 //REFINE_DATABASE_CODE
             index = GetTableIndex(); // EX8036: D1 640*360 is from 1280*720 scale down
@@ -1847,6 +1956,12 @@ void CPreviewImageDlg::UpdatePreviewParams()
             else if (270 == m_pStreamKColorInfo[depthOption].nHeight) index = 3;
             else if (240 == m_pStreamKColorInfo[depthOption].nHeight) index = 4;
             else index = 0;
+        }
+        else if (IsDevicePid(APC_PID_80362) && m_previewParams.m_colorOption > EOF &&
+                ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() > EOF &&
+                ((m_pStreamColorInfo[m_previewParams.m_colorOption].nHeight / m_pStreamDepthInfo[((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel()].nHeight) == 2))
+        {
+            index = 0; //scale down
         }
         else
             index = ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel();
@@ -2064,6 +2179,9 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 #endif
 			}
 		}
+
+		if (isGrabFrames)
+			m_ColorFrameQueue.insert(std::pair<int, std::vector<unsigned char>>(serialNumber, imgBuf));
 	}
 	else if (APCImageType::IsImageDepth(imgType))
 	{
@@ -2150,6 +2268,8 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			}
 #endif	
 		}
+		if (isGrabFrames)
+			m_DepthFrameQueue.insert(std::pair<int, std::vector<unsigned char>>(serialNumber, imgBuf));
 	}
 	else
 	{
@@ -2493,9 +2613,9 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
 		if (USB_PORT_TYPE_2_0 == m_eUSB_Port_Type && height == 360)
 			*pzdTblIdx = 0;
 	}
-    else if ( height && ( IsDevicePid( APC_PID_8052 ) || IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) ) ) // U2 mode34, 35
+    else if ( height && ( IsDevicePid( APC_PID_8052 ) || IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ) ) ) // U2 mode34, 35
 	{
-		if ((IsDevicePid(APC_PID_8036) || IsDevicePid(APC_PID_IRIS)) && height == 360)
+		if ((IsDevicePid(APC_PID_8036) || IsDevicePid(APC_PID_IRIS) || IsDevicePid(APC_PID_FRANK)) && height == 360)
 		{
 			*pzdTblIdx = 0;
 		}
@@ -2543,6 +2663,11 @@ void CPreviewImageDlg::AdjustZDTableIndex(int *pzdTblIdx, int width, int height,
         {
             *pzdTblIdx = 1;
         }
+    }
+    else if (IsDevicePid(APC_PID_80362) && m_previewParams.m_depthOption > EOF)
+    {
+        if ((m_pStreamColorInfo[m_previewParams.m_colorOption].nHeight / m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight) == 2)
+            *pzdTblIdx = 0;
     }
 }
 
@@ -2798,6 +2923,7 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
         GetDlgItem( IDC_COMBO_MODE_CONFIG )->EnableWindow( FALSE );
         GetDlgItem( IDC_CHK_MULTI_SYNC )->EnableWindow( FALSE );
         GetDlgItem( IDC_SNAPSHOT_BTN )->EnableWindow( TRUE );
+        GetDlgItem( IDC_GRAB_FRAMES_BTN )->EnableWindow( TRUE );
         GetDlgItem( IDC_BT_Z_SET  )->EnableWindow(TRUE);
         GetDlgItem( IDC_BT_Z_RESET )->EnableWindow(TRUE);
         GetDlgItem( IDC_EDIT_ZFAR  )->EnableWindow(TRUE);
@@ -2919,14 +3045,14 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
             APC_SetDepthDataType(pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType);
 #else
 			WORD depthDataTypeOffset = 0;
-			if ((pThis->IsDevicePid(APC_PID_8036) || pThis->IsDevicePid(APC_PID_IRIS) || pThis->IsDevicePid(APC_PID_8052)) && depthOption != EOF)
+			if ((pThis->IsDevicePid(APC_PID_8036) || pThis->IsDevicePid(APC_PID_IRIS) || pThis->IsDevicePid(APC_PID_FRANK) || pThis->IsDevicePid(APC_PID_8052)) && depthOption != EOF)
 			{
 				if (pThis->m_pStreamDepthInfo[depthOption].nWidth == 640 && pThis->m_pStreamDepthInfo[depthOption].nHeight == 360)
 				{
 					depthDataTypeOffset = APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET;
 				}
 			}
-			if (pThis->IsDevicePid(APC_PID_HYPATIA2))
+			if ((pThis->IsDevicePid(APC_PID_HYPATIA2) || pThis->IsDevicePid(APC_PID_80362)) && depthOption > EOF)
 			{
 				if ((pThis->m_pStreamColorInfo[pThis->m_previewParams.m_colorOption].nHeight / pThis->m_pStreamDepthInfo[depthOption].nHeight) == 2)
 				{
@@ -3158,7 +3284,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
 			EnableDenoise(true);
 			InitEysov(colorRealRes.x, colorRealRes.y);
 		}
-        const BOOL bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) && 
+        const BOOL bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) &&
                                  ( ( 2560 == colorRealRes.x && 1280 == cpDepthRes.x ) || ( 2560 == colorRealRes.x && 640 == cpDepthRes.x )  || ( 1280 == colorRealRes.x && 640 == cpDepthRes.x ) ||
                                    ( 640 == colorRealRes.x && 320 == cpDepthRes.x ) ) );
         CColorDlg* pDlg = new CColorDlg(this);
@@ -3462,6 +3588,7 @@ void CPreviewImageDlg::CloseDeviceAndStopPreview(CDialog* pCallerDlg)
     GetDlgItem( IDC_EDIT_ZFAR  )->EnableWindow(FALSE);
     GetDlgItem( IDC_EDIT_ZNEAR )->EnableWindow(FALSE);
     GetDlgItem(IDC_SNAPSHOT_BTN)->EnableWindow(FALSE);
+	GetDlgItem(IDC_GRAB_FRAMES_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_FRAME_SYNC)->EnableWindow(FALSE);
 	GetDlgItem(IDC_PREVIEW_BTN)->EnableWindow(TRUE);
     GetDlgItem( IDC_CHK_MASTER )->EnableWindow(FALSE);
@@ -3855,6 +3982,13 @@ void CPreviewImageDlg::OnBnClickedSnapshotBtn()
 #endif
 }
 
+void CPreviewImageDlg::OnBnClickedGrabFramesBtn()
+{
+#ifndef ESPDI_EG
+	PostMessage(WM_MSG_GRAB_FRAMES, (WPARAM)this);
+#endif
+}
+
 BOOL CPreviewImageDlg::IsDevicePid( const int pid )
 {
 	return ( m_devinfoEx.wPID == pid && (m_devinfoEx.wVID == APC_VID_0x1E4E || m_devinfoEx.wVID == APC_VID_0x3438));
@@ -3900,7 +4034,7 @@ void CPreviewImageDlg::OnBnClickedCheckRotateImg()
 void CPreviewImageDlg::OnBnClickedCheckPointcloudViewer()
 {
 #ifndef ESPDI_EG
-	if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) || IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ))
+	if ( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) || IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ))
 	{
 		((CButton*)GetDlgItem(IDC_RADIO_RECTIFY_DATA))->SetCheck(BST_CHECKED);
 		OnBnClickedRadioRectifyAndRawData();

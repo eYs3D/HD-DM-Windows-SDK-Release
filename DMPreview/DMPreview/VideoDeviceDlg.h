@@ -75,4 +75,6 @@ private:
     afx_msg LRESULT OnChangeActiveTab( WPARAM wparam,LPARAM lparam );
     afx_msg void    OnPaint();
     afx_msg LRESULT OnAutoPreview(WPARAM wParam, LPARAM lParam);
+public:
+	afx_msg void OnBnClickedEditForceOverride();
 };

@@ -1,11 +1,11 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by DMPreview.rc
+// Microsoft Visual C++ 產生的 Include 檔案。
+// 由 DMPreview.rc 使用
 //
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
-#define IDD_APC_TEST_DIALOG         102
+#define IDD_APC_TEST_DIALOG             102
 #define IDS_APP_TITLE                   102
 #define ID_INDICATOR_FPS                103
 #define IDS_ERTON_DI_CLASS_NAME         107
@@ -57,6 +57,7 @@
 #define IDC_STATIC_SENSOR_MODE          1035
 #define IDC_STATIC_FLASH_RW             1038
 #define IDC_CHECK_COLOR_STREAM          1039
+#define IDC_STATIC_FLASH_RW2            1039
 #define IDC_STATIC_AE_AWB               1040
 #define IDC_CHECK_DEPTH1                1041
 #define IDC_STATIC_PREVIEW_IMG          1042
@@ -314,6 +315,8 @@
 #define IDC_STATIC_TEMPERATURE          1399
 #define IDC_TEMPERATURE_GET             1400
 #define IDC_EDIT_TEMPERATURE            1401
+#define IDC_EDIT_FORCE_OVERRIDE         1402
+#define IDC_GRAB_FRAMES_BTN             1403
 
 // Next default values for new objects
 // 

@@ -287,7 +287,7 @@ GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewGetSubroutineUni
 GLSLProgram.obj : warning LNK4049: 本機定義的符號 ___glewUniformSubroutinesuiv 已匯入
 glew32s.lib(glew.obj) : warning LNK4099: 找不到 PDB 'vc120.pdb' (有 'glew32s.lib(glew.obj)' 或位於 'D:\workspace\etronsdk_0729\EtronDI\Win32\Debug\vc120.pdb')，當做沒有偵錯資訊，連結物件
   DMPreview.vcxproj -> D:\workspace\etronsdk_0729\EtronDI\Win32\Debug\DMPreview.exe
-  系統找不到指定的路徑。
+  系統找不到指定的檔案。
   D:\workspace\etronsdk_0729\EtronDI\Win32\Debug\DMPreview.exe -> D:\workspace\etronsdk_0729\bin\eSPDI_DM\Win32\DMPreview.exe
   已複製 1 個檔案
   D:\workspace\etronsdk_0729\eSPDI\DM\Win32\eSPDI_DM.dll -> D:\workspace\etronsdk_0729\bin\eSPDI_DM\Win32\eSPDI_DM.dll

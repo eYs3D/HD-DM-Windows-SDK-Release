@@ -107,15 +107,15 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)console_tester\console_tester\bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -143,14 +143,15 @@ copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_t
       </AdditionalOptions>
       <ImageHasSafeExceptionHandlers />
       <AdditionalLibraryDirectories>$(SolutionDir)console_tester\console_tester\bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -170,14 +171,15 @@ copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_t
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)console_tester\console_tester\bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -199,14 +201,15 @@ copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_t
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)console_tester\console_tester\bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)\..\eSPDI\DM\$(Platform)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+      <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>

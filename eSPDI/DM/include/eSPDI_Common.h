@@ -119,11 +119,12 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_ORANGE_K    0x0199
 #define APC_PID_GRAPE       0x0300
 #define APC_PID_IVY         0x0177
-#define APC_PID_8076        0x0181
+#define APC_PID_80362       0x0181
 #define APC_PID_8077        0x0182
+#define APC_PID_8081        0x0183
 #define APC_PID_IRIS        0x0184
 #define APC_PID_MARY        0x0174
-
+#define APC_PID_FRANK       0x0187
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
