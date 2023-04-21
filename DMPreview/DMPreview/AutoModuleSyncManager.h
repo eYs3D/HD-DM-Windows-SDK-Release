@@ -66,7 +66,9 @@ private:
 	{
 		return APC_PID_8053 == pid ||
 			   APC_PID_8059 == pid || 
-			   APC_PID_8062 == pid ;
+			   APC_PID_8062 == pid ||
+			   APC_PID_80362 == pid||
+			   APC_PID_8077 == pid;
 	}
 
 	void SetMasterDeviceSerialNumber(wchar_t *pSerialNumber, bool bSaveConfig = true);

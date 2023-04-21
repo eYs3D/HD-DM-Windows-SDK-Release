@@ -43,10 +43,13 @@ private:
 
     BOOL m_TabPage4DepthFilter;
     BOOL m_TabPage4Property;
+    BOOL m_TabPage4SparseMode;
     BOOL m_TabPage4Accuracy;
     BOOL m_TabPage4RegisterSetting;
     BOOL m_TabPage4IMU;
     BOOL m_TabPage4Audio;
+    BOOL m_TabPage4SelfCalibration;
+
 
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

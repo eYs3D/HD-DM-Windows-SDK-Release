@@ -217,10 +217,20 @@ copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(Solut
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\DMPreview\Quaternion1.c" />
+    <ClCompile Include="..\utility\hidapi\hid.c" />
+    <ClCompile Include="..\utility\IMUData.cpp" />
+    <ClCompile Include="ColorPaletteGenerator.cpp" />
+    <ClCompile Include="IMUReader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="testFunc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\DMPreview\Quaternion1.h" />
+    <ClInclude Include="..\utility\hidapi\hidapi.h" />
+    <ClInclude Include="..\utility\IMUData.h" />
+    <ClInclude Include="ColorPaletteGenerator.h" />
+    <ClInclude Include="IMUReader.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

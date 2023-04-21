@@ -21,6 +21,14 @@ BEGIN_MESSAGE_MAP( AEAWB_PropertyDlg, CDialog )
     ON_BN_CLICKED( IDC_BUTTON_EXPTIME_WRITE,     &AEAWB_PropertyDlg::OnBnClickedButtonExptimeWrite    )
     ON_BN_CLICKED( IDC_BUTTON_GLOGAL_GAIN_READ,  &AEAWB_PropertyDlg::OnBnClickedButtonGlogalGainRead  )
     ON_BN_CLICKED( IDC_BUTTON_GLOGAL_GAIN_WRITE, &AEAWB_PropertyDlg::OnBnClickedButtonGlogalGainWrite )
+    ON_BN_CLICKED( IDC_BUTTON_ANALOG_GAIN_READ,  &AEAWB_PropertyDlg::OnBnClickedButtonAnalogGainRead  )
+    ON_BN_CLICKED( IDC_BUTTON_ANALOG_GAIN_WRITE, &AEAWB_PropertyDlg::OnBnClickedButtonAnalogGainWrite )
+    ON_BN_CLICKED( IDC_BUTTON_DIGITAL_GAIN_READ, &AEAWB_PropertyDlg::OnBnClickedButtonDigitalGainRead )
+    ON_BN_CLICKED( IDC_BUTTON_DIGITAL_GAIN_WRITE,&AEAWB_PropertyDlg::OnBnClickedButtonDigitalGainWrite)
+    ON_EN_CHANGE(  IDC_EDIT_ANALOG_GAIN,         &AEAWB_PropertyDlg::OnEnChangeEditAnalogGain         )
+    ON_EN_CHANGE(  IDC_EDIT_DIGITAL_GAIN,        &AEAWB_PropertyDlg::OnEnChangeEditDigitalGain        )
+    ON_NOTIFY(UDN_DELTAPOS,IDC_SPIN_ANALOG_GAIN, &AEAWB_PropertyDlg::OnDeltaposSpinAnalogGain         )
+    ON_NOTIFY(UDN_DELTAPOS,IDC_SPIN_DIGITAL_GAIN,&AEAWB_PropertyDlg::OnDeltaposSpinDigitalGain        )
 END_MESSAGE_MAP()
 
 AEAWB_PropertyDlg::AEAWB_PropertyDlg( void*&                  hApcDI, 
@@ -78,12 +86,6 @@ void AEAWB_PropertyDlg::InitUI()
         m_pComboBox->SetItemData( m_pComboBox->AddString(L"Kolor"), APC_PID_8054_K );//0x0143 ); // AR1335
         }
         break;
-    case APC_PID_ORANGE://0x0189: //Orange
-        {
-            m_pComboBox->SetItemData(m_pComboBox->AddString(L"Color"), APC_PID_ORANGE);  //0x0189 ); // esp777
-            m_pComboBox->SetItemData(m_pComboBox->AddString(L"Kolor"), APC_PID_ORANGE_K);//0x0199 ); // AR1335
-        }
-    break;
     case APC_PID_8063://0x0164: //8063
         {
             m_pComboBox->SetItemData(m_pComboBox->AddString(L"Color"), APC_PID_8063);
@@ -104,19 +106,17 @@ void AEAWB_PropertyDlg::InitUI()
 	m_WBTemperatureSliderCtrl = ( CSliderCtrl* )GetDlgItem( IDC_SLIDER_WB_TEMPERATURE );
 
 	ReadProperty();
-}
 
-void AEAWB_PropertyDlg::SetDefaultPropertyForIVY()
-{
-    APC_PropertyCT_SetCurrent(m_hApcDI, &m_DevSelInfo, CT_PROPERTY_ID_EXPOSURE, -10, 0, 2, APC_PID_IVY);
-    APC_PropertyItem_Write(m_hApcDI, &m_DevSelInfo, PROPSETID_VIDCAP_CAMERACONTROL, KSPROPERTY_CAMERACONTROL_AUTO_EXPOSURE_PRIORITY, 0, APC_PID_IVY);
-    ReadProperty();
+    CSpinButtonCtrl *spinAnalogGain = (CSpinButtonCtrl *)GetDlgItem(IDC_SPIN_ANALOG_GAIN);
+    spinAnalogGain->SetBuddy(GetDlgItem(IDC_EDIT_ANALOG_GAIN));
+    CSpinButtonCtrl *spinDigitalGain = (CSpinButtonCtrl *)GetDlgItem(IDC_SPIN_DIGITAL_GAIN);
+    spinDigitalGain->SetBuddy(GetDlgItem(IDC_EDIT_DIGITAL_GAIN));
 }
 
 void AEAWB_PropertyDlg::ReadProperty()
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
 	long max, min, step, default, capsflag, cur1, cur2;
 
     int hr = APC_DEVICE_NOT_SUPPORT;
@@ -226,6 +226,31 @@ void AEAWB_PropertyDlg::UpdateUI_AE(BOOL enable)
     GetDlgItem( IDC_EDIT_EXPTIME             )->EnableWindow( !m_CButtonAE->GetCheck() );
     GetDlgItem( IDC_BUTTON_GLOGAL_GAIN_WRITE )->EnableWindow( !m_CButtonAE->GetCheck() );
     GetDlgItem( IDC_EDIT_GLOBAL_GAIN         )->EnableWindow( !m_CButtonAE->GetCheck() );
+
+
+    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY || pid == APC_PID_IVY2)
+    {
+        GetDlgItem(IDC_GAIN_CONTROL)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_TEXT_ANALOG_GAIN)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_TEXT_DIGITAL_GAIN)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_EDIT_ANALOG_GAIN)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_EDIT_DIGITAL_GAIN)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_SPIN_ANALOG_GAIN)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_SPIN_DIGITAL_GAIN)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_BUTTON_ANALOG_GAIN_READ)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_BUTTON_DIGITAL_GAIN_READ)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_BUTTON_ANALOG_GAIN_WRITE)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_BUTTON_DIGITAL_GAIN_WRITE)->ShowWindow(SW_SHOW);
+        GetDlgItem(IDC_LIST_GAIN_REGISTER)->ShowWindow(SW_SHOW);
+
+        GetDlgItem(IDC_BUTTON_ANALOG_GAIN_WRITE)->EnableWindow(!m_CButtonAE->GetCheck());
+        GetDlgItem(IDC_EDIT_ANALOG_GAIN)->EnableWindow(!m_CButtonAE->GetCheck());
+        GetDlgItem(IDC_BUTTON_DIGITAL_GAIN_WRITE)->EnableWindow(!m_CButtonAE->GetCheck());
+        GetDlgItem(IDC_EDIT_DIGITAL_GAIN)->EnableWindow(!m_CButtonAE->GetCheck());
+
+        GetDlgItem(IDC_BUTTON_GLOGAL_GAIN_WRITE)->EnableWindow(false);
+    }
 }
 
 void AEAWB_PropertyDlg::EnableUI_AE(BOOL enable)
@@ -298,7 +323,8 @@ void AEAWB_PropertyDlg::OnCbnSelchangeComboDeviceType()
 
 void AEAWB_PropertyDlg::OnBnClickedCheckAutoExposure()
 {
-    const int  pid       = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    int  pid       = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     const BOOL isChecked = m_CButtonAE->GetCheck();
     const long value     = m_ExposureTimeSliderCtrl->GetPos();
     const long capsflag  = isChecked ? 1 : 2;
@@ -312,7 +338,8 @@ void AEAWB_PropertyDlg::OnBnClickedCheckAutoExposure()
 
 void AEAWB_PropertyDlg::OnBnClickedCheckAWB()
 {
-    const int  pid       = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    int  pid       = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     const BOOL isChecked = m_CButtonAWB->GetCheck();
     const long value     = m_WBTemperatureSliderCtrl->GetPos();
     const long capsflag  = isChecked ? 1 : 2;
@@ -326,50 +353,58 @@ void AEAWB_PropertyDlg::OnBnClickedCheckAWB()
 
 void AEAWB_PropertyDlg::OnBnClickedRadio50hz()
 {
+    int pid = (int)m_pComboBox->GetItemData(m_pComboBox->GetCurSel());
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     APC_PropertyPU_SetCurrent( m_hApcDI,
                                    &m_DevSelInfo,
                                    PU_PROPERTY_ID_POWERLINE_FREQUENCY,
                                    1,
                                    0,
                                    0,
-                                   ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() ) );
+                                   pid);
 }
 
 void AEAWB_PropertyDlg::OnBnClickedRadio60hz()
 {
+    int pid = (int)m_pComboBox->GetItemData(m_pComboBox->GetCurSel());
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     APC_PropertyPU_SetCurrent( m_hApcDI,
                                    &m_DevSelInfo,
                                    PU_PROPERTY_ID_POWERLINE_FREQUENCY,
                                    2,
                                    0,
                                    0,
-                                   ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() ) );
+                                   pid);
 }
 
 void AEAWB_PropertyDlg::OnBnClickedRadioLlcOn()
 {
+    int pid = (int)m_pComboBox->GetItemData(m_pComboBox->GetCurSel());
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     APC_PropertyItem_Write( m_hApcDI,
                                 &m_DevSelInfo,
                                 PROPSETID_VIDCAP_CAMERACONTROL,
                                 KSPROPERTY_CAMERACONTROL_AUTO_EXPOSURE_PRIORITY,
                                 1,
-                                ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() ) );
+                                pid);
 }
 
 void AEAWB_PropertyDlg::OnBnClickedRadioLlcOff()
 {
+    int pid = (int)m_pComboBox->GetItemData(m_pComboBox->GetCurSel());
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     APC_PropertyItem_Write( m_hApcDI,
                                 &m_DevSelInfo,
                                 PROPSETID_VIDCAP_CAMERACONTROL,
                                 KSPROPERTY_CAMERACONTROL_AUTO_EXPOSURE_PRIORITY,
                                 0,
-                                ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() ) );
+                                pid);
 }
 
 void AEAWB_PropertyDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     const long irValue = ( ( CSliderCtrl* )pScrollBar )->GetPos();
 
 	if ( m_ExposureTimeSliderCtrl == ( CSliderCtrl* )pScrollBar )
@@ -389,8 +424,8 @@ void AEAWB_PropertyDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
 
 void AEAWB_PropertyDlg::OnBnClickedBtPropertyReset()
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     CheckRadioButton( IDC_RADIO_50HZ,   IDC_RADIO_60HZ,    IDC_RADIO_60HZ    );
     CheckRadioButton( IDC_RADIO_LLC_ON, IDC_RADIO_LLC_OFF, IDC_RADIO_LLC_OFF );
 
@@ -411,8 +446,8 @@ void AEAWB_PropertyDlg::OnBnClickedBtPropertyReset()
 
 void AEAWB_PropertyDlg::OnBnClickedButtonExptimeRead()
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     float value = NULL;
 
     APC_GetExposureTime( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, &value );
@@ -426,8 +461,8 @@ void AEAWB_PropertyDlg::OnBnClickedButtonExptimeRead()
 
 void AEAWB_PropertyDlg::OnBnClickedButtonExptimeWrite()
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     CString csText;
 
     GetDlgItemText( IDC_EDIT_EXPTIME, csText );
@@ -439,8 +474,8 @@ void AEAWB_PropertyDlg::OnBnClickedButtonExptimeWrite()
 
 void AEAWB_PropertyDlg::OnBnClickedButtonGlogalGainRead()
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     float value = NULL;
 
     APC_GetGlobalGain( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, &value );
@@ -454,8 +489,8 @@ void AEAWB_PropertyDlg::OnBnClickedButtonGlogalGainRead()
 
 void AEAWB_PropertyDlg::OnBnClickedButtonGlogalGainWrite()
 {
-    const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
     CString csText;
 
     GetDlgItemText( IDC_EDIT_GLOBAL_GAIN, csText );
@@ -463,6 +498,197 @@ void AEAWB_PropertyDlg::OnBnClickedButtonGlogalGainWrite()
     const float value = ( float )_wtof( csText );
 
     APC_SetGlobalGain( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, value );
+}
+
+void AEAWB_PropertyDlg::UpdateGainRegisterList() {
+    constexpr int kRegisterFlag = FG_Address_2Byte | FG_Value_1Byte;
+    constexpr int kSensorSlaveAddress = 0x20;
+    unsigned short gainReg;
+    unsigned short gainValue;
+    std::vector<std::pair<unsigned short, unsigned short>> gainRegisters;
+    std::vector<std::string> resultStdStringList;
+
+    gainRegisters.push_back(std::make_pair(0x044D, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0450, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0451, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0452, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0453, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0454, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0455, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0456, 0x0));
+    gainRegisters.push_back(std::make_pair(0x0457, 0x0));
+
+    CListBox* registerList = (CListBox*)GetDlgItem(IDC_LIST_GAIN_REGISTER);
+    registerList->ResetContent();
+    for (auto it : gainRegisters) {
+        int ret = APC_GetSlaveSensorRegister(m_hApcDI, &m_DevSelInfo, kSensorSlaveAddress, it.first, &it.second, kRegisterFlag, APC_SensorMode::SensorAll);
+        char buff[100];
+        snprintf(buff, sizeof(buff), "Address 0x%x Value 0x%x", it.first, it.second);
+        CString buffAsStdStr(buff);
+        registerList->AddString(buffAsStdStr);
+    }
+}
+
+void AEAWB_PropertyDlg::OnBnClickedButtonAnalogGainRead()
+{
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
+    float value = NULL;
+
+    APC_GetAnalogGain( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, &value );
+
+    CString csText;
+
+    csText.Format( L"%.4f", value );
+
+    SetDlgItemText( IDC_EDIT_ANALOG_GAIN, csText );
+
+    TRACE("AnalogGainRead\n");
+    UpdateGainRegisterList();
+}
+
+void AEAWB_PropertyDlg::OnBnClickedButtonAnalogGainWrite()
+{
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
+    CString csText;
+
+    GetDlgItemText( IDC_EDIT_ANALOG_GAIN, csText );
+
+    const float value = ( float )_wtof( csText );
+
+    APC_SetAnalogGain( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, value );
+
+    TRACE("AnalogGainWrite\n");
+    UpdateGainRegisterList();
+}
+
+void AEAWB_PropertyDlg::OnBnClickedButtonDigitalGainRead()
+{
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
+    float value = NULL;
+
+    APC_GetDigitalGain( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, &value );
+
+    CString csText;
+
+    csText.Format( L"%.4f", value );
+
+    SetDlgItemText( IDC_EDIT_DIGITAL_GAIN, csText );
+
+    TRACE("DigitalGainRead\n");
+    UpdateGainRegisterList();
+}
+
+void AEAWB_PropertyDlg::OnBnClickedButtonDigitalGainWrite()
+{
+    int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
+    if (pid == APC_PID_IVY2) pid = APC_PID_IVY2_S;
+    CString csText;
+
+    GetDlgItemText( IDC_EDIT_DIGITAL_GAIN, csText );
+
+    const float value = ( float )_wtof( csText );
+
+    APC_SetDigitalGain( m_hApcDI, &m_DevSelInfo, APC_SensorMode::SensorAll, pid, value );
+
+    TRACE("DigitalGainWrite\n");
+    UpdateGainRegisterList();
+}
+
+void AEAWB_PropertyDlg::OnEnChangeEditAnalogGain()
+{
+    TRACE("OnEnChangeEditAnalogGain\n");
+}
+
+void AEAWB_PropertyDlg::OnEnChangeEditDigitalGain()
+{
+    TRACE("OnEnChangeEditDigitalGain\n");
+}
+
+void AEAWB_PropertyDlg::OnDeltaposSpinAnalogGain(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    LPNMUPDOWN pNMUpDown = reinterpret_cast<LPNMUPDOWN>(pNMHDR);
+
+    CString csText;
+    GetDlgItemText(IDC_EDIT_ANALOG_GAIN, csText);
+    float analog_gain = (float)_wtof(csText);
+
+    float gap = 0.5f;
+    float min_value = 1.0f;
+    float max_value = 8.0f;
+
+    if (pNMUpDown->iDelta < 0)
+    {
+        if (analog_gain - gap < min_value)
+        {
+            csText.Format(L"%.4f", min_value);
+            SetDlgItemText(IDC_EDIT_ANALOG_GAIN, csText);
+        }
+        else
+        {
+            csText.Format(L"%.4f", (analog_gain - gap));
+            SetDlgItemText(IDC_EDIT_ANALOG_GAIN, csText);
+        }
+    }
+    else
+    {
+        if (analog_gain + gap > max_value)
+        {
+            csText.Format(L"%.4f", max_value);
+            SetDlgItemText(IDC_EDIT_ANALOG_GAIN, csText);
+        }
+        else
+        {
+            csText.Format(L"%.4f", (analog_gain + gap));
+            SetDlgItemText(IDC_EDIT_ANALOG_GAIN, csText);
+        }
+    }
+
+    *pResult = 0;
+}
+
+void AEAWB_PropertyDlg::OnDeltaposSpinDigitalGain(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    LPNMUPDOWN pNMUpDown = reinterpret_cast<LPNMUPDOWN>(pNMHDR);
+
+    CString csText;
+    GetDlgItemText(IDC_EDIT_DIGITAL_GAIN, csText);
+    float digital_gain = (float)_wtof(csText);
+
+    float gap = 0.003906f;
+    float min_value = 1.0f;
+    float max_value = 8.0f;
+
+    if (pNMUpDown->iDelta < 0)
+    {
+        if (digital_gain - gap < min_value)
+        {
+            csText.Format(L"%.4f", min_value);
+            SetDlgItemText(IDC_EDIT_DIGITAL_GAIN, csText);
+        }
+        else
+        {
+            csText.Format(L"%.4f", (digital_gain - gap));
+            SetDlgItemText(IDC_EDIT_DIGITAL_GAIN, csText);
+        }
+    }
+    else
+    {
+        if (digital_gain + gap > max_value)
+        {
+            csText.Format(L"%.4f", max_value);
+            SetDlgItemText(IDC_EDIT_DIGITAL_GAIN, csText);
+        }
+        else
+        {
+            csText.Format(L"%.4f", (digital_gain + gap));
+            SetDlgItemText(IDC_EDIT_DIGITAL_GAIN, csText);
+        }
+    }
+
+    *pResult = 0;
 }
 
 bool AEAWB_PropertyDlg::IsLowLight()

@@ -9,6 +9,7 @@
 #include "utility/FrameGrabber.h"
 #include "utility\FrameProcess\PlyFilter.h"
 #include "RegisterSettings.h"
+#include "ModeConfig.h"
 
 typedef enum {
 	TRANSFER_TO_COLORFULRGB,
@@ -23,8 +24,10 @@ class CDepthFusionHelper;
 class CDepthDlg;
 class WaitDlg;
 class AEAWB_PropertyDlg;
+class SparseMode_PropertyDlg;
 class DistanceAccuracyDlg;
 class DepthFilterDlg;
+class Self_CalibrationDlg;
 struct DepthfilterParam;
 
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
@@ -41,8 +44,10 @@ public:
     enum { IDD = IDD_DIALOG_PREVIEW_IMAGE };
 
     inline void SetPropertyDlg( AEAWB_PropertyDlg* pPropertyDlg ) { m_pPropertyDlg = pPropertyDlg; }
+    inline void SetSparseModeDlg(SparseMode_PropertyDlg* pSparseModeDlg) { m_SparseModeDlg = pSparseModeDlg; }
     inline void SetAccuracyDlg( DistanceAccuracyDlg* pAccuracyDlg ) { m_pAccuracyDlg = pAccuracyDlg; }
     inline void SetDepthFilterDlg( DepthFilterDlg* pDepthFilterDlg ) { m_pDepthFilterDlg = pDepthFilterDlg; }
+    inline void SetSelfCalibrationDlg(Self_CalibrationDlg* pSelfCalibrationDlg) { m_pSelfCalibrationDlg = pSelfCalibrationDlg; }
     inline void DepthIndexAccuracy( const int iDepthIndex ) { m_i8038DepthIndex = iDepthIndex; }
 
     void SetFilterParam( DepthfilterParam& xDfParam );
@@ -52,9 +57,11 @@ public:
     afx_msg LRESULT OnSnapshot(WPARAM wParam, LPARAM lParam);
     afx_msg LRESULT OnGrabFrames(WPARAM wParam, LPARAM lParam);
     afx_msg void OnBnClickedPreviewBtn();
-
+	LRESULT OnClosePreviewDlg(WPARAM wParam, LPARAM lParam);
+	BOOL m_isPreviewed;
 	BOOL IsInterLeaveMode();
 	CVideoDeviceDlg * m_pdlgVideoDeviceDlg;
+	ModeConfig::MODE_CONFIG GetCurrentMode();
 private:
 
     int GetDepthStreamIndex(int depthIndex) const;
@@ -99,6 +106,13 @@ private:
     WORD m_maxIR;
     void SetIRValue(WORD value);
 	void ChangeIRValue(WORD value);
+    void GetFloodIRRange(unsigned short &nMin, unsigned short &nMax);
+    void GetFloodIRValue(unsigned short &nValue);
+    void SetFloodIRValue(unsigned short value);
+    void GetFloodIRToggleMode(unsigned short &nMode);
+    void SetFloodIRToggleMode(unsigned short nMode);
+    void UpdateFloodIRSlider(unsigned short value);
+    void UpdateFloodIRToggleMode();
     static void DepthFusionCallback(unsigned char* depthBuf, unsigned char* selectedIndex, int depthSize, 
         int width, int height, int serialNumber, void* pParam);
 	static void FrameGrabberCallback(   BOOL isDepthOnly,
@@ -116,6 +130,7 @@ private:
     bool IsSupportHwPostProc() const;
 	void EnableIR(bool enable);
 	void InitIR();
+	void InitFloodLED();
     void InitDepthROI();
     void InitModeConfig();
 	void ResetStreamTimeStamp();
@@ -207,6 +222,8 @@ private:
     int m_depthStreamOptionCount;
     int m_ZFar;
     int m_ZNear;
+    bool mIsLRDr;
+
 	APC_STREAM_INFO m_pStreamKDepthInfo[APC_MAX_STREAM_COUNT];
 	APC_STREAM_INFO m_pStreamTDepthInfo[APC_MAX_STREAM_COUNT];
     APC_STREAM_INFO m_pStreamDepthInfo[APC_MAX_STREAM_COUNT];
@@ -224,16 +241,21 @@ private:
 	char m_LogImgfile[128];
     DEVINFORMATIONEX m_devinfoEx;
 	std::vector<unsigned char*> bufDepthTmp;
-	bool m_isPreviewed;
 	WORD m_irValue = -1;
     int m_imgSerialNumber;
     PointCloudInfo m_xPointCloudInfo;
+    WORD m_floodValue = -1;
+    std::pair<WORD, WORD> m_floodRange;
     
 	AEAWB_PropertyDlg* m_pPropertyDlg;
+    SparseMode_PropertyDlg* m_SparseModeDlg;
+
 	bool m_bPrevLowLigh;
 
     DistanceAccuracyDlg* m_pAccuracyDlg;
     DepthFilterDlg* m_pDepthFilterDlg;
+    Self_CalibrationDlg* m_pSelfCalibrationDlg;
+
     const USB_PORT_TYPE m_eUSB_Port_Type;
     std::unique_ptr< WaitDlg > m_pWaitDlg;
 	std::map< int, time_t> m_mapColorStreamTimeStamp;
@@ -256,8 +278,6 @@ private:
     virtual BOOL OnInitDialog();
     virtual void OnOK() {}
     virtual void OnCancel() {}
-	
-	LRESULT OnClosePreviewDlg(WPARAM wParam, LPARAM lParam);
 
     afx_msg LRESULT OnUpdateMousePos(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnSnapshotAll(WPARAM wParam, LPARAM lParam);
@@ -293,6 +313,7 @@ private:
     afx_msg void OnBnClickedChkIrmaxExt();
     afx_msg void OnBnClickedChkPcvNocolor();
     afx_msg void OnBnClickedChkPcvSingle();
+    afx_msg void OnCbnSelchangeComboToogleMode();
 public:
 	afx_msg void OnBnClickedChkMultiSync();
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);

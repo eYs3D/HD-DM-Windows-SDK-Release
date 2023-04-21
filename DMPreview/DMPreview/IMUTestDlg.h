@@ -44,6 +44,13 @@ const char READ_SERIAL_NUMBER[5][8] = { { 0x00, 0x14, 0x00, 0x00, 0x00, 0x00, 0x
                                         { 0x00, 0x14, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00 } };
 const char WRITE_SERIAL_NUMBER_TO_FLASH[8] = { 0x00, 0x1B, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
+const char READ_RTC[8] = { 0x00, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const char WRITE_RTC[8] = { 0x00, 0x1D, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const char READ_ACC_FS[8] = { 0x01, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const char WRITE_ACC_FS[8] = { 0x01, 0x23, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const char READ_GYR_FS[8] = { 0x01, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const char WRITE_GYR_FS[8] = { 0x01, 0x25, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
 struct SetFeatureDATA_Item {
 	const char* pData;
 	int nDataLength;
@@ -173,10 +180,22 @@ private:
 
     void ReadSerialNumber( char* pSerialNumber );
     void WriteSerialNumber( const char* pSerialNumber );
+    void GetRTC(char* pHour, char* pMinute, char* pSecond);
+    void SetRTC(char hour, char minute, char second);
+    void GetAccFs(char* pData);
+    void SetAccFs(char data);
+    void GetGyrFs(char* pData);
+    void SetGyrFs(char data);
 
 	double m_QuaternionBeginInverse[4] = { 0 };
 	bool m_bNeedInitQuaternion = true;
 public:
 	afx_msg void OnBnClickedImu3dReset();
 	afx_msg void OnBnClickedCheckFrameSync();
+	afx_msg void OnBnClickedButtonRtcRead();
+	afx_msg void OnBnClickedButtonRtcWrite();
+	afx_msg void OnBnClickedButtonAccFsRead();
+	afx_msg void OnBnClickedButtonAccFsWrite();
+	afx_msg void OnBnClickedButtonGyrFsRead();
+	afx_msg void OnBnClickedButtonGyrFsWrite();
 };

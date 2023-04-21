@@ -255,7 +255,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\DM\include;$(SolutionDir)utility\PointCloudViewer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\DM\include;$(SolutionDir)utility\PointCloudViewer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -272,8 +272,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;Self_Calibration_API.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
@@ -288,7 +288,10 @@
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
-        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\</Command>
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -298,7 +301,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\DM\include;$(SolutionDir)utility\PointCloudViewer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)..\eSPDI\DM\include;$(SolutionDir)utility\PointCloudViewer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -315,8 +318,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;Self_Calibration_API.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -332,6 +335,8 @@
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\DM_Quality_Cfg\cfg\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -417,7 +422,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)utility\PointCloudViewer;$(SolutionDir)..\eSPDI\;$(SolutionDir)..\eSPDI\DM\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)utility\PointCloudViewer;$(SolutionDir)..\eSPDI\;$(SolutionDir)..\eSPDI\DM\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -437,8 +442,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\;$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;Self_Calibration_API.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\;$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences />
@@ -449,7 +454,6 @@
     </Link>
     <PostBuildEvent>
       <Command>
-
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
@@ -457,6 +461,8 @@
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -469,7 +475,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)utility\PointCloudViewer;$(SolutionDir)..\eSPDI\DM\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\include;$(SolutionDir)\NVIDIA_GPU_Computing_SDK\OpenCL\common\inc;$(SolutionDir)utility\PointCloudViewer;$(SolutionDir)..\eSPDI\DM\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -487,8 +493,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avrt.lib;setupapi.lib;eSPDI_DM.lib;Self_Calibration_API.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)\self_calibration\Self_Calibration_API\$(PlatformName)\$(Configuration)\lib;$(SolutionDir)DepthMerge\$(PlatformName);$(SolutionDir)NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\$(Platform);$(SolutionDir)..\eSPDI\DM\$(PlatformName)\$(Configuration);$(SolutionDir)GL\glfw\bin\$(PlatformName);$(SolutionDir)GL\glew\lib\Release\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>
@@ -501,14 +507,16 @@
     </Link>
     <PostBuildEvent>
       <Command>
-
         mkdir $(SolutionDir)..\bin\eSPDI_DM\$(Platform)
         xcopy /y /v /f $(TargetPath) $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\ModeConfig.db $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\
         xcopy /y /v /f $(SolutionDir).\DMPreview\*.ini $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
         xcopy /y /v /f $(SolutionDir).\DMPreview\cfg\DM_Quality_Cfg\*.cfg $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\cfg\DM_Quality_Cfg\
-        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\</Command>
+        xcopy /y /v /f $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)$(Platform)\$(Configuration)\
+        xcopy /y /v /f $(SolutionDir)..\self_calibration\Self_Calibration_API\$(Platform)\$(Configuration)\lib\Self_Calibration_API.dll $(SolutionDir)..\bin\eSPDI_DM\$(Platform)\
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Win32|x64'">
@@ -713,7 +721,10 @@
     <ClCompile Include="..\utility\PointCloudViewer\rply.c" />
     <ClCompile Include="..\utility\ResizableDlg.cpp" />
     <ClCompile Include="..\utility\WindowsMfcUtility.cpp" />
+    <ClCompile Include="Self_CalibrationDlg.cpp" />
+    <ClCompile Include="ModuleCalibParWrite.cpp" />
     <ClCompile Include="AEAWB_PropertyDlg.cpp" />
+    <ClCompile Include="SparseMode_PropertyDlg.cpp" />
     <ClCompile Include="AudioDlg.cpp" />
     <ClCompile Include="AutoModuelSyncDlg.cpp" />
     <ClCompile Include="AutoModuleSyncManager.cpp" />
@@ -769,7 +780,10 @@
     <ClInclude Include="..\utility\PointCloudViewer\rply.h" />
     <ClInclude Include="..\utility\ResizableDlg.h" />
     <ClInclude Include="..\utility\WindowsMfcUtility.h" />
+    <ClInclude Include="Self_CalibrationDlg.h" />
+    <ClInclude Include="ModuleCalibParWrite.h" />
     <ClInclude Include="AEAWB_PropertyDlg.h" />
+    <ClInclude Include="SparseMode_PropertyDlg.h" />
     <ClInclude Include="AudioDlg.h" />
     <ClInclude Include="AutoModuelSyncDlg.h" />
     <ClInclude Include="AutoModuleSyncManager.h" />

@@ -4,6 +4,7 @@
 #include "VideoDeviceDlg.h"
 #include "APC_TestDlg.h"
 #include "AEAWB_PropertyDlg.h"
+#include "SparseMode_PropertyDlg.h"
 #include "AudioDlg.h"
 #include "PreviewImageDlg.h"
 #include "RegisterAccessDlg.h"
@@ -14,6 +15,7 @@
 #include "DistanceAccuracyDlg.h"
 #include "DepthFilterDlg.h"
 #include "ModeConfig.h"
+#include "Self_CalibrationDlg.h"
 
 class CopyG1ToG2Helper {
 	friend class CVideoDeviceDlg;
@@ -302,10 +304,12 @@ CVideoDeviceDlg::CVideoDeviceDlg(CWnd* pParent, bool enableSDKLog)
                                 m_bIMU_Device_Sync(false),
                                 m_TabPage4DepthFilter(TRUE),
                                 m_TabPage4Property(TRUE),
+                                m_TabPage4SparseMode(TRUE),
                                 m_TabPage4Accuracy(TRUE),
                                 m_TabPage4RegisterSetting(TRUE),
                                 m_TabPage4IMU(TRUE),
-                                m_TabPage4Audio(TRUE)
+                                m_TabPage4Audio(TRUE),
+                                m_TabPage4SelfCalibration(TRUE)
 
 {
   /*APC_Init2 can enable the auto-restart function and register USB device events */
@@ -375,6 +379,13 @@ BOOL CVideoDeviceDlg::ReadUIConfig()
     m_TabPage4Property = (strData == _T("1"));
     strData.ReleaseBuffer();
 
+    // Enable_TabPage_SparseMode =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_SparseMode");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4SparseMode = (strData == _T("1") || m_pDevInfo->wPID == APC_PID_IVY || m_pDevInfo->wPID == APC_PID_IVY2);
+    strData.ReleaseBuffer();
+
     // Enable_TabPage_Accuracy =
     strData.Empty();
     strKeyName = _T("Enable_TabPage_Accuracy");
@@ -398,9 +409,16 @@ BOOL CVideoDeviceDlg::ReadUIConfig()
 
     // Enable_TabPage_Audio =
     strData.Empty();
-    strKeyName = _T("Enable_TabPage_IMU");
+    strKeyName = _T("Enable_TabPage_Audio");
     GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
     m_TabPage4Audio = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_TabPage_SelfCalibration =
+    strData.Empty();
+    strKeyName = _T("Enable_TabPage_SelfCalibration");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_TabPage4SelfCalibration = (strData == _T("1"));
     strData.ReleaseBuffer();
 
     return TRUE;
@@ -486,21 +504,39 @@ void CVideoDeviceDlg::InitChildDlg()
     depthfilterDlg->setVersion(version);
 
     AEAWB_PropertyDlg* aeAwbCtrlDlg = new AEAWB_PropertyDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
+    Self_CalibrationDlg* selfCalibrationDlg = new Self_CalibrationDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage, previewDlg);
+    SparseMode_PropertyDlg* pSparseModeDlg = new SparseMode_PropertyDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
+
 
     previewDlg->SetDepthFilterDlg(depthfilterDlg);
     previewDlg->SetPropertyDlg(aeAwbCtrlDlg);
+    previewDlg->SetSelfCalibrationDlg(selfCalibrationDlg);
+    if (m_TabPage4SparseMode)
+    {
+        previewDlg->SetSparseModeDlg(pSparseModeDlg);
+    }
+
 
     depthfilterDlg->Create(depthfilterDlg->IDD, &m_oTabPage);
     previewDlg->Create(previewDlg->IDD, &m_oTabPage);
     aeAwbCtrlDlg->Create(aeAwbCtrlDlg->IDD, &m_oTabPage);
+    selfCalibrationDlg->Create(selfCalibrationDlg->IDD, &m_oTabPage);
+    pSparseModeDlg->Create(pSparseModeDlg->IDD, &m_oTabPage);
+
 
     m_childDlg.push_back(previewDlg);
     m_childDlg.push_back(depthfilterDlg);
     m_childDlg.push_back(aeAwbCtrlDlg);
+    m_childDlg.push_back(selfCalibrationDlg);
+    m_childDlg.push_back(pSparseModeDlg);
+
 
     m_oTabPage.AddTab(previewDlg, _T("Preview"));
     if (m_TabPage4DepthFilter)  m_oTabPage.AddTab(depthfilterDlg, _T("Depth Filter"));
     if (m_TabPage4Property)     m_oTabPage.AddTab(aeAwbCtrlDlg, _T("Property"));
+    if (m_TabPage4SelfCalibration)     m_oTabPage.AddTab(selfCalibrationDlg, _T("SelfCalibration"));
+    if (m_TabPage4SparseMode)     m_oTabPage.AddTab(pSparseModeDlg, _T("Sparse Mode"));
+
 
     DistanceAccuracyDlg* DAlg = new DistanceAccuracyDlg(m_hApcDI, m_DevSelInfo, previewDlg);
     DAlg->Create(DAlg->IDD, &m_oTabPage);
@@ -1204,7 +1240,8 @@ void CVideoDeviceDlg::OnBnClickedTemperatureGet()
 		if (is_negtive) {
 			temp = 0.0 - temp;
 		}
-		csText.Format(L"%f", temp);
+		csText.Format(L"%.2f", temp);
+		csText = csText + _T("°C");
 		SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
 	}
     else if (m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_8077)
@@ -1226,7 +1263,7 @@ void CVideoDeviceDlg::OnBnClickedTemperatureGet()
             TempeRegVal = temperature_reg_val_reverse;
             TempeRegVal >>= 5;
             fTemperature = (float)TempeRegVal * 0.125;
-            csText.Format(L"%f", fTemperature);
+            csText.Format(L"%.2f", fTemperature);
             csText = csText + _T("°C");
             SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
         }
@@ -1339,7 +1376,7 @@ void CVideoDeviceDlg::OnBnClickedEditForceOverride()
 		std::string resultString;
 
 		CProgressCtrl progressIndicator;
-		progressIndicator.Create(WS_CHILD | WS_VISIBLE, CRect(17, 187, 280, 195), this, IDC_EDIT_FORCE_OVERRIDE);
+		progressIndicator.Create(WS_CHILD | WS_VISIBLE, CRect(17, 187, 230, 195), this, IDC_EDIT_FORCE_OVERRIDE);
 		progressIndicator.SetRange(0, CopyG1ToG2Helper::APC_USER_SETTING_OFFSET);
 		progressIndicator.SetStep(1);
 

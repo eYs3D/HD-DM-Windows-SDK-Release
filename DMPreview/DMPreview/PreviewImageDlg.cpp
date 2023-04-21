@@ -14,10 +14,12 @@
 #include "ModeConfig.h"
 #include "WaitDlg.h"
 #include "AEAWB_PropertyDlg.h"
+#include "SparseMode_PropertyDlg.h"
 #include "DistanceAccuracyDlg.h"
 #include "DepthFilterDlg.h"
 #include "AutoModuleSyncManager.h"
 #include "FrameSyncManager.h"
+#include "Self_CalibrationDlg.h"
 
 #ifndef ESPDI_EG
 #include "utility/DepthFusionHelper.h"
@@ -43,9 +45,9 @@ IMPLEMENT_DYNAMIC(CPreviewImageDlg, CDialog)
 #define MAX_IR_MAXIMUM 15
 #define MAX_IR_HYPATIA 96
 #define MAX_IR_HYPATIA_DEFAULT 60
-#define MAX_IR_IVY 96
-#define MAX_IR_IVY_DEFAULT 60
+#define MAX_IR_IVY_DEFAULT 20
 
+#define FLOODIR_VALUE_DEFAULT 15
 
 typedef struct plyThreadData
 {
@@ -66,6 +68,7 @@ CPreviewImageDlg::CPreviewImageDlg(void*& hApcDI, DEVSELINFO& devSelInfo, const 
     m_bPCV_SingleColor( FALSE ),
     m_bIsInterLeaveMode( FALSE ),
     m_pPropertyDlg( NULL ),
+    m_SparseModeDlg(NULL),
     m_pAccuracyDlg( NULL ),
     m_pDepthFilterDlg( NULL ),
     m_i8038DepthIndex( NULL ),
@@ -454,7 +457,7 @@ void CPreviewImageDlg::UpdateUI()
 	UpdateDepthStreamUI(0);	
 	UpdateKcolorStreamUI(1);
 	UpdateTrackStreamUI(2);
-	GetDlgItem(IDC_COMBO_K_COLOR_STREAM)->EnableWindow( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ) || IsDevicePid(APC_PID_ORANGE));
+	GetDlgItem(IDC_COMBO_K_COLOR_STREAM)->EnableWindow( IsDevicePid( APC_PID_8054 ) || IsDevicePid( APC_PID_8040S ));
 	GetDlgItem(IDC_COMBO_T_COLOR_STREAM)->EnableWindow(FALSE);
 
     GetDlgItem(IDC_CHECK_DEPTH0)->EnableWindow(FALSE);
@@ -622,14 +625,16 @@ void CPreviewImageDlg::UpdateUI()
 	//update DM color mape mode
 	OnCbnSelchangeComboDepthOutputCtrl();
 
-	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062));
+	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_8077));
 
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_SNAPSHOT_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_GRAB_FRAMES_BTN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_FRAME_SYNC)->EnableWindow(FALSE);
-	if (!IsDevicePid(APC_PID_IVY))
+	if (!IsDevicePid(APC_PID_IVY) && !IsDevicePid(APC_PID_IVY2))
 		GetDlgItem(IDC_GRAB_FRAMES_BTN)->ShowWindow(SW_HIDE);
+
+	((CComboBox*)GetDlgItem(IDC_COMBO_TOGGLE_MODE))->SetCurSel(0);
 }
 
 bool CPreviewImageDlg::IsSupportHwPostProc() const
@@ -659,10 +664,6 @@ bool CPreviewImageDlg::UpdateStreamInfo()
     {
         GetResolution( m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8054_K );
     }
-    if (IsDevicePid(APC_PID_ORANGE))
-    {
-        GetResolution(m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_ORANGE_K);
-    }
     if (IsDevicePid(APC_PID_8063))
     {
         GetResolution(m_pStreamKColorInfo, &m_kcolorStreamOptionCount, m_pStreamKDepthInfo, &m_kdepthStreamOptionCount, APC_PID_8063_K);
@@ -686,7 +687,6 @@ void CPreviewImageDlg::UpdateIRConfig()
     APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_irRange.second);
 
 	if ( IsDevicePid( APC_PID_HYPATIA) )  m_irRange.second = MAX_IR_HYPATIA;
-	if ( IsDevicePid( APC_PID_IVY) )  m_irRange.second = MAX_IR_IVY;
     if ( IsDevicePid( APC_PID_8060  ) ) m_irRange.second = 5;
     if ( IsDevicePid( APC_PID_8040S ) ) m_irRange.second = 4;
 }
@@ -700,6 +700,7 @@ BOOL CPreviewImageDlg::OnInitDialog()
     UpdateUIForDemo();
 
 	InitIR();
+    InitFloodLED();
     InitDepthROI();
     InitModeConfig();
 
@@ -887,6 +888,7 @@ BEGIN_MESSAGE_MAP(CPreviewImageDlg, CDialog)
     ON_BN_CLICKED(IDC_CHK_PCV_NOCOLOR, &CPreviewImageDlg::OnBnClickedChkPcvNocolor)
     ON_BN_CLICKED(IDC_CHK_PCV_SINGLE, &CPreviewImageDlg::OnBnClickedChkPcvSingle)
 	ON_BN_CLICKED(IDC_CHK_MULTI_SYNC, &CPreviewImageDlg::OnBnClickedChkMultiSync)
+	ON_CBN_SELCHANGE(IDC_COMBO_TOGGLE_MODE, &CPreviewImageDlg::OnCbnSelchangeComboToogleMode)
 	ON_WM_SHOWWINDOW()
 END_MESSAGE_MAP()
 
@@ -898,6 +900,7 @@ LRESULT CPreviewImageDlg::OnClosePreviewDlg(WPARAM wParam, LPARAM lParam)
         CloseDeviceAndStopPreview((CDialog*)wParam);
 
 		m_isPreviewed = false;
+		UpdateFloodIRToggleMode();
 	}
     
     return 0;
@@ -983,10 +986,6 @@ void CPreviewImageDlg::InitIR()
 		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_HYPATIA);
 		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
 	}
-    else if (IsDevicePid(APC_PID_IVY)) {
-		APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, MAX_IR_IVY);
-		GetDlgItem(IDC_CHK_IRMAX_EXT)->EnableWindow(false);
-	}
     else if (IsDevicePid(APC_PID_NORA))
     {
         WORD wTestMaxIR = NULL;
@@ -996,6 +995,7 @@ void CPreviewImageDlg::InitIR()
     }
     else if ( !IsDevicePid( APC_PID_SALLY ) &&
               !IsDevicePid( APC_PID_MARY ) &&
+              !IsDevicePid( APC_PID_8081 ) &&
 			  !IsDevicePid( APC_PID_8040S ) )
     {
         WORD wTestMaxIR = NULL;
@@ -1014,6 +1014,7 @@ void CPreviewImageDlg::InitIR()
     switch (m_devinfoEx.wPID)
     {
     case APC_PID_HYPATIA:
+    case APC_PID_8081:
         m_irValue = MAX_IR_HYPATIA_DEFAULT;
         break;
 
@@ -1022,7 +1023,13 @@ void CPreviewImageDlg::InitIR()
         break;
 
     case APC_PID_IVY:
+    case APC_PID_IVY2:
         m_irValue = MAX_IR_IVY_DEFAULT;
+        break;
+
+    case APC_PID_STACY:
+    case APC_PID_STACYJUNIOR:
+        m_irValue = MAX_IR_DEFAULT;
         break;
 
     default:
@@ -1036,6 +1043,84 @@ void CPreviewImageDlg::InitIR()
 	std::ostringstream irValue;
 	irValue << m_irValue << " / " << m_irRange.second;
 	GetDlgItem(IDC_STATIC_IR_VALUE)->SetWindowText(CString(irValue.str().c_str()));
+}
+
+void CPreviewImageDlg::SetFloodIRValue(WORD value)
+{
+    int ret = APC_SetFWRegister(m_hApcDI, &m_DevSelInfo, 0xE6, value, FG_Address_1Byte | FG_Value_1Byte);
+}
+
+void CPreviewImageDlg::GetFloodIRRange(unsigned short &nMin, unsigned short &nMax)
+{
+    int ret = APC_DEVICE_NOT_SUPPORT;
+    ret = APC_GetFWRegister(m_hApcDI, &m_DevSelInfo, 0xE7, &nMin, FG_Address_1Byte | FG_Value_1Byte);
+    ret = APC_GetFWRegister(m_hApcDI, &m_DevSelInfo, 0xE8, &nMax, FG_Address_1Byte | FG_Value_1Byte);
+}
+
+void CPreviewImageDlg::GetFloodIRValue(unsigned short &nValue)
+{
+    int ret = APC_GetFWRegister(m_hApcDI, &m_DevSelInfo, 0xE6, &nValue, FG_Address_1Byte | FG_Value_1Byte);
+}
+
+void CPreviewImageDlg::GetFloodIRToggleMode(unsigned short &nMode)
+{
+    int ret = APC_GetFWRegister(m_hApcDI, &m_DevSelInfo, 0xEA, &nMode, FG_Address_1Byte | FG_Value_1Byte);
+}
+
+void CPreviewImageDlg::SetFloodIRToggleMode(unsigned short nMode)
+{
+    int ret = APC_SetFWRegister(m_hApcDI, &m_DevSelInfo, 0xEA, nMode, FG_Address_1Byte | FG_Value_1Byte);
+}
+
+void CPreviewImageDlg::OnCbnSelchangeComboToogleMode()
+{
+    unsigned short nMode = ((CComboBox*)GetDlgItem(IDC_COMBO_TOGGLE_MODE))->GetCurSel();
+    SetFloodIRToggleMode(nMode);
+}
+
+void CPreviewImageDlg::UpdateFloodIRSlider(unsigned short value)
+{
+    std::ostringstream floodIrValue;
+    floodIrValue << value << " / " << m_floodRange.second;
+    GetDlgItem(IDC_STATIC_FLOODLED_VALUE)->SetWindowText(CString(floodIrValue.str().c_str()));
+}
+
+void CPreviewImageDlg::UpdateFloodIRToggleMode()
+{
+    unsigned short nMode;
+    GetFloodIRToggleMode(nMode);
+    ((CComboBox*)GetDlgItem(IDC_COMBO_TOGGLE_MODE))->SetCurSel(nMode);
+    ((CComboBox*)GetDlgItem(IDC_COMBO_TOGGLE_MODE))->EnableWindow(!m_isPreviewed);
+}
+
+void CPreviewImageDlg::InitFloodLED()
+{
+    if (!IsDevicePid(APC_PID_IVY) && !IsDevicePid(APC_PID_IVY2))
+    {
+        GetDlgItem(IDC_STATIC_FLOODLED)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_SLIDER_FLOODLED)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_STATIC_FLOODLED_VALUE)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_STATIC_TOGGLE_MODE)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_COMBO_TOGGLE_MODE)->ShowWindow(SW_HIDE);
+        return;
+    }
+
+    if (!IsDevicePid(APC_PID_IVY))
+    {
+        GetDlgItem(IDC_STATIC_TOGGLE_MODE)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_COMBO_TOGGLE_MODE)->ShowWindow(SW_HIDE);
+    }
+    else
+    {
+        UpdateFloodIRToggleMode();
+    }
+
+    SetFloodIRValue(FLOODIR_VALUE_DEFAULT);
+    GetFloodIRRange(m_floodRange.first, m_floodRange.second);
+    CSliderCtrl* irSliderCtrl = (CSliderCtrl*)GetDlgItem(IDC_SLIDER_FLOODLED);
+    irSliderCtrl->SetRange(m_floodRange.first, m_floodRange.second);
+    irSliderCtrl->SetPos(FLOODIR_VALUE_DEFAULT);
+    UpdateFloodIRSlider(FLOODIR_VALUE_DEFAULT);
 }
 
 void CPreviewImageDlg::InitDepthROI()
@@ -1093,23 +1178,6 @@ void CPreviewImageDlg::InitModeConfig()
         if (IsDevicePid(APC_PID_SANDRA) && (eUSB_Port_Type == USB_PORT_TYPE_3_0))
         {
             int specifyDefaultMode = 5;
-            int modeNumber  = pCbx->GetCount();
-            for (int loop = 0 ; loop < modeNumber; loop ++)
-            {
-                if (pCbx->GetItemData(loop) == specifyDefaultMode)
-                {
-                    pCbx->SetCurSel(loop);
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-        }
-        else if (IsDevicePid(APC_PID_IVY) && (eUSB_Port_Type == USB_PORT_TYPE_3_0))
-        {
-            int specifyDefaultMode = 11;
             int modeNumber  = pCbx->GetCount();
             for (int loop = 0 ; loop < modeNumber; loop ++)
             {
@@ -1761,6 +1829,7 @@ void CPreviewImageDlg::CPreviewParams::Reset(CDialog* pCallerDlg)
     m_camFocus = 0.0;
     m_baselineDist = std::vector<float>(APC_MAX_DEPTH_STREAM_COUNT, 0.0);
     m_showFusionSelectedDlg = false;
+    m_rotate = false;
     for (int i = 0; i < APC_MAX_DEPTH_STREAM_COUNT; ++i)
     {
         if (m_rectifyLogData[i] != nullptr)
@@ -2026,7 +2095,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
             }
 
             float ratio_Mat = (float)ptRes.y / m_previewParams.m_rectifyLogData[i]->OutImgHeight;
-            if ( IsDevicePid( APC_PID_8063 ) )
+            if ( IsDevicePid( APC_PID_8063 ) || m_previewParams.m_rectifyLogData[i]->OutImgHeight == 0)
             {
                 ratio_Mat = 1.0f;
             }
@@ -2179,7 +2248,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 #endif
 			}
 		}
-
+        m_pSelfCalibrationDlg->ApplyInputImage(imgType, imgId, &imgBuf[0], imgSize, width, height, serialNumber);
 		if (isGrabFrames)
 			m_ColorFrameQueue.insert(std::pair<int, std::vector<unsigned char>>(serialNumber, imgBuf));
 	}
@@ -2268,6 +2337,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			}
 #endif	
 		}
+        m_pSelfCalibrationDlg->ApplyInputImage(imgType, imgId, &imgBuf[0], imgSize, width, height, serialNumber);
 		if (isGrabFrames)
 			m_DepthFrameQueue.insert(std::pair<int, std::vector<unsigned char>>(serialNumber, imgBuf));
 	}
@@ -2755,7 +2825,7 @@ int CPreviewImageDlg::AdjDepthBitIndex( const int depthType )
 	}
     else if (m_bIsInterLeaveMode)//( IsDevicePid( APC_PID_8052 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid(APC_PID_8062) )
     {
-        if (IsDevicePid(APC_PID_IVY)) return depthType;
+        if (IsDevicePid(APC_PID_IVY) || IsDevicePid(APC_PID_IVY2)) return depthType;
         //if ( m_bIsInterLeaveMode )	//#6493;
         {
             switch ( depthType )
@@ -2993,6 +3063,19 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
     ::CreateThread( NULL, NULL, Thread_Preview, this, NULL, NULL );
 
 	MappingIMU();
+	UpdateFloodIRToggleMode();
+}
+
+ModeConfig::MODE_CONFIG CPreviewImageDlg::GetCurrentMode()
+{
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_MODE_CONFIG);
+    int iMode = pCbx->GetItemData(pCbx->GetCurSel());
+    const std::vector< ModeConfig::MODE_CONFIG >& vecModeConfig = g_ModeConfig.GetModeConfigList(m_devinfoEx.wPID);
+    for (auto& ModeConfig : vecModeConfig)
+    {
+        if ( iMode == ModeConfig.iMode ) return ModeConfig;
+    }
+    return ModeConfig::MODE_CONFIG();
 }
 
 DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
@@ -3085,7 +3168,6 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
             {
             case APC_PID_8060:  iPid = APC_PID_8060_K;  break;
             case APC_PID_8054:  iPid = APC_PID_8054_K;  APC_SetDepthDataTypeEx( pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid  ); break;
-            case APC_PID_ORANGE:  iPid = APC_PID_ORANGE_K;  APC_SetDepthDataTypeEx(pThis->m_hApcDI, &pThis->m_DevSelInfo, 0x01, iPid); break;
             case APC_PID_8063:
             {
                iPid = APC_PID_8063_K;
@@ -3284,13 +3366,19 @@ void CPreviewImageDlg::PreparePreviewDlg()
 			EnableDenoise(true);
 			InitEysov(colorRealRes.x, colorRealRes.y);
 		}
-        const BOOL bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) &&
+        BOOL bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) &&
                                  ( ( 2560 == colorRealRes.x && 1280 == cpDepthRes.x ) || ( 2560 == colorRealRes.x && 640 == cpDepthRes.x )  || ( 1280 == colorRealRes.x && 640 == cpDepthRes.x ) ||
                                    ( 640 == colorRealRes.x && 320 == cpDepthRes.x ) ) );
         CColorDlg* pDlg = new CColorDlg(this);
         pDlg->SetColorParams(m_hApcDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, bIsLRD_Mode, cpDepthRes);
         pDlg->Create(pDlg->IDD, this);
         m_previewParams.m_colorPreview.SetPreviewDlg(pDlg);
+
+        if (GetCurrentMode().csModeDesc.Find(L"L+R+D") > -1 || GetCurrentMode().csModeDesc.Find(L"L'+R'+D") > -1)
+        {
+            bIsLRD_Mode = true;
+        }
+        m_pSelfCalibrationDlg->SetImageParams(colorRealRes.x, colorRealRes.y, bIsLRD_Mode, mIsLRDr, cpDepthRes);
     }
     InitPreviewDlgPos();
 }
@@ -3600,9 +3688,10 @@ void CPreviewImageDlg::CloseDeviceAndStopPreview(CDialog* pCallerDlg)
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_CHK_PCV_NOCOLOR)->EnableWindow(TRUE);
 	GetDlgItem(IDC_CHK_PCV_SINGLE)->EnableWindow(TRUE);
-	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062));
+	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_8077));
 
     OnCbnSelchangeComboFrameRate();
+    m_pSelfCalibrationDlg->disableSelfK();
 }
 
 void CPreviewImageDlg::OnCbnSelchangeComboTColorStream()
@@ -3713,6 +3802,16 @@ void CPreviewImageDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar
             SetDlgItemText( IDC_ST_PSIZE, csPSize );
 
             if ( m_previewParams.m_pointCloudViewer ) m_previewParams.m_pointCloudViewer->SetPointSize( iValue );
+        }
+        break;
+    case IDC_SLIDER_FLOODLED:
+        {
+            if (m_floodValue != iValue)
+            {
+                m_floodValue = iValue;
+                SetFloodIRValue(iValue);
+                UpdateFloodIRSlider(iValue);
+            }
         }
         break;
     }
@@ -4161,6 +4260,16 @@ void CPreviewImageDlg::OnCbnSelchangeComboModeConfig()
         SetDlgItemText( IDC_ST_MODE_CONFIG, xModeConfig.csModeDesc );
     }
     m_iInterLeaveModeFPS = xModeConfig.iInterLeaveModeFPS;
+    CString theCStr = xModeConfig.csModeDesc;
+    std::string STDStr(CW2A(theCStr.GetString()));
+    if ((STDStr.find("L'+R'+D") != std::string::npos)) {
+        mIsLRDr = true;
+    }
+    else
+    {
+        mIsLRDr = false;
+    }
+
 
     CheckRadioButton( IDC_RADIO_RAW_DATA, IDC_RADIO_RECTIFY_DATA, xModeConfig.bRectifyMode ? IDC_RADIO_RECTIFY_DATA : IDC_RADIO_RAW_DATA );
     OnBnClickedRadioRectifyAndRawData();
@@ -4172,11 +4281,6 @@ void CPreviewImageDlg::OnCbnSelchangeComboModeConfig()
 
     OnCbnSelchangeComboColorStream();
     OnCbnSelchangeComboFrameRate();
-
-    if (IsDevicePid(APC_PID_IVY) && m_iInterLeaveModeFPS > 0)
-    {
-        m_pPropertyDlg->SetDefaultPropertyForIVY();
-    }
 }
 
 void CPreviewImageDlg::OnBnClickedRadioRectifyAndRawData()
@@ -4211,7 +4315,7 @@ void CPreviewImageDlg::OnBnClickedRadioRectifyAndRawData()
 void CPreviewImageDlg::DoSerialNumCommand()
 {
 #ifndef ESPDI_EG
-    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid( APC_PID_8077 ) )
     {
         APC_EnableSerialCount( m_hApcDI, &m_DevSelInfo, ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) );
     }
@@ -4227,7 +4331,7 @@ void CPreviewImageDlg::DoSerialNumCommand()
 void CPreviewImageDlg::DoMultiModuleSynCommand()
 {
 #ifndef ESPDI_EG
-    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid( APC_PID_8077 ) )
     {
         if ( ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) )
         {
@@ -4256,7 +4360,7 @@ void CPreviewImageDlg::DoMultiModuleSynReset()
 /// **************************************** ///
 void CPreviewImageDlg::OnBnClickedChkMaster()
 {
-    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid( APC_PID_8077 ) )
     {
         if ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MASTER ) )->GetCheck() )
         {
@@ -4270,8 +4374,8 @@ void CPreviewImageDlg::OnBnClickedChkMaster()
 
 void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
 {
-    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NORA) && !IsDevicePid(APC_PID_IVY)
-            && !IsDevicePid(APC_PID_MARY))
+    if ( !IsDevicePid( APC_PID_SALLY ) && !IsDevicePid( APC_PID_8040S ) && !IsDevicePid(APC_PID_HYPATIA) && !IsDevicePid(APC_PID_NORA) && !IsDevicePid(APC_PID_IVY) && !IsDevicePid(APC_PID_IVY2)
+            && !IsDevicePid(APC_PID_MARY) && !IsDevicePid(APC_PID_8081))
     {
         APC_SetIRMaxValue( m_hApcDI, &m_DevSelInfo, BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_IRMAX_EXT ) )->GetCheck() ? MAX_IR_MAXIMUM : MAX_IR_DEFAULT );
     }
@@ -4286,7 +4390,6 @@ void CPreviewImageDlg::OnBnClickedChkIrmaxExt()
     }
     else
     {
-        if (IsDevicePid(APC_PID_IVY)) m_maxIR = MAX_IR_IVY;
         APC_SetIRMaxValue(m_hApcDI, &m_DevSelInfo, m_maxIR);
     }
 

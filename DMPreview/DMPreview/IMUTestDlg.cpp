@@ -56,6 +56,12 @@ BEGIN_MESSAGE_MAP(IMUTestDlg, CDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO_SET_IMU_DATA_FORMAT, &IMUTestDlg::OnCbnSelchangeComboSetImuDataFormat)
 	ON_BN_CLICKED(IDC_IMU_3D_RESET, &IMUTestDlg::OnBnClickedImu3dReset)
 	ON_BN_CLICKED(IDC_CHECK_FRAME_SYNC, &IMUTestDlg::OnBnClickedCheckFrameSync)
+	ON_BN_CLICKED(IDC_BUTTON_RTC_READ, &IMUTestDlg::OnBnClickedButtonRtcRead)
+	ON_BN_CLICKED(IDC_BUTTON_RTC_WRITE, &IMUTestDlg::OnBnClickedButtonRtcWrite)
+	ON_BN_CLICKED(IDC_BUTTON_ACC_FS_READ, &IMUTestDlg::OnBnClickedButtonAccFsRead)
+	ON_BN_CLICKED(IDC_BUTTON_ACC_FS_WRITE, &IMUTestDlg::OnBnClickedButtonAccFsWrite)
+	ON_BN_CLICKED(IDC_BUTTON_GYR_FS_READ, &IMUTestDlg::OnBnClickedButtonGyrFsRead)
+	ON_BN_CLICKED(IDC_BUTTON_GYR_FS_WRITE, &IMUTestDlg::OnBnClickedButtonGyrFsWrite)
 END_MESSAGE_MAP()
 
 //IMUTestDlg::IMUTestDlg( const wchar_t* SN, const BOOL bIs9Axis, CWnd* pParent )
@@ -258,8 +264,6 @@ int IMUTestDlg::stopGetImuData()
 	if (m_nIndex_s_vecIMU == -1)
 		return 0;
 
-	EnableDataOutout(false);
-
     m_isRunning = false;
 	m_isPause = true;
 
@@ -269,6 +273,9 @@ int IMUTestDlg::stopGetImuData()
 
 		m_IMUThread[m_nIndex_s_vecIMU] = nullptr;
 	}
+
+	EnableDataOutout(false);
+
 	return 0;
 }
 
@@ -906,6 +913,30 @@ BOOL IMUTestDlg::OnInitDialog()
 		GetDlgItem(IDC_IMU_3D_RESET)->ShowWindow(SW_HIDE);
 	}
 
+    if (m_pPreviewDlg->IsDevicePid(APC_PID_IVY2))
+    {
+        OnBnClickedButtonRtcRead();
+        OnBnClickedButtonAccFsRead();
+        OnBnClickedButtonGyrFsRead();
+    }
+    else
+    {
+        GetDlgItem(IDC_STATIC_RTC)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_STATIC_ACC_FS)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_STATIC_GYR_FS)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_EDIT_RTC_HOUR)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_EDIT_RTC_MINUTE)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_EDIT_RTC_SECOND)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_BUTTON_RTC_READ)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_BUTTON_RTC_WRITE)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_COMBO_ACC_FS)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_BUTTON_ACC_FS_READ)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_BUTTON_ACC_FS_WRITE)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_COMBO_GYR_FS)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_BUTTON_GYR_FS_READ)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_BUTTON_GYR_FS_WRITE)->ShowWindow(SW_HIDE);
+    }
+
     return TRUE;
 }
 
@@ -1259,4 +1290,147 @@ void IMUTestDlg::OnBnClickedCheckFrameSync()
 	{
 		FrameSyncManager::GetInstance()->UnregisterDevice(m_hApcDI, m_DevSelInfo);
 	}
+}
+
+void IMUTestDlg::GetRTC(char* pHour, char* pMinute, char* pSecond)
+{
+    char rtc[8] = { 0 };
+
+    SetFeatureDATA_Item setFeatureData = { &READ_RTC[0], (sizeof(READ_RTC) / sizeof(READ_RTC[0])) };
+	SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+	GetFeatureReport(&rtc[0], setFeatureData.nDataLength);
+
+    char rtcStr[9] = { 0 };
+    sprintf(rtcStr, "%02d:%02d:%02d", rtc[0], rtc[1], rtc[2]);
+    TRACE("OnBnClickedButtonRtcRead is %c\n", rtcStr);
+
+    *pHour = rtc[0];
+    *pMinute = rtc[1];
+    *pSecond = rtc[2];
+}
+
+void IMUTestDlg::SetRTC(char hour, char minute, char second)
+{
+    char rtc[8];
+    memcpy(&rtc[0], &WRITE_RTC[0], 8);
+
+    rtc[3] = hour;
+    rtc[4] = minute;
+    rtc[5] = second;
+
+    SetFeatureDATA_Item setFeatureData = { &rtc[0], (sizeof(WRITE_RTC) / sizeof(WRITE_RTC[0])) };
+	SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+}
+
+void IMUTestDlg::GetAccFs(char* pData)
+{
+    char accfs[8] = { 0 };
+
+    SetFeatureDATA_Item setFeatureData = { &READ_ACC_FS[0], (sizeof(READ_ACC_FS) / sizeof(READ_ACC_FS[0])) };
+	SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+	GetFeatureReport(&accfs[0], setFeatureData.nDataLength);
+
+    TRACE("OnBnClickedButtonAccFsRead is %d\n", accfs[0]);
+    *pData = accfs[0];
+}
+
+void IMUTestDlg::SetAccFs(char data)
+{
+    char accfs[8];
+    memcpy(&accfs[0], &WRITE_ACC_FS[0], 8);
+
+    accfs[3] = data;
+
+    SetFeatureDATA_Item setFeatureData = { &accfs[0], (sizeof(WRITE_ACC_FS) / sizeof(WRITE_ACC_FS[0])) };
+	SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+}
+
+void IMUTestDlg::GetGyrFs(char* pData)
+{
+    char gyrfs[8] = { 0 };
+
+    SetFeatureDATA_Item setFeatureData = { &READ_GYR_FS[0], (sizeof(READ_GYR_FS) / sizeof(READ_GYR_FS[0])) };
+	SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+	GetFeatureReport(&gyrfs[0], setFeatureData.nDataLength);
+
+    TRACE("OnBnClickedButtonGyrFsRead is %d\n", gyrfs[0]);
+    *pData = gyrfs[0];
+}
+
+void IMUTestDlg::SetGyrFs(char data)
+{
+    char gyrfs[8];
+    memcpy(&gyrfs[0], &WRITE_GYR_FS[0], 8);
+
+    gyrfs[3] = data;
+
+    SetFeatureDATA_Item setFeatureData = { &gyrfs[0], (sizeof(WRITE_GYR_FS) / sizeof(WRITE_GYR_FS[0])) };
+	SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+}
+
+void IMUTestDlg::OnBnClickedButtonRtcRead()
+{
+    char hour, minute, second;
+    GetRTC(&hour, &minute, &second);
+
+    CString csText;
+    csText.Format(L"%02d", hour);
+    SetDlgItemText(IDC_EDIT_RTC_HOUR, csText);
+    csText.Format(L"%02d", minute);
+    SetDlgItemText(IDC_EDIT_RTC_MINUTE, csText);
+    csText.Format(L"%02d", second);
+    SetDlgItemText(IDC_EDIT_RTC_SECOND, csText);
+}
+
+void IMUTestDlg::OnBnClickedButtonRtcWrite()
+{
+    char hour, minute, second;
+
+    CString csText;
+
+    GetDlgItemText(IDC_EDIT_RTC_HOUR, csText);
+    char value = (char)_wtoi(csText);
+    hour = value;
+
+    GetDlgItemText(IDC_EDIT_RTC_MINUTE, csText);
+    value = (char)_wtoi(csText);
+    minute = value;
+
+    GetDlgItemText(IDC_EDIT_RTC_SECOND, csText);
+    value = (char)_wtoi(csText);
+    second = value;
+
+    SetRTC(hour, minute, second);
+}
+
+void IMUTestDlg::OnBnClickedButtonAccFsRead()
+{
+    char value = 0;
+    GetAccFs(&value);
+
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_ACC_FS);
+    pCbx->SetCurSel(value);
+}
+
+void IMUTestDlg::OnBnClickedButtonAccFsWrite()
+{
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_ACC_FS);
+    char value = pCbx->GetCurSel();
+    SetAccFs(value);
+}
+
+void IMUTestDlg::OnBnClickedButtonGyrFsRead()
+{
+    char value = 0;
+    GetGyrFs(&value);
+
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_GYR_FS);
+    pCbx->SetCurSel(value);
+}
+
+void IMUTestDlg::OnBnClickedButtonGyrFsWrite()
+{
+    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_GYR_FS);
+    char value = pCbx->GetCurSel();
+    SetGyrFs(value);
 }

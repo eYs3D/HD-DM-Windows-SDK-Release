@@ -11,5 +11,6 @@ var searchData=
   ['spline_5fcontrol_5fv5_150',['spline_control_v5',['../struct_para_l_u_t.html#a6847fb38db3d815cac4eaa0fc5f1e5eb',1,'ParaLUT']]],
   ['spline_5fcontrol_5fv6_151',['spline_control_v6',['../struct_para_l_u_t.html#ae5c3a8de2efe2bec044ed482bf16d9d3',1,'ParaLUT']]],
   ['spline_5fcontrol_5fv7_152',['spline_control_v7',['../struct_para_l_u_t.html#a9688e95ea35837a744fbb50b8e7ad735',1,'ParaLUT']]],
-  ['strdevname_153',['strDevName',['../structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n.html#a31a6970a84fc0dd8b4a62e74f7945f0d',1,'tagDEVINFORMATION::strDevName()'],['../class_d_e_v_i_n_f_o_r_m_a_t_i_o_n_e_x.html#a43f2c3919a3d25e783624136328480a6',1,'DEVINFORMATIONEX::strDevName()']]]
+  ['strdevname_153',['strDevName',['../structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n.html#a31a6970a84fc0dd8b4a62e74f7945f0d',1,'tagDEVINFORMATION::strDevName()'],['../class_d_e_v_i_n_f_o_r_m_a_t_i_o_n_e_x.html#a43f2c3919a3d25e783624136328480a6',1,'DEVINFORMATIONEX::strDevName()']]],
+  ['strdevpath_154',['strDevPath',['../structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n.html#a907752379703b3ab9fdf5ad1ce9bd83d',1,'tagDEVINFORMATION::strDevPath()'],['../class_d_e_v_i_n_f_o_r_m_a_t_i_o_n_e_x.html#a7ecacec7fa263bf31236bf04aa77b50e',1,'DEVINFORMATIONEX::strDevPath()']]]
 ];

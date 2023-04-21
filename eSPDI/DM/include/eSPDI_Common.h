@@ -115,16 +115,18 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_SANDRA      0x0167
 #define APC_PID_NORA        0x0168
 #define APC_PID_HELEN       0x0171
-#define APC_PID_ORANGE      0x0189
-#define APC_PID_ORANGE_K    0x0199
 #define APC_PID_GRAPE       0x0300
 #define APC_PID_IVY         0x0177
+#define APC_PID_IVY2        0x0191
+#define APC_PID_IVY2_S      0x0195
 #define APC_PID_80362       0x0181
 #define APC_PID_8077        0x0182
 #define APC_PID_8081        0x0183
 #define APC_PID_IRIS        0x0184
 #define APC_PID_MARY        0x0174
 #define APC_PID_FRANK       0x0187
+#define APC_PID_STACY       0x0188
+#define APC_PID_STACYJUNIOR 0x0189
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
@@ -556,6 +558,7 @@ typedef struct tagDEVINFORMATION {
 									*/
     unsigned short wVID;			/**< vender ID, 0x1E4E for ApcDI device */
     char *strDevName;				/**< pointer to device name stored inside the SDK*/
+    char *strDevPath;				/**< pointer to device path stored inside the SDK*/
     unsigned short  nChipID;		/**< chip ID, 0x18 for AXES1, 0x1C for KIWI, 0x15 for PUMA */
     unsigned short  nDevType;		/**< chip enum value, @see APC_DEVICE_TYPE */
 	unsigned short wUsbNode;		/**< USB Node */
@@ -575,6 +578,7 @@ public:
         wPID = wVID = nChipID = 0;
         nDevType = OTHERS;
         strDevName[0] = '\0';
+        strDevPath[0] = '\0';
 		wUsbNode = -1;
     }
 
@@ -583,6 +587,7 @@ public:
         wPID = rhs.wPID;
         wVID = rhs.wVID;
         strcpy_s(strDevName, rhs.strDevName);
+        strcpy_s(strDevPath, rhs.strDevPath);
         nChipID = rhs.nChipID;
         nDevType = rhs.nDevType;
 		wUsbNode = rhs.wUsbNode;
@@ -595,6 +600,7 @@ public:
         wPID = rhs.wPID;
         wVID = rhs.wVID;
         strcpy_s(strDevName, rhs.strDevName);
+        strcpy_s(strDevPath, rhs.strDevPath);
         nChipID = rhs.nChipID;
         nDevType = rhs.nDevType;
 		wUsbNode = rhs.wUsbNode;
@@ -623,6 +629,7 @@ public:
 									*/
     unsigned short wVID;		/**< vender ID, 0x1E4E for ApcDI device */
     char strDevName[512];		/**< device name */
+    char strDevPath[512];		/**< device path */
     unsigned short nChipID;		/**< chip ID, 0x18 for AXES1, 0x1C for KIWI, 0x15 for PUMA */
     unsigned short nDevType;	/**< chip enum value, see APC_DEVICE_TYPE */
 	unsigned short wUsbNode;		/**< USB Node */
@@ -1456,6 +1463,8 @@ typedef enum
     APC_SENSOR_TYPE_AR0522,
     APC_SENSOR_TYPE_OV2740,
     APC_SENSOR_TYPE_OC0SA10,
+    APC_SENSOR_TYPE_VD56G3,
+    APC_SENSOR_TYPE_VD66GY,
     APC_SENSOR_TYPE_UNKOWN = 0xffff
 } SENSOR_TYPE_NAME; 
 
@@ -1587,6 +1596,74 @@ int APC_API APC_GetGlobalGain( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int 
 	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
 int APC_API APC_SetGlobalGain( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fGlobalGain);
+
+/*! \fn int APC_SetAnalogGain(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        int nSensorMode,
+        float fGlobalGain)
+    \brief set analog gain of ISP sensor setting
+        the target sensor type was set in APC_SetSensorTypeName()
+    \param void *pHandleEYSD	handle
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param int nSensorMode	which sensor(sensor A, B or Both) to get
+        A is 0, B is 1, Both is 2
+    \param pid	product id of the USB device
+    \param float fGlobalGain	pointer of global gain value
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_API APC_SetAnalogGain(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fGlobalGain);
+
+/*! \fn int APC_GetAnalogGain(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        int nSensorMode,
+        float *pfGlobalGain)
+    \brief get analog gain of ISP setting
+        the target sensor type was set in APC_SetSensorTypeName()
+    \param void *pHandleEYSD	handle
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param int nSensorMode	which sensor(sensor A, B or Both) to get
+        A is 0, B is 1, Both is 2
+    \param pid	product id of the USB device
+    \param float *pfGlobalGain	pointer of global gain value
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_API APC_GetAnalogGain(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float *pfGlobalGain);
+
+/*! \fn int APC_SetDigitalGain(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        int nSensorMode,
+        float fGlobalGain)
+    \brief set digital gain of ISP sensor setting
+        the target sensor type was set in APC_SetSensorTypeName()
+    \param void *pHandleEYSD	handle
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param int nSensorMode	which sensor(sensor A, B or Both) to get
+        A is 0, B is 1, Both is 2
+    \param pid	product id of the USB device
+    \param float fGlobalGain	pointer of global gain value
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_API APC_SetDigitalGain(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float fGlobalGain);
+
+/*! \fn int APC_GetDigitalGain(
+        void *pHandleEYSD,
+        PDEVSELINFO pDevSelInfo,
+        int nSensorMode,
+        float *pfGlobalGain)
+    \brief get digital gain of ISP setting
+        the target sensor type was set in APC_SetSensorTypeName()
+    \param void *pHandleEYSD	handle
+    \param PDEVSELINFO pDevSelInfo	pointer of device select index
+    \param int nSensorMode	which sensor(sensor A, B or Both) to get
+        A is 0, B is 1, Both is 2
+    \param pid	product id of the USB device
+    \param float *pfGlobalGain	pointer of global gain value
+    \return success: APC_OK, others: see eSPDI_def.h
+*/
+int APC_API APC_GetDigitalGain(void *pHandleEYSD, PDEVSELINFO pDevSelInfo, int nSensorMode, int pid, float *pfGlobalGain);
 
 /*! \fn int APC_GetGPIOValue(
 		void *pHandleApcDI,

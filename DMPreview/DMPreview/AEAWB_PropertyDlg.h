@@ -25,7 +25,6 @@ public:
 	bool IsLowLight();
 	void SetLowLight(const BOOL IsLowLight);
     void LowLightEnable( const BOOL Enable );
-	void SetDefaultPropertyForIVY();
 
 	CPreviewImageDlg* m_pPreviewDlg;
 private:
@@ -47,6 +46,8 @@ private:
 
 	void EnableUI_LLC(BOOL enable);
 	void UpdateUI_LLC(long value);
+
+	void UpdateGainRegisterList();
 
 	void*&            m_hApcDI;
 	DEVSELINFO&       m_DevSelInfo;
@@ -81,4 +82,12 @@ private:
     afx_msg void OnBnClickedButtonExptimeWrite();
     afx_msg void OnBnClickedButtonGlogalGainRead();
     afx_msg void OnBnClickedButtonGlogalGainWrite();
+    afx_msg void OnBnClickedButtonAnalogGainRead();
+    afx_msg void OnBnClickedButtonAnalogGainWrite();
+    afx_msg void OnBnClickedButtonDigitalGainRead();
+    afx_msg void OnBnClickedButtonDigitalGainWrite();
+    afx_msg void OnEnChangeEditAnalogGain();
+    afx_msg void OnEnChangeEditDigitalGain();
+    afx_msg void OnDeltaposSpinAnalogGain(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnDeltaposSpinDigitalGain(NMHDR *pNMHDR, LRESULT *pResult);
 };

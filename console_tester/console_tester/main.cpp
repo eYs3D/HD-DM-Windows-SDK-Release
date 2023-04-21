@@ -1,6 +1,7 @@
 #include "main.h"
 
 #pragma comment (lib,"eSPDI_DM.lib")
+#pragma comment(lib, "setupapi.lib" )
 
 int main(void)
 {
@@ -25,6 +26,9 @@ int main(void)
         printf("12. Get Color&Depth Image - print all\n");
         printf("13. Get Point Cloud\n");
 		printf("14. Copy from G1 to G2\n");
+		printf("15. Set analog & digital gain for IVY\n");
+		printf("16. IMU Callback\n");
+		printf("17. IMU New API\n");
 
         printf("\nPlease choose the testing item:\n");
         scanf("%d", &input);
@@ -112,6 +116,21 @@ int main(void)
 			case 14:
 			{
 				CopyFromG1ToG2();
+				break;
+			}
+			case 15:
+			{
+				SetAnalogAndDigitalGainExample();
+				break;
+			}
+			case 16:
+			{
+				IMUCallbackDemo();
+				break;
+			}
+			case 17:
+			{
+				IMUAPIDemo();
 				break;
 			}
 

@@ -21,9 +21,39 @@
     <ClCompile Include="testFunc.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="ColorPaletteGenerator.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="IMUReader.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\utility\IMUData.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\utility\hidapi\hid.c">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DMPreview\Quaternion1.c">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPaletteGenerator.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="IMUReader.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utility\IMUData.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utility\hidapi\hidapi.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DMPreview\Quaternion1.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

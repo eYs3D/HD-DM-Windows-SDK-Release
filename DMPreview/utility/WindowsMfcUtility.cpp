@@ -29,7 +29,7 @@ CString GetProductVersion()
                 csVersion.Format( _T( "v%d.%d.%d" ), HIWORD( verInfo->dwProductVersionMS ),
                                                      LOWORD( verInfo->dwProductVersionMS ),
                                                      HIWORD( verInfo->dwProductVersionLS ) );
-                if ( LOWORD( verInfo->dwProductVersionLS ) ) csVersion.AppendFormat( _T( ".%d" ), LOWORD( verInfo->dwProductVersionLS ) );
+                /*if ( LOWORD( verInfo->dwProductVersionLS ) )*/ csVersion.AppendFormat( _T( ".%d" ), LOWORD( verInfo->dwProductVersionLS ) );
 
                 return csVersion;
             }

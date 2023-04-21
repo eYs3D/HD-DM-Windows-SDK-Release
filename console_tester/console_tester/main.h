@@ -35,6 +35,13 @@ void GetUserData(); // Issue 6882
 void GetColorDepthImage(bool printAll);
 void GetPointCloud();
 void CopyFromG1ToG2();
+void SetAnalogAndDigitalGainExample();
+void IMUCallbackDemo();
+void IMUAPIDemo();
+
+int selectDeviceIndex(void* pHandleApcDI);
+int selectColorDepth(void* pHandleApcDI, DEVSELINFO devSelInfo, int* color_index, int* depth_index, int* fps);
+void selectDepthType(void* pHandleApcDI, DEVSELINFO devSelInfo, int* depthType);
 
 class FramePool
 {
@@ -44,6 +51,7 @@ class FramePool
 		int m_width;
 		int m_height;
 		int sn;
+		APCImageType::Value m_imgType;
 		std::vector<unsigned char> data;
 };
 
@@ -53,4 +61,13 @@ class PreviewParam
 		void* handleApcDI;
 		DEVSELINFO devSelInfo;
 		PointCloudInfo pointCloudInfo;
+};
+
+struct CloudPoint {
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	float x;
+	float y;
+	float z;
 };
