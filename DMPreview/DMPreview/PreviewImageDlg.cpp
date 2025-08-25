@@ -19,7 +19,7 @@
 #include "DepthFilterDlg.h"
 #include "AutoModuleSyncManager.h"
 #include "FrameSyncManager.h"
-#include "Self_CalibrationDlg.h"
+#include "SelfCalibration2Dlg.h"
 
 #ifndef ESPDI_EG
 #include "utility/DepthFusionHelper.h"
@@ -72,6 +72,7 @@ CPreviewImageDlg::CPreviewImageDlg(void*& hApcDI, DEVSELINFO& devSelInfo, const 
     m_pAccuracyDlg( NULL ),
     m_pDepthFilterDlg( NULL ),
     m_i8038DepthIndex( NULL ),
+    m_pSelfCalibration2Dlg( NULL ),
     m_DfParam( new DepthfilterParam() )
 {
     APC_GetIRMaxValue(m_hApcDI, &m_DevSelInfo, &m_maxIR);
@@ -625,7 +626,7 @@ void CPreviewImageDlg::UpdateUI()
 	//update DM color mape mode
 	OnCbnSelchangeComboDepthOutputCtrl();
 
-	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_8077));
+	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_TARYN) || IsDevicePid(APC_PID_8077));
 
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_SNAPSHOT_BTN)->EnableWindow(FALSE);
@@ -786,6 +787,7 @@ void CPreviewImageDlg::OnTimer(UINT_PTR nIDEvent)
         {
             KillTimer( CHECK_REOPEN_TIMER );
 
+            if (m_pSelfCalibration2Dlg) m_pSelfCalibration2Dlg->StopSelfK2();
             APC_CloseDevice(m_hApcDI, &m_DevSelInfo);
 			APC_Release(&m_hApcDI);
 			APC_Init(&m_hApcDI, false);
@@ -820,8 +822,13 @@ void CPreviewImageDlg::OnTimer(UINT_PTR nIDEvent)
             {
                 KillTimer( CHECK_REGISTER_TIMER );
                 AdjustRegister();
-                OnBnClickedCheckPumaPostproc();
+                //OnBnClickedCheckPumaPostproc();
                 RegisterSettings::DM_Quality_Register_Setting(m_hApcDI, &m_DevSelInfo);
+                if (m_SparseModeDlg)
+                {
+                    m_SparseModeDlg->SetSparseMode(true);
+                }
+                if (m_pdlgVideoDeviceDlg->m_bEnable_SK2_Runtime && m_pSelfCalibration2Dlg) m_pSelfCalibration2Dlg->OnBnClickedBtnRun();
             }
         }
         break;
@@ -1095,7 +1102,7 @@ void CPreviewImageDlg::UpdateFloodIRToggleMode()
 
 void CPreviewImageDlg::InitFloodLED()
 {
-    if (!IsDevicePid(APC_PID_IVY) && !IsDevicePid(APC_PID_IVY2))
+    if (!IsDevicePid(APC_PID_IVY) && !IsDevicePid(APC_PID_IVY2) && !IsDevicePid(APC_PID_IVY4))
     {
         GetDlgItem(IDC_STATIC_FLOODLED)->ShowWindow(SW_HIDE);
         GetDlgItem(IDC_SLIDER_FLOODLED)->ShowWindow(SW_HIDE);
@@ -1175,7 +1182,7 @@ void CPreviewImageDlg::InitModeConfig()
 
         // Special Path for Sandra.
         // Set the default video mode to 5 when using USB3.0
-        if (IsDevicePid(APC_PID_SANDRA) && (eUSB_Port_Type == USB_PORT_TYPE_3_0))
+        if ((IsDevicePid(APC_PID_SANDRA) || IsDevicePid(APC_PID_IVY2)) && (eUSB_Port_Type == USB_PORT_TYPE_3_0))
         {
             int specifyDefaultMode = 5;
             int modeNumber  = pCbx->GetCount();
@@ -1284,6 +1291,7 @@ return 0;
 
 	std::vector<float> imgFloatBufOut;
 	std::vector<unsigned char> bufColor;
+	std::vector<unsigned char> bufRaw;
 
 	int widthColor = 0;
 	int heightColor = 0;
@@ -1354,7 +1362,10 @@ return 0;
 		CAutoLock lock(pThis->m_previewParams.m_mutex);
 
         if ( pThis->m_previewParams.m_kcolorPreview.m_previewDlg )      ( ( CColorDlg* )pThis->m_previewParams.m_kcolorPreview.m_previewDlg )->GetImage(bufColor, widthColor, heightColor, snColor );
-        else if ( pThis->m_previewParams.m_colorPreview.m_previewDlg  ) ( ( CColorDlg* )pThis->m_previewParams.m_colorPreview.m_previewDlg  )->GetImage(bufColor, widthColor, heightColor, snColor );
+        else if (pThis->m_previewParams.m_colorPreview.m_previewDlg) {
+            ((CColorDlg*)pThis->m_previewParams.m_colorPreview.m_previewDlg)->GetImage(bufColor, widthColor, heightColor, snColor);
+            ((CColorDlg*)pThis->m_previewParams.m_colorPreview.m_previewDlg)->GetRawImage(bufRaw, widthColor, heightColor, snColor);
+        }
 	}
     if ( !pThis->m_bIsInterLeaveMode && pThis->m_previewParams.m_kcolorOption == EOF && pThis->m_devinfoEx.wPID != APC_PID_HYPATIA)
     {
@@ -1521,7 +1532,16 @@ return 0;
                 }
                 else  // For other mode.
                 {
-                    PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
+                    int realwidthColor = widthColor;
+                    if (pThis->m_bIsLRD_Mode)
+                    {
+                        realwidthColor /= 2;
+                        for (int i = 0; i < heightColor; i++)
+                        {
+                            memcpy(&bufColorRGB[realwidthColor * 3 * i], &bufColorRGB[widthColor * 3 * i], realwidthColor * 3);
+                        }
+                    }
+                    PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, realwidthColor, heightColor, bufColorRGB, pThis->m_previewParams.m_rectifyLogData[depthIndex], depthImageType, pointCloud, true, zNear, zFar, true, false, 1.0f);
                 }
 			}
 
@@ -1565,6 +1585,18 @@ return 0;
 	}
     
 	/*save color bmp -*/
+	/*save color raw +*/
+	std::ostringstream FileName_Colorraw;
+	FileName_Colorraw << GetCurrentModuleFolder().c_str() << "\\Raw" << "_" << timestamp << "_" << treadID << ".raw";
+	if (bufRaw.empty() == false)
+	{
+		FILE * pFile = fopen(FileName_Colorraw.str().c_str(), "wb");
+		if (pFile) {
+			fwrite(&bufRaw[0], 1, bufRaw.size(), pFile);
+			fclose(pFile);
+		}
+	}
+	/*save color raw -*/
 	if ( !stringResult.IsEmpty() ) {
 		AfxMessageBox(stringResult);
     }
@@ -2011,11 +2043,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
        	    index = 0; // EX8051 & YX8062: U2 is Binning mode
         else if ((IsDevicePid(APC_PID_8052) || IsDevicePid(APC_PID_8036) || IsDevicePid(APC_PID_IRIS) || IsDevicePid(APC_PID_FRANK)) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() == 1)
         {
-#if 0 //REFINE_DATABASE_CODE
-            index = GetTableIndex(); // EX8036: D1 640*360 is from 1280*720 scale down
-#else
             index = 0; // EX8036/EX8052: D1 640*360 is from 1280*720 scale down
-#endif
         }
         else if (IsDevicePid(APC_PID_8063))
         {
@@ -2034,6 +2062,12 @@ void CPreviewImageDlg::UpdatePreviewParams()
         }
         else
             index = ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel();
+
+        //for new db structure
+        if (GetCurrentMode().rectifyFileIndex != 0xFF)
+        {
+            index = GetCurrentMode().rectifyFileIndex;
+        }
 
         PrepareRectifyLogData(m_previewParams.m_rectifyLogData[1], index);
     }
@@ -2054,11 +2088,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
 
     m_previewParams.m_rectifyData = (((CButton*)GetDlgItem(IDC_RADIO_RECTIFY_DATA))->GetCheck() == BST_CHECKED);
 
-#if 0 // REFINE_DATABASE_CODE
-    m_previewParams.m_depthType = GetVideoModeFWValue(); 
-#else
-    m_previewParams.m_depthType = AdjDepthBitIndex(pDepthBitCbx->GetCurSel() > EOF ? pDepthBitCbx->GetItemData(pDepthBitCbx->GetCurSel()) : NULL);
-#endif
+    m_previewParams.m_depthType = AdjDepthBitIndex( pDepthBitCbx->GetCurSel() > EOF ? pDepthBitCbx->GetItemData( pDepthBitCbx->GetCurSel() ) : NULL );
     m_xPointCloudInfo.wDepthType = m_previewParams.m_depthType;
     SetFilterParam( *m_DfParam );
 
@@ -2104,6 +2134,24 @@ void CPreviewImageDlg::UpdatePreviewParams()
             m_xPointCloudInfo.centerX       = -1.0f*m_previewParams.m_rectifyLogData[i]->ReProjectMat[3] * ratio_Mat;
 	        m_xPointCloudInfo.centerY       = -1.0f*m_previewParams.m_rectifyLogData[i]->ReProjectMat[7] * ratio_Mat;
 	        m_xPointCloudInfo.focalLength   = m_previewParams.m_rectifyLogData[i]->ReProjectMat[11] * ratio_Mat;
+
+            //// Camera Parameters needed by larger FOV PLY algorithm
+            //m_xPointCloudInfo.centerXP = m_previewParams.m_rectifyLogData[i]->NewCamMat1[2];
+            //m_xPointCloudInfo.centerYP = m_previewParams.m_rectifyLogData[i]->NewCamMat1[6];
+            //m_xPointCloudInfo.focalXP = m_previewParams.m_rectifyLogData[i]->NewCamMat1[0];
+            //m_xPointCloudInfo.focalYP = m_previewParams.m_rectifyLogData[i]->NewCamMat1[5];
+            //m_xPointCloudInfo.baseline = baseline;
+
+            m_xPointCloudInfo.fx1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[0];
+            m_xPointCloudInfo.fy1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[5];
+            m_xPointCloudInfo.fx2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[0];
+            m_xPointCloudInfo.fy2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[5];
+            m_xPointCloudInfo.cx1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[2];
+            m_xPointCloudInfo.cy1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[6];
+            m_xPointCloudInfo.cx2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[2];
+            m_xPointCloudInfo.cy2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[6];
+
+            m_xPointCloudInfo.Tx = -1 * baseline;
 
             switch ( APCImageType::DepthDataTypeToDepthImageType( m_previewParams.m_depthType ) )
             {
@@ -2248,7 +2296,6 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 #endif
 			}
 		}
-        m_pSelfCalibrationDlg->ApplyInputImage(imgType, imgId, &imgBuf[0], imgSize, width, height, serialNumber);
 		if (isGrabFrames)
 			m_ColorFrameQueue.insert(std::pair<int, std::vector<unsigned char>>(serialNumber, imgBuf));
 	}
@@ -2337,7 +2384,7 @@ void CPreviewImageDlg::ProcessImgCallback(APCImageType::Value imgType, int imgId
 			}
 #endif	
 		}
-        m_pSelfCalibrationDlg->ApplyInputImage(imgType, imgId, &imgBuf[0], imgSize, width, height, serialNumber);
+		if (m_pSelfCalibration2Dlg) m_pSelfCalibration2Dlg->ApplyInputImage(imgType, imgId, imgBuf, imgSize, width, height, serialNumber);
 		if (isGrabFrames)
 			m_DepthFrameQueue.insert(std::pair<int, std::vector<unsigned char>>(serialNumber, imgBuf));
 	}
@@ -2424,6 +2471,19 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
 	{
 		return;
 	}
+
+    if (isDepthOnly)
+    {
+        if (pThis->m_previewParams.m_rectifyLogData[1] && pThis->m_previewParams.m_rectifyLogData[1]->RECT_ScaleWidth > widthColor)
+        {
+            widthColor = pThis->m_previewParams.m_rectifyLogData[1]->RECT_ScaleWidth;
+            heightColor = pThis->m_previewParams.m_rectifyLogData[1]->RECT_ScaleHeight;
+            if (bufColor.size() < (widthColor * heightColor * 3)) bufColor.resize(widthColor * heightColor * 3);
+        }
+    }
+
+    if (pThis->m_bIsLRD_Mode) widthColor /= 2;
+
     if ( pThis->m_bPCV_SingleColor )
     {
         const UINT stride = widthColor * 3;
@@ -2487,6 +2547,13 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
             break;
         }
     }
+    else if (pThis->m_bIsLRD_Mode)
+    {
+        for (int i = 0; i < heightColor; i++)
+        {
+            memcpy(&bufColor[widthColor * 3 * i], &bufColor[widthColor * 2 * 3 * i], widthColor * 3);
+        }
+    }
 	APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType);
 	/*Get RectLogData*/
 	eSPCtrl_RectLogData* rectifyLogData = NULL;
@@ -2516,7 +2583,7 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
     {
         std::fill(pThis->m_pointCloudDepth.begin(), pThis->m_pointCloudDepth.end(), 0.0f);
     }
-    
+
     if (pThis->m_pointCloudRGB.size() != widthColor * heightColor * 3)
     {
         pThis->m_pointCloudRGB.resize(widthColor * heightColor * 3, 0);
@@ -2559,14 +2626,9 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
     else
     {
         // For the depth only mode, set the point cloud in green.
-        if (isDepthOnly)
+        if (isDepthOnly && !pThis->m_bPCV_NoColorStream)
         {
-            for (int i = 0; i < (widthDepth * heightDepth * 3); i += 3)
-            {
-                bufColor[i]     = 0x0;
-                bufColor[i + 1] = 0xFF;
-                bufColor[i + 2] = 0x0;
-            }
+            memcpy(&bufColor[0], &pThis->m_bufGreenColor[0], pThis->m_bufGreenColor.size());
         }
 
 		//PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, depthImageType, pointCloud, true, zNear, zFar, true, true, downsampleRatio);
@@ -3050,6 +3112,17 @@ void CPreviewImageDlg::OnBnClickedPreviewBtn()
 		m_frameGrabber = new FrameGrabber(maxPoolSize, CPreviewImageDlg::FrameGrabberCallback, this);
 		m_frameGrabber->SetFrameFormat(FrameGrabber::FRAME_POOL_INDEX_COLOR, resColor.x, resColor.y, bytesPerPixelColor);
 		m_frameGrabber->SetFrameFormat(FrameGrabber::FRAME_POOL_INDEX_DEPTH, resDepth.x, resDepth.y, bytesPerPixelDepth);
+
+        if (m_previewParams.m_colorOption < 0 && m_previewParams.m_rectifyLogData[1]) {
+            //this buffer is used to generate point clound from depth only data
+            m_bufGreenColor.resize(m_previewParams.m_rectifyLogData[1]->RECT_ScaleWidth * m_previewParams.m_rectifyLogData[1]->RECT_ScaleHeight * 3);
+            for (int i = 0; i < m_bufGreenColor.size(); i += 3)
+            {
+                m_bufGreenColor[i] = 0x0;
+                m_bufGreenColor[i + 1] = 0xFF;
+                m_bufGreenColor[i + 2] = 0x0;
+            }
+        }
 		//if ( IsDevicePid( APC_PID_8054 ) && ((CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_STREAM))->GetCurSel() > 1) {
 		//	m_frameGrabber->SetDisableSerialSyn(true);
 		//}
@@ -3124,9 +3197,7 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 
                 if (pThis->m_previewParams.m_depthOption > EOF) iFPS = pThis->GetDlgItemInt( IDC_DEPTH_FRAME_RATE ); // D+K use Depth-Fps
             }
-#if 0 //REFINE_DATABASE_CODE
-            APC_SetDepthDataType(pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType);
-#else
+
 			WORD depthDataTypeOffset = 0;
 			if ((pThis->IsDevicePid(APC_PID_8036) || pThis->IsDevicePid(APC_PID_IRIS) || pThis->IsDevicePid(APC_PID_FRANK) || pThis->IsDevicePid(APC_PID_8052)) && depthOption != EOF)
 			{
@@ -3135,16 +3206,24 @@ DWORD CPreviewImageDlg::Thread_Preview( void* pvoid )
 					depthDataTypeOffset = APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET;
 				}
 			}
-			if ((pThis->IsDevicePid(APC_PID_HYPATIA2) || pThis->IsDevicePid(APC_PID_80362)) && depthOption > EOF)
+			if ((pThis->IsDevicePid(APC_PID_8072) || pThis->IsDevicePid(APC_PID_HYPATIA2) || pThis->IsDevicePid(APC_PID_80362)) && depthOption > EOF)
 			{
 				if ((pThis->m_pStreamColorInfo[pThis->m_previewParams.m_colorOption].nHeight / pThis->m_pStreamDepthInfo[depthOption].nHeight) == 2)
 				{
 					depthDataTypeOffset = APC_DEPTH_DATA_SCALE_DOWN_MODE_OFFSET;
 				}
 			}
+            //for new db structure
+            if (pThis->GetCurrentMode().videoModeD11OrColorOnly != 0xFF && pThis->GetCurrentMode().videoModeZ14 != 0xFF)
+            {
+                if (pThis->m_previewParams.m_depthOption == EOF || APCImageType::DEPTH_11BITS == APCImageType::DepthDataTypeToDepthImageType(pThis->m_previewParams.m_depthType))
+                    pThis->m_previewParams.m_depthType = pThis->GetCurrentMode().videoModeD11OrColorOnly;
+                else
+                    pThis->m_previewParams.m_depthType = pThis->GetCurrentMode().videoModeZ14;
 
+                depthDataTypeOffset = 0;
+            }
             APC_SetDepthDataType( pThis->m_hApcDI, &pThis->m_DevSelInfo, pThis->m_previewParams.m_depthType + depthDataTypeOffset);
-#endif
 
             if ( !OpenDevice( pThis->m_previewParams.m_colorOption,
                               depthOption,
@@ -3231,46 +3310,6 @@ void CPreviewImageDlg::ResetStreamTimeStamp()
 	m_mapDepthStreamTimeStamp.clear();
 }
 
-#if 0 //REFINE_DATABASE_CODE
-int CPreviewImageDlg::GetTableIndex()
-{
-    int tableIndex = 0;
-    const std::vector< ModeConfig::MODE_CONFIG >& vecModeConfig = g_ModeConfig.GetModeConfigList(m_devinfoEx.wPID);
-    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_MODE_CONFIG);
-    int iMode = pCbx->GetItemData(pCbx->GetCurSel());
-    for (auto& ModeConfig : vecModeConfig)
-    {
-        if (iMode == ModeConfig.iMode)
-        {
-            tableIndex = ModeConfig.tableIndex;
-            break;
-        }
-    }
-    return tableIndex;
-}
-
-WORD CPreviewImageDlg::GetVideoModeFWValue()
-{
-    int videoModefwValue = 0;
-
-    CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_MODE_CONFIG);
-    int iMode = pCbx->GetItemData(pCbx->GetCurSel());
-    const std::vector< ModeConfig::MODE_CONFIG >& vecModeConfig = g_ModeConfig.GetModeConfigList(m_devinfoEx.wPID);
-    for (auto& ModeConfig : vecModeConfig)
-    {
-        // Get current video mode
-        if (iMode == ModeConfig.iMode)
-        {
-            CComboBox* pDepthBitCbx = (CComboBox*)GetDlgItem(IDC_COMBO_DEPTH_BIT_SEL_CTRL);
-            int curIndex = pDepthBitCbx->GetCurSel();
-            videoModefwValue = ModeConfig.vecVideoMode.at(curIndex);
-            break;
-        }
-    }
-    return videoModefwValue;
-}
-#endif
-
 void CPreviewImageDlg::PreparePreviewDlg()
 {
     CAutoLock lock(m_previewParams.m_mutex);
@@ -3291,14 +3330,16 @@ void CPreviewImageDlg::PreparePreviewDlg()
         }
 #endif
     }
-
     APCImageType::Value depthImageType = APCImageType::DepthDataTypeToDepthImageType(m_previewParams.m_depthType);
-#if 0 //REFINE_DATABASE_CODE
-    int zdTableIndex = GetTableIndex();
-#else
+
     int zdTableIndex = GetDepthStreamIndex(cpDepthRes);
-    AdjustZDTableIndex(&zdTableIndex, cpDepthRes.x, cpDepthRes.y, depthImageType);
-#endif
+	AdjustZDTableIndex(&zdTableIndex, cpDepthRes.x, cpDepthRes.y, depthImageType);
+    //for new db structure
+    if (GetCurrentMode().rectifyFileIndex != 0xFF)
+    {
+        zdTableIndex = GetCurrentMode().rectifyFileIndex;
+    }
+
     BOOL bInitialZDValue = TRUE;
 
     const int iDepthPeriod = ( GetDlgItemInt( IDC_DEPTH_FRAME_RATE ) ? GetDlgItemInt( IDC_DEPTH_FRAME_RATE ) : GetDlgItemInt( IDC_COMBO_FRAME_RATE ) ) / 3;
@@ -3332,6 +3373,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
             pDlg->SetDepthROI( GetDlgItemInt( IDC_ST_DEPTH_ROI ) );
 
             m_previewParams.m_depthPreview[i].SetPreviewDlg(pDlg);
+            if (m_pSelfCalibration2Dlg) m_pSelfCalibration2Dlg->SetImageParams(cpDepthRes.x, cpDepthRes.y, zdTableIndex, m_previewParams.m_rectifyLogData[i]);
         }
     }
     if (m_previewParams.m_IsDepthFusionOn)//depth fusion
@@ -3359,6 +3401,7 @@ void CPreviewImageDlg::PreparePreviewDlg()
         //    m_previewParams.m_fusionSelectedTargetPreview.SetPreviewDlg(pSelectedTargetDlg);
         //}
     }
+    m_bIsLRD_Mode = false;
     if (m_previewParams.m_colorOption >= 0)//color
     {
 		if (m_previewParams.m_360ModeEnabled)
@@ -3366,19 +3409,18 @@ void CPreviewImageDlg::PreparePreviewDlg()
 			EnableDenoise(true);
 			InitEysov(colorRealRes.x, colorRealRes.y);
 		}
-        BOOL bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) &&
+        m_bIsLRD_Mode = ( ( IsDevicePid( APC_PID_8036 ) || IsDevicePid( APC_PID_IRIS ) || IsDevicePid( APC_PID_FRANK ) || IsDevicePid( APC_PID_8037 ) || IsDevicePid( APC_PID_8052 )  || IsDevicePid( APC_PID_8029 ) ) &&
                                  ( ( 2560 == colorRealRes.x && 1280 == cpDepthRes.x ) || ( 2560 == colorRealRes.x && 640 == cpDepthRes.x )  || ( 1280 == colorRealRes.x && 640 == cpDepthRes.x ) ||
                                    ( 640 == colorRealRes.x && 320 == cpDepthRes.x ) ) );
         CColorDlg* pDlg = new CColorDlg(this);
-        pDlg->SetColorParams(m_hApcDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, bIsLRD_Mode, cpDepthRes);
+        pDlg->SetColorParams(m_hApcDI, m_DevSelInfo, colorRealRes.x, colorRealRes.y, m_bIsLRD_Mode, cpDepthRes);
         pDlg->Create(pDlg->IDD, this);
         m_previewParams.m_colorPreview.SetPreviewDlg(pDlg);
 
         if (GetCurrentMode().csModeDesc.Find(L"L+R+D") > -1 || GetCurrentMode().csModeDesc.Find(L"L'+R'+D") > -1)
         {
-            bIsLRD_Mode = true;
+            m_bIsLRD_Mode = true;
         }
-        m_pSelfCalibrationDlg->SetImageParams(colorRealRes.x, colorRealRes.y, bIsLRD_Mode, mIsLRDr, cpDepthRes);
     }
     InitPreviewDlgPos();
 }
@@ -3630,6 +3672,11 @@ void CPreviewImageDlg::CloseDeviceAndStopPreview(CDialog* pCallerDlg)
 		FrameSyncManager::GetInstance()->UnregisterDevice(m_hApcDI, m_DevSelInfo);
 	}
 
+    if (m_SparseModeDlg)
+    {
+        m_SparseModeDlg->SetSparseMode(false);
+    }
+
     ((CButton*)GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC))->SetCheck(IsSupportHwPostProc() ? BST_CHECKED : BST_UNCHECKED);
 
     GetDlgItem(IDC_CHECK_HARDWARE_POSTPROC)->EnableWindow(FALSE);
@@ -3688,10 +3735,10 @@ void CPreviewImageDlg::CloseDeviceAndStopPreview(CDialog* pCallerDlg)
 	GetDlgItem(IDC_CHECK_POINTCLOUD_VIEWER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_CHK_PCV_NOCOLOR)->EnableWindow(TRUE);
 	GetDlgItem(IDC_CHK_PCV_SINGLE)->EnableWindow(TRUE);
-	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_8077));
+	GetDlgItem(IDC_CHK_MULTI_SYNC)->EnableWindow(IsDevicePid(APC_PID_8053) || IsDevicePid(APC_PID_8059) || IsDevicePid(APC_PID_8062) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_TARYN) || IsDevicePid(APC_PID_8077));
 
     OnCbnSelchangeComboFrameRate();
-    m_pSelfCalibrationDlg->disableSelfK();
+    if (m_pSelfCalibration2Dlg) m_pSelfCalibration2Dlg->StopSelfK2();
 }
 
 void CPreviewImageDlg::OnCbnSelchangeComboTColorStream()
@@ -4315,7 +4362,7 @@ void CPreviewImageDlg::OnBnClickedRadioRectifyAndRawData()
 void CPreviewImageDlg::DoSerialNumCommand()
 {
 #ifndef ESPDI_EG
-    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid( APC_PID_8077 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_TARYN) || IsDevicePid( APC_PID_8077 ) )
     {
         APC_EnableSerialCount( m_hApcDI, &m_DevSelInfo, ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) );
     }
@@ -4331,7 +4378,7 @@ void CPreviewImageDlg::DoSerialNumCommand()
 void CPreviewImageDlg::DoMultiModuleSynCommand()
 {
 #ifndef ESPDI_EG
-    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid( APC_PID_8077 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_TARYN) || IsDevicePid( APC_PID_8077 ) )
     {
         if ( ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MULTI_SYNC ) )->GetCheck() ) )
         {
@@ -4360,7 +4407,7 @@ void CPreviewImageDlg::DoMultiModuleSynReset()
 /// **************************************** ///
 void CPreviewImageDlg::OnBnClickedChkMaster()
 {
-    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid( APC_PID_8077 ) )
+    if ( IsDevicePid( APC_PID_8053 ) || IsDevicePid( APC_PID_8059 ) || IsDevicePid( APC_PID_8062 ) || IsDevicePid(APC_PID_80362) || IsDevicePid(APC_PID_TARYN) || IsDevicePid( APC_PID_8077 ) )
     {
         if ( BST_CHECKED == ( ( CButton* )GetDlgItem( IDC_CHK_MASTER ) )->GetCheck() )
         {
@@ -4559,4 +4606,9 @@ void CPreviewImageDlg::InitAutoModuleSync()
 		);
 	}
 
+}
+
+PointCloudInfo* CPreviewImageDlg::GetPointCloudInfo()
+{
+    return &m_xPointCloudInfo;
 }

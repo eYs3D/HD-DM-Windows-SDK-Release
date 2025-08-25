@@ -29,6 +29,10 @@ int main(void)
 		printf("15. Set analog & digital gain for IVY\n");
 		printf("16. IMU Callback\n");
 		printf("17. IMU New API\n");
+		printf("18. Reset Bootloader\n");
+		printf("19. Batch ASIC register value\n");
+		printf("20. Batch ASIC & Sensor & FW register value\n");
+		printf("21. Loop init get image close release)\n");
 
         printf("\nPlease choose the testing item:\n");
         scanf("%d", &input);
@@ -131,6 +135,26 @@ int main(void)
 			case 17:
 			{
 				IMUAPIDemo();
+				break;
+			}
+			case 18:
+			{
+				ResetBootloader();
+				break;
+			}
+			case 19:
+			{
+				BatchReadASIC();
+				break;
+			}
+			case 20:
+			{
+				BatchReadASICSensorFW();
+				break;
+			}
+			case 21:
+			{
+				InitOpenCloseReleaseLoop();
 				break;
 			}
 

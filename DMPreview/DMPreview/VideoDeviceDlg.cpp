@@ -15,7 +15,7 @@
 #include "DistanceAccuracyDlg.h"
 #include "DepthFilterDlg.h"
 #include "ModeConfig.h"
-#include "Self_CalibrationDlg.h"
+#include "SelfCalibration2Dlg.h"
 
 class CopyG1ToG2Helper {
 	friend class CVideoDeviceDlg;
@@ -308,9 +308,8 @@ CVideoDeviceDlg::CVideoDeviceDlg(CWnd* pParent, bool enableSDKLog)
                                 m_TabPage4Accuracy(TRUE),
                                 m_TabPage4RegisterSetting(TRUE),
                                 m_TabPage4IMU(TRUE),
-                                m_TabPage4Audio(TRUE),
-                                m_TabPage4SelfCalibration(TRUE)
-
+                                m_TabPage4SelfCalibration2(TRUE),
+                                m_TabPage4Audio(TRUE)
 {
   /*APC_Init2 can enable the auto-restart function and register USB device events */
   APC_Init2(&m_hApcDI, enableSDKLog, false); 
@@ -414,11 +413,18 @@ BOOL CVideoDeviceDlg::ReadUIConfig()
     m_TabPage4Audio = (strData == _T("1"));
     strData.ReleaseBuffer();
 
-    // Enable_TabPage_SelfCalibration =
+    // Enable_TabPage_SelfCalibration2 =
     strData.Empty();
-    strKeyName = _T("Enable_TabPage_SelfCalibration");
+    strKeyName = _T("Enable_TabPage_SelfCalibration2");
     GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
-    m_TabPage4SelfCalibration = (strData == _T("1"));
+    m_TabPage4SelfCalibration2 = (strData == _T("1"));
+    strData.ReleaseBuffer();
+
+    // Enable_SelfCalibration2_Runtime =
+    strData.Empty();
+    strKeyName = _T("Enable_SelfCalibration2_Runtime");
+    GetPrivateProfileString(strAppName, strKeyName, _T(""), strData.GetBuffer(MAX_PATH), MAX_PATH, profile_file);
+    m_bEnable_SK2_Runtime = (strData == _T("1"));
     strData.ReleaseBuffer();
 
     return TRUE;
@@ -476,7 +482,7 @@ void CVideoDeviceDlg::OnPaint()
     DrawF( IDC_STATIC_MODULE_INFO );
     DrawF( IDC_STATIC_FLASH_RW );
     DrawF( IDC_STATIC_FLASH_RW2 );
-    if (m_pDevInfo->wPID == APC_PID_8063 || m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_8077)
+    if (m_pDevInfo->wPID == APC_PID_8063 || m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_TARYN || m_pDevInfo->wPID == APC_PID_8077)
     {
         DrawF(IDC_STATIC_TEMPERATURE);
     }
@@ -504,39 +510,38 @@ void CVideoDeviceDlg::InitChildDlg()
     depthfilterDlg->setVersion(version);
 
     AEAWB_PropertyDlg* aeAwbCtrlDlg = new AEAWB_PropertyDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
-    Self_CalibrationDlg* selfCalibrationDlg = new Self_CalibrationDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage, previewDlg);
     SparseMode_PropertyDlg* pSparseModeDlg = new SparseMode_PropertyDlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage);
-
+    SelfCalibration2Dlg* pSelfCalibration2Dlg = new SelfCalibration2Dlg(m_hApcDI, m_DevSelInfo, *m_pDevInfo, &m_oTabPage, previewDlg);
 
     previewDlg->SetDepthFilterDlg(depthfilterDlg);
     previewDlg->SetPropertyDlg(aeAwbCtrlDlg);
-    previewDlg->SetSelfCalibrationDlg(selfCalibrationDlg);
     if (m_TabPage4SparseMode)
     {
         previewDlg->SetSparseModeDlg(pSparseModeDlg);
     }
-
+    if (m_TabPage4SelfCalibration2)
+    {
+        previewDlg->SetSelfCalibration2Dlg(pSelfCalibration2Dlg);
+    }
 
     depthfilterDlg->Create(depthfilterDlg->IDD, &m_oTabPage);
     previewDlg->Create(previewDlg->IDD, &m_oTabPage);
     aeAwbCtrlDlg->Create(aeAwbCtrlDlg->IDD, &m_oTabPage);
-    selfCalibrationDlg->Create(selfCalibrationDlg->IDD, &m_oTabPage);
     pSparseModeDlg->Create(pSparseModeDlg->IDD, &m_oTabPage);
-
+    pSelfCalibration2Dlg->Create(pSelfCalibration2Dlg->IDD, &m_oTabPage);
 
     m_childDlg.push_back(previewDlg);
     m_childDlg.push_back(depthfilterDlg);
     m_childDlg.push_back(aeAwbCtrlDlg);
-    m_childDlg.push_back(selfCalibrationDlg);
-    m_childDlg.push_back(pSparseModeDlg);
+    if (m_TabPage4SparseMode) m_childDlg.push_back(pSparseModeDlg);
+    if (m_TabPage4SelfCalibration2) m_childDlg.push_back(pSelfCalibration2Dlg);
 
 
     m_oTabPage.AddTab(previewDlg, _T("Preview"));
     if (m_TabPage4DepthFilter)  m_oTabPage.AddTab(depthfilterDlg, _T("Depth Filter"));
     if (m_TabPage4Property)     m_oTabPage.AddTab(aeAwbCtrlDlg, _T("Property"));
-    if (m_TabPage4SelfCalibration)     m_oTabPage.AddTab(selfCalibrationDlg, _T("SelfCalibration"));
     if (m_TabPage4SparseMode)     m_oTabPage.AddTab(pSparseModeDlg, _T("Sparse Mode"));
-
+    if (m_TabPage4SelfCalibration2)    m_oTabPage.AddTab(pSelfCalibration2Dlg, _T("SelfCalibration2"));
 
     DistanceAccuracyDlg* DAlg = new DistanceAccuracyDlg(m_hApcDI, m_DevSelInfo, previewDlg);
     DAlg->Create(DAlg->IDD, &m_oTabPage);
@@ -571,7 +576,7 @@ void CVideoDeviceDlg::InitChildDlg()
     regAccessDlg->Create(regAccessDlg->IDD, &m_oTabPage);
     m_childDlg.push_back(regAccessDlg);
     if (m_TabPage4RegisterSetting) m_oTabPage.AddTab(regAccessDlg, _T("Register"));
-    if (m_pDevInfo->wPID == APC_PID_8063 || m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_8077)
+    if (m_pDevInfo->wPID == APC_PID_8063 || m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_TARYN || m_pDevInfo->wPID == APC_PID_8077)
     {
         GetDlgItem(IDC_TEMPERATURE_GET)->ShowWindow(SW_SHOW);
         GetDlgItem(IDC_EDIT_TEMPERATURE)->ShowWindow(SW_SHOW);
@@ -1244,7 +1249,7 @@ void CVideoDeviceDlg::OnBnClickedTemperatureGet()
 		csText = csText + _T("°C");
 		SetDlgItemText(IDC_EDIT_TEMPERATURE, csText);
 	}
-    else if (m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_8077)
+    else if (m_pDevInfo->wPID == APC_PID_80362 || m_pDevInfo->wPID == APC_PID_TARYN || m_pDevInfo->wPID == APC_PID_8077)
     {
         int ret = APC_OK;
         unsigned short TempeRegAddr = 0x00;

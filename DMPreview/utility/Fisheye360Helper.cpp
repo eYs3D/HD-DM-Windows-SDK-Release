@@ -2,7 +2,7 @@
 #include "Fisheye360Helper.h"
 #include "eys_fisheye360/fisheye360_api_cl.h"
 #include "eys_imgproc/img_alter.h"
-#include <experimental/filesystem>
+//#include <experimental/filesystem>
 #ifdef ESPDI_EG
 #pragma comment(lib, "eys_world.lib")
 #endif
@@ -84,7 +84,9 @@ COpenCLPlatformInitializer CFisheye360Helper::m_openCLPlatformInitializer;
 CFisheye360Helper::CFisheye360Helper(const std::string& lutFileName, OutputType outType)
     : m_outType(outType), m_ready(false), m_pLut(NULL), m_pColorImgBuf_Dewarping(NULL)
 {
-    if (!std::experimental::filesystem::exists(lutFileName))
+    DWORD fileAttr;
+    fileAttr = GetFileAttributes(CString(lutFileName.c_str()));
+    if (fileAttr == INVALID_FILE_ATTRIBUTES && GetLastError() == ERROR_FILE_NOT_FOUND)
     {
         m_errMsg = "Lut file doesn't exist.";
     }

@@ -1,14 +1,35 @@
 #include "main.h"
 #include <direct.h>
 #include "ColorPaletteGenerator.h"
+#include <fstream>
+#include <sstream>
 #include <mutex>
 #include "IMUReader.h"
 extern "C" {
-#include "..\DMPreview\Quaternion1.h"
+#include "Quaternion1.h"
 }
 #define APC_USER_SETTING_OFFSET 5
 #define APC_ZD_TABLE_FILE_SIZE_11_BITS 4096
 #define CT_DEBUG(format, ...) printf("[%s][%d]" format, __func__, __LINE__, ##__VA_ARGS__)
+#define APC_CIPHER ""
+
+#ifndef _DEBUG_COLOR_
+#define _DEBUG_COLOR_
+    #define KRED "\033[0m\033[0;31m%s\033[0m"
+    #define KRED_L "\033[0m\033[1;31m%s\033[0m"
+    #define KGRN "\033[0m\033[0;32m%s\033[0m"
+    #define KGRN_L "\033[0m\033[1;32m%s\033[0m"
+    #define KYEL "\033[0m\033[0;33m%s\033[0m"
+    #define KYEL_L "\033[0m\033[1;33m%s\033[0m"
+    #define KBLU "\033[0m\033[0;34m%s\033[0m"
+    #define KBLU_L "\033[0m\033[1;34m%s\033[0m"
+    #define KMAG "\033[0m\033[0;35m%s\033[0m"
+    #define KMAG_L "\033[0m\033[1;35m%s\033[0m"
+    #define KCYN "\033[0m\033[0;36m%s\033[0m"
+    #define KCYN_L "\033[0m\033[1;36m%s\033[0m"
+    #define WHITE "\033[0m\033[0;37m%s\033[0m"
+    #define WHITE_L "\033[0m\033[1;37m%s\033[0m"
+#endif
 
 void Read3X()
 {
@@ -19,15 +40,22 @@ void Read3X()
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
     int index;
-    int nbfferLength = APC_Y_OFFSET_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_Y_OFFSET_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 3%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetYOffset(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
         {
-            printf("\n Read3%d \n", index);
+            printf("\n Read3%d with lengh %d \n", index, pActualLength);
             for (int i = 0; i < nbfferLength; i++)
             {
                 printf("%02x ", data[i]);
@@ -38,9 +66,9 @@ void Read3X()
         {
             printf("\n Read3%d Failed\n", index);
         }
+        delete[] data;
     }
 
-    delete[] data;
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -53,27 +81,37 @@ void Write3X()
     DEVSELINFO devSelInfo;
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
+    // need to set correct cipher to unprotect flash if you need to write G1 group
+    APC_UnprotectFlashByCipher(pHandleApcDI, &devSelInfo, APC_CIPHER);
+
     int index;
-    int nbfferLength = APC_Y_OFFSET_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_Y_OFFSET_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 3%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetYOffset(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
         {
             if (APC_OK == APC_SetYOffset(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
             {
-                printf("Write3%d Success \n", index);
+                printf("Write 3%d Success with length %d \n", index, pActualLength);
             }
             else
             {
                 printf("Write3%d Failed \n", index);
             }
         }
+        delete[] data;
     }
 
-    delete[] data;
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -87,15 +125,22 @@ void Read4X()
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
     int index;
-    int nbfferLength = APC_RECTIFY_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_RECTIFY_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 4%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetRectifyTable(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
         {
-            printf("\n Read4%d \n", index);
+            printf("\n Read4%d with lengh %d \n", index, pActualLength);
             for (int i = 0; i < nbfferLength; i++)
             {
                 printf("%02x ", data[i]);
@@ -106,8 +151,9 @@ void Read4X()
         {
             printf("\n Read4%d Failed\n", index);
         }
+        delete[] data;
     }
-    delete[] data;
+
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -120,26 +166,36 @@ void Write4X()
     DEVSELINFO devSelInfo;
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
+    // need to set correct cipher to unprotect flash if you need to write G1 group
+    APC_UnprotectFlashByCipher(pHandleApcDI, &devSelInfo, APC_CIPHER);
+
     int index;
-    int nbfferLength = APC_RECTIFY_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_RECTIFY_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 4%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetRectifyTable(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
         {
             if (APC_OK == APC_SetRectifyTable(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
             {
-                printf("Write4%d Success \n", index);
+                printf("Write 4%d Success with length %d \n", index, pActualLength);
             }
             else
             {
                 printf("Write4%d Failed \n", index);
             }
         }
+        delete[] data;
     }
-    delete[] data;
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -153,20 +209,28 @@ void Read5X()
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
     int index;
-    int nbfferLength = APC_ZD_TABLE_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
 
     ZDTABLEINFO zdTableInfo;
     zdTableInfo.nDataType = APC_DEPTH_DATA_11_BITS;
 
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
         zdTableInfo.nIndex = index;
+
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_ZD_TABLE_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 5%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetZDTable(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, &zdTableInfo))
         {
-            printf("\n Read5%d \n", index);
+            printf("\n Read5%d with lengh %d \n", index, pActualLength);
             for (int i = 0; i < nbfferLength; i++)
             {
                 printf("%02x ", data[i]);
@@ -177,8 +241,9 @@ void Read5X()
         {
             printf("\n Read5%d Failed\n", index);
         }
+        delete[] data;
     }
-    delete[] data;
+
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -191,32 +256,42 @@ void Write5X()
     DEVSELINFO devSelInfo;
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
+    // need to set correct cipher to unprotect flash if you need to write G1 group
+    APC_UnprotectFlashByCipher(pHandleApcDI, &devSelInfo, APC_CIPHER);
+
     int index;
-    int nbfferLength = APC_ZD_TABLE_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
 
     ZDTABLEINFO zdTableInfo;
     zdTableInfo.nDataType = APC_DEPTH_DATA_11_BITS;
 
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
-
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
         zdTableInfo.nIndex = index;
+
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_ZD_TABLE_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 5%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetZDTable(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, &zdTableInfo))
         {
             if (APC_OK == APC_SetZDTable(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, &zdTableInfo))
             {
-                printf("Write5%d Success \n", index);
+                printf("Write 5%d Success with length %d \n", index, pActualLength);
             }
             else
             {
                 printf("Write5%d Failed \n", index);
             }
         }
+        delete[] data;
     }
-    delete[] data;
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -230,17 +305,23 @@ void Read24X()
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
     int index;
-    int nbfferLength = APC_CALIB_LOG_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
 
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
-
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_CALIB_LOG_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 24%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetLogData(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
         {
-            printf("\n Read24%d ALL_LOG \n", index);
+            printf("\n Read24%d with lengh %d \n", index, pActualLength);
             for (int i = 0; i < nbfferLength; i++)
             {
                 printf("%02x ", data[i]);
@@ -251,8 +332,9 @@ void Read24X()
         {
             printf("\n Read24%d ALL_LOG Failed\n", index);
         }
+        delete[] data;
     }
-    delete[] data;
+
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -265,28 +347,37 @@ void Write24X()
     DEVSELINFO devSelInfo;
     devSelInfo.index = selectDeviceIndex(pHandleApcDI);
 
+    // need to set correct cipher to unprotect flash if you need to write G1 group
+    APC_UnprotectFlashByCipher(pHandleApcDI, &devSelInfo, APC_CIPHER);
+
     int index;
-    int nbfferLength = APC_CALIB_LOG_FILE_SIZE;
+    int nbfferLength = 0;
     int pActualLength = 0;
 
-    BYTE *data = new BYTE[nbfferLength];
-    memset(data, 0x0, nbfferLength);
-
+    BYTE *data;
     for (index = 0; index <= 9; index++)
     {
+        if (APC_GetFWFSLength(pHandleApcDI, &devSelInfo, APC_CALIB_LOG_FILE_ID_0 + index, nbfferLength) != APC_OK)
+        {
+            printf("\n Failed to get length for 24%d \n", index);
+            continue;
+        }
+
+        data = new BYTE[nbfferLength];
+        memset(data, 0x0, nbfferLength);
         if (APC_OK == APC_GetLogData(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
         {
             if (APC_OK == APC_SetLogData(pHandleApcDI, &devSelInfo, data, nbfferLength, &pActualLength, index))
             {
-                printf("Write24%d Success \n", index);
+                printf("Write 24%d Success with length %d \n", index, pActualLength);
             }
             else
             {
                 printf("Write24%d Failed \n", index);
             }
         }
+        delete[] data;
     }
-    delete[] data;
     APC_CloseDevice(pHandleApcDI, &devSelInfo);
     APC_Release(&pHandleApcDI);
 }
@@ -489,7 +580,7 @@ int save_file(unsigned char *buf, int size, int width, int height, int type, boo
         ret = -1;
     }
 
-    if (pFile > 0) {
+    if (pFile) {
         fclose(pFile);
     }
 
@@ -555,7 +646,10 @@ void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* i
 	std::vector<unsigned char> vecImgBuf(imgSize);
 	memcpy(&vecImgBuf[0], imgBuf, imgSize);
 
-	int printAll = (int)pParam;
+
+	CallbackParam* callbackParam = (CallbackParam*)pParam;
+	bool printAll = callbackParam->print_log;
+	bool saveFile = callbackParam->save_file;
 	if (imgType == APCImageType::COLOR_YUY2 || imgType == APCImageType::COLOR_MJPG) {
 		if (printAll)
 			CT_DEBUG("[Color] SN: %d, timestamp: %lld\n", serialNumber, timestamp);
@@ -565,13 +659,13 @@ void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* i
 
 		last_color_sn = serialNumber;
 
-		save_file(&vecImgBuf[0], imgSize, width, height, (imgType == APCImageType::COLOR_MJPG), false);
+		if (saveFile) save_file(&vecImgBuf[0], imgSize, width, height, (imgType == APCImageType::COLOR_MJPG), false);
 
 		std::vector<unsigned char> m_vecRGBImageBuf(width * height * 3);
 		if (APC_OK == APC_ColorFormat_to_RGB24(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, &m_vecRGBImageBuf[0], &vecImgBuf[0],
 				imgSize, width, height, imgType))
 		{
-			save_file(&m_vecRGBImageBuf[0], m_vecRGBImageBuf.size(), width, height, (imgType == APCImageType::COLOR_MJPG), true);
+			if (saveFile) save_file(&m_vecRGBImageBuf[0], m_vecRGBImageBuf.size(), width, height, (imgType == APCImageType::COLOR_MJPG), true);
 		}
 	}
 	else if (imgType == APCImageType::DEPTH_11BITS || imgType == APCImageType::DEPTH_14BITS) {
@@ -583,7 +677,7 @@ void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* i
 
 		last_depth_sn = serialNumber;
 
-		save_file(&vecImgBuf[0], imgSize, width, height, 2, false);
+		if (saveFile) save_file(&vecImgBuf[0], imgSize, width, height, 2, false);
 
 		std::vector<unsigned char> m_vecRGBImageBuf(width * height * 3);
 		if (imgType == APCImageType::DEPTH_11BITS)
@@ -594,7 +688,7 @@ void ColorDepthCallback(APCImageType::Value imgType, int imgId, unsigned char* i
 		{
 			UpdateZ14DisplayImage_DIB24(m_ColorPalette, (WORD*)&vecImgBuf[0], &m_vecRGBImageBuf[0], width, height);
 		}
-		save_file(&m_vecRGBImageBuf[0], m_vecRGBImageBuf.size(), width, height, 2, true);
+		if (saveFile) save_file(&m_vecRGBImageBuf[0], m_vecRGBImageBuf.size(), width, height, 2, true);
 	}
 }
 
@@ -678,9 +772,26 @@ void selectDepthType(void* pHandleApcDI, DEVSELINFO devSelInfo, int* depthType)
     printf("APC_DEPTH_DATA_8_BITS_x80_RAW: %d\n", APC_DEPTH_DATA_8_BITS_x80_RAW);
     printf("APC_DEPTH_DATA_11_BITS_RAW: %d\n", APC_DEPTH_DATA_11_BITS_RAW);
     printf("APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY: %d\n", APC_DEPTH_DATA_11_BITS_COMBINED_RECTIFY);
+    printf("APC_DEPTH_DATA_ILM_14_BITS: %d\n", APC_DEPTH_DATA_ILM_14_BITS);
+    printf("APC_DEPTH_DATA_ILM_11_BITS: %d\n", APC_DEPTH_DATA_ILM_11_BITS);
+    printf("APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS: %d\n", APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS);
+    printf("APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS: %d\n", APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS);
     printf("===========================================================\n");
     printf("\nPlease input depth type value:\n");
     scanf("%d", depthType);
+}
+
+void setIR(int *ir_value){
+    printf("\nPlease input ir value:\n");
+    scanf("%d", ir_value);
+}
+
+int enableInterleaveModeIfNeeded(int depth_type){
+    bool enable = (depth_type == APC_DEPTH_DATA_ILM_14_BITS || depth_type == APC_DEPTH_DATA_ILM_11_BITS ||
+                depth_type == APC_DEPTH_DATA_SCALE_DOWN_ILM_14_BITS || depth_type == APC_DEPTH_DATA_SCALE_DOWN_ILM_11_BITS);
+    int ret = APC_EnableInterleave(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, enable);
+    CT_DEBUG("set interleave mode %d\n", enable);
+    return ret;
 }
 
 void GetDepthZValue(int& zFar, int& zNear)
@@ -745,9 +856,14 @@ void GetColorDepthImage(bool printAll)
 		return;
 	}
 
+	CallbackParam callParam;
+	callParam.print_log = printAll;
+	callParam.save_file = true;
+
 	int color_index = -1, depth_index = -1, fps = 30;
 	int depth_type = APC_DEPTH_DATA_11_BITS;
 	int deviceIndex = selectDeviceIndex(mPreviewParam.handleApcDI);
+	int ir_value = 0;
 
 	last_color_sn = 0;
 	last_depth_sn = 0;
@@ -767,6 +883,8 @@ void GetColorDepthImage(bool printAll)
 	}
 
 	selectDepthType(mPreviewParam.handleApcDI, mPreviewParam.devSelInfo, &depth_type);
+	setIR(&ir_value);
+	ret = enableInterleaveModeIfNeeded(depth_type);
 	ret = APC_SetDepthDataType(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, depth_type);
 	if (ret != APC_OK) {
 		CT_DEBUG("APC_SetDepthDataType error\n");
@@ -776,7 +894,8 @@ void GetColorDepthImage(bool printAll)
 	printf("color index : %d, depth index : %d, fps : %d, depth type : %d\n", color_index, depth_index, fps, depth_type);
 	printf("Start to preview, press ESC to stop\n");
 
-	ret = APC_OpenDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, color_index, depth_index, ApcDIDepthSwitch::Depth1, fps, ColorDepthCallback, (void*)printAll);
+	ret = APC_SetCurrentIRValue(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, ir_value);
+	ret = APC_OpenDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, color_index, depth_index, ApcDIDepthSwitch::Depth1, fps, ColorDepthCallback, &callParam);
 	if (ret != APC_OK) {
 		CT_DEBUG("APC_OpenDevice error\n");
 		goto finish;
@@ -1004,6 +1123,7 @@ void GetPointCloud()
 	int color_index = -1, depth_index = -1, fps = 30;
 	int depth_type = APC_DEPTH_DATA_11_BITS;
 	int deviceIndex = selectDeviceIndex(mPreviewParam.handleApcDI);
+	int ir_value = 0;
 
 	last_color_sn = 0;
 	last_depth_sn = 0;
@@ -1021,6 +1141,7 @@ void GetPointCloud()
 	}
 
 	selectDepthType(mPreviewParam.handleApcDI, mPreviewParam.devSelInfo, &depth_type);
+	setIR(&ir_value);
 	mPreviewParam.pointCloudInfo.wDepthType = depth_type;
 
 	eSPCtrl_RectLogData* rectifyData = (eSPCtrl_RectLogData*)malloc(sizeof(eSPCtrl_RectLogData));
@@ -1047,13 +1168,13 @@ void GetPointCloud()
 
 	m_threadStart = true;
 	m_checkFrameReadyThread = ::CreateThread( NULL, NULL, CheckFrameReadyThreadFn, 0, NULL, NULL );
-
+	ret = enableInterleaveModeIfNeeded(depth_type);
 	ret = APC_SetDepthDataType(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, depth_type);
 	if (ret != APC_OK) {
 		CT_DEBUG("APC_SetDepthDataType error\n");
 		goto finish;
 	}
-
+	ret = APC_SetCurrentIRValue(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, ir_value);
 	printf("Start to preview, press ESC to stop\n");
 	ret = APC_OpenDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, color_index, depth_index, ApcDIDepthSwitch::Depth1, fps, ColorDepthCallbackForPointCloud, (void*)0);
 	if (ret != APC_OK) {
@@ -1394,6 +1515,7 @@ void SetAnalogAndDigitalGainExample()
     int color_index = -1, depth_index = -1, fps = 30;
     int depth_type = APC_DEPTH_DATA_11_BITS;
     int puma_index = 0, plum_index = 0;;
+    int ir_value = 0;
 
     printf("Please select eSP876 device to get color image \n");
     puma_index = selectDeviceIndex(mPreviewParam.handleApcDI);
@@ -1405,12 +1527,14 @@ void SetAnalogAndDigitalGainExample()
     selectColorDepth(mPreviewParam.handleApcDI, mPreviewParam.devSelInfo, &color_index, &depth_index, &fps);
 
     selectDepthType(mPreviewParam.handleApcDI, mPreviewParam.devSelInfo, &depth_type);
+    setIR(&ir_value);
+    ret = enableInterleaveModeIfNeeded(depth_type);
     ret = APC_SetDepthDataType(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, depth_type);
     if (ret != APC_OK) {
         CT_DEBUG("APC_SetDepthDataType error\n");
         goto finish;
     }
-
+    ret = APC_SetCurrentIRValue(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, ir_value);
     printf("color index : %d, depth index : %d, fps : %d, depth type : %d\n", color_index, depth_index, fps, depth_type);
 
     ret = APC_OpenDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, color_index, depth_index, ApcDIDepthSwitch::Depth1, fps, ImageCallback, 0);
@@ -1456,10 +1580,11 @@ bool m_bNeedInitQuaternion = true;
 double m_QuaternionBeginInverse[4] = { 0 };
 int m_OutputDataSize = 0;
 int imuType = 0;
+bool showReason = false;
 static void IMUCallback(IMUData imu)
 {
     char textBuff[256] = { 0 };
-
+    std::string m_text;
     if (imuType)//IMU_9Axis
     {
         double Roll = 0;	//Angles.X
@@ -1543,7 +1668,13 @@ static void IMUCallback(IMUData imu)
             imu._compassX_TBC, imu._compassY_TBC, imu._compassZ_TBC,
             imu._accuracy_FLAG);
     }
-    printf("%s\n", textBuff);
+    m_text = textBuff;
+    if (showReason)
+    {
+        snprintf(textBuff, sizeof(textBuff), "Reason:%02x\n", imu._updateReason);
+        m_text += textBuff;
+    }
+    printf("%s\n", m_text.c_str());
 }
 
 int selectIMUAxis()
@@ -1575,6 +1706,13 @@ void IMUCallbackDemo()
 
     imuType = selectIMUAxis();
 
+    showReason = false;
+    DEVINFORMATIONEX devinfo;
+    ret = APC_GetDeviceInfoEx(pHandleApcDI, &devSelInfo, &devinfo);
+    if (ret == APC_OK && devinfo.wPID == APC_PID_IVY2) {
+        showReason = true;
+    }
+
     IMUReader* imu_reader = new IMUReader(pHandleApcDI, devSelInfo, (imuType == 1) ? IMU_9Axis : IMU_6Axis);
     m_OutputDataSize = imu_reader->startGetImuData(IMUCallback);
     while (GetAsyncKeyState(VK_ESCAPE) == 0) {
@@ -1588,6 +1726,16 @@ void IMUCallbackDemo()
         CT_DEBUG("APC_Release error\n");
         return;
     }
+}
+
+int GetAccIndex(std::vector<std::string>& ACC_FS_LIST, char value) {
+    for (int i = 0; i < ACC_FS_LIST.size(); i++) {
+        int tempValue = std::atoi(ACC_FS_LIST[i].substr(0, (ACC_FS_LIST[i].size() - 1)).c_str());
+        if (tempValue == value) {
+            return i;
+        }
+    }
+    return 0;
 }
 
 void IMUAPIDemo()
@@ -1627,20 +1775,35 @@ void IMUAPIDemo()
     }
     printf("\n");
 
+    bool isLSM6DSR = false;//BMI088
+    WORD length = 0;
+    char fwVersion[256] = { 0 };
+    imu_reader->GetFwVersion(&fwVersion[0], &length);
+    if (strstr(fwVersion, "LSM6DSR") != nullptr) {
+        isLSM6DSR = true;
+    }
+
     //2. Read/Write full scale of Accelerate
     {
         char value = 0;
         int iValue = 0;
         imu_reader->GetAccFs(&value);
-        printf("Get Acc FS : %s\n", ACC_FS[value].c_str());
-        printf("Set Acc FS\n[0]%s\n[1]%s\n[2]%s\n[3]%s\n", ACC_FS[0].c_str(), ACC_FS[1].c_str(), ACC_FS[2].c_str(), ACC_FS[3].c_str());
+
+        std::vector<std::string> ACC_FS_LIST = (isLSM6DSR) ? ACC_FS_LSM6DSR : ACC_FS_BMI088;
+
+        printf("Get Acc FS : %s\n", ACC_FS_LIST[GetAccIndex(ACC_FS_LIST, value)].c_str());
+        printf("Set Acc FS:\n");
+        for (int i = 0; i < ACC_FS_LIST.size(); i++) {
+            printf("[%d] %s\n", i, ACC_FS_LIST[i].c_str());
+        }
         scanf("%d", &iValue);
-        if (iValue < size(ACC_FS))
+        if (iValue < ACC_FS_LIST.size())
         {
-            printf("Your input is %s\n", ACC_FS[iValue].c_str());
-            imu_reader->SetAccFs((char)iValue);
+            printf("Your input is %s\n", ACC_FS_LIST[iValue].c_str());
+            value = std::atoi(ACC_FS_LIST[iValue].substr(0, (ACC_FS_LIST[iValue].size() - 1)).c_str());
+            imu_reader->SetAccFs(value);
             imu_reader->GetAccFs(&value);
-            printf("Get Acc FS : %s\n", ACC_FS[value].c_str());
+            printf("Get Acc FS : %s\n", ACC_FS_LIST[GetAccIndex(ACC_FS_LIST, value)].c_str());
         }
         else
         {
@@ -1654,15 +1817,21 @@ void IMUAPIDemo()
         char value = 0;
         int iValue = 0;
         imu_reader->GetGyrFs(&value);
-        printf("Get Gyr FS : %s\n", GYR_FS[value].c_str());
-        printf("Set Gyr FS\n[0]%s\n[1]%s\n[2]%s\n[3]%s\n[4]%s\n[5]%s\n", GYR_FS[0].c_str(), GYR_FS[1].c_str(), GYR_FS[2].c_str(), GYR_FS[3].c_str(), GYR_FS[4].c_str(), GYR_FS[5].c_str());
+
+        std::vector<std::string> GYR_FS_LIST = (isLSM6DSR) ? GYR_FS_LSM6DSR : GYR_FS_BMI088;
+
+        printf("Get Gyr FS : %s\n", GYR_FS_LIST[value].c_str());
+        printf("Set Gyr FS:\n");
+        for (int i = 0; i < GYR_FS_LIST.size(); i++) {
+            printf("[%d] %s\n", i, GYR_FS_LIST[i].c_str());
+        }
         scanf("%d", &iValue);
-        if (iValue < size(GYR_FS))
+        if (iValue < GYR_FS_LIST.size())
         {
-            printf("Your input is %s\n", GYR_FS[iValue].c_str());
+            printf("Your input is %s\n", GYR_FS_LIST[iValue].c_str());
             imu_reader->SetGyrFs((char)iValue);
             imu_reader->GetGyrFs(&value);
-            printf("Get Gyr FS : %s\n", GYR_FS[value].c_str());
+            printf("Get Gyr FS : %s\n", GYR_FS_LIST[value].c_str());
         }
         else
         {
@@ -1678,4 +1847,413 @@ void IMUAPIDemo()
         CT_DEBUG("APC_Release error\n");
         return;
     }
+}
+
+void ResetBootloader()
+{
+    void* pHandleApcDI;
+    int ret = APC_Init(&pHandleApcDI, false);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Init error\n");
+        return;
+    }
+
+    int deviceIndex = selectDeviceIndex(pHandleApcDI);
+
+    DEVSELINFO devSelInfo;
+    devSelInfo.index = deviceIndex;
+
+    imuType = selectIMUAxis();
+
+    IMUReader* imu_reader = new IMUReader(pHandleApcDI, devSelInfo, (imuType == 1) ? IMU_9Axis : IMU_6Axis);
+    imu_reader->ResetBootloader();
+    delete imu_reader;
+
+    APC_Release(&pHandleApcDI);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Release error\n");
+        return;
+    }
+}
+
+void BatchReadASICRegister(void* pHandleApcDI, DEVSELINFO& devSelInfo)
+{
+    DEVINFORMATIONEX devinfo;
+    int ret = APC_GetDeviceInfoEx(pHandleApcDI, &devSelInfo, &devinfo);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_GetDeviceInfoEx error\n");
+        return;
+    }
+    char readfileName[256] = { 0 };
+    char writefileName[256] = { 0 };
+    switch (devinfo.nChipID) {
+    case 0x015:
+        sprintf(readfileName, "./batch/ASIC(ISP)_list_eSP876.txt");
+        sprintf(writefileName, "./batch/ASIC(ISP)_read_eSP876.txt");
+        break;
+    case 0x029:
+        sprintf(readfileName, "./batch/ASIC(ISP)_list_eSP777.txt");
+        sprintf(writefileName, "./batch/ASIC(ISP)_read_eSP777.txt");
+        break;
+    default:
+        CT_DEBUG("Chip not support\n");
+        return;
+    }
+    int nRet = 0;
+    char tmp[255];
+    int RegAddress, Data;
+    
+    std::ifstream in(readfileName);
+    std::ofstream out(writefileName);
+    if (!in)
+    {
+        printf("[%s][%d]Cannot open read format file %s \n", __func__, __LINE__, readfileName);
+        return;
+    }
+    printf("[%s][%d]Successfully open read format file %s \n", __func__, __LINE__, readfileName);
+    while (in)
+    {
+        in.getline(tmp, 255);
+        if (in)
+        {
+            unsigned short RegValue;
+            sscanf(tmp, "%x, %x", &RegAddress, &Data);
+            APC_GetHWRegister(pHandleApcDI, &devSelInfo, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
+            std::ostringstream ra, rv;
+            ra << "0x" << std::hex << RegAddress;
+            std::string read = ra.str();
+            if (RegValue >= 16)
+            {
+                rv << "0x" << std::hex << RegValue;
+                std::string write = rv.str();
+                out << read << "," << write << std::endl;
+            }
+            if (RegValue < 16)
+            {
+                rv << "0x0" << std::hex << RegValue;
+                std::string write = rv.str();
+                out << read << "," << write << std::endl;
+            }
+        }
+    }
+    in.close();
+    out.close();
+}
+
+#define SensorSlaveAddress 0x20
+void BatchReadSensorRegister(void* pHandleApcDI, DEVSELINFO& devSelInfo)
+{
+    char readfileName[256] = {0};
+    char writefileName[256] = {0};
+    char tmp[255];
+    int RegAddress, Data;
+    sprintf(readfileName, "./batch/Sensor_list.txt");
+    sprintf(writefileName, "./batch/Sensor_read.txt");
+    std::ifstream in(readfileName);
+    std::ofstream out(writefileName);
+    if (!in)
+    {
+        printf("[%s][%d]Cannot open read format file %s \n", __func__, __LINE__, readfileName);
+        return;
+    }
+    printf("[%s][%d]Successfully open read format file %s \n", __func__, __LINE__, readfileName);
+    while (in)
+    {
+            in.getline(tmp, 255);
+            if (in)
+            {
+                unsigned short RegValue;
+                sscanf(tmp, "%x, %x", &RegAddress, &Data);
+                APC_GetSensorRegister(pHandleApcDI, &devSelInfo, SensorSlaveAddress, RegAddress, &RegValue, FG_Address_2Byte | FG_Value_1Byte, APC_SensorMode::Sensor1);
+                std::ostringstream ra ,rv;
+                ra << "0x0" << std::hex << RegAddress;
+                std::string read = ra.str();
+                if (RegValue>=16)
+                {
+                    rv << "0x" << std::hex << RegValue;
+                    std::string write = rv.str();
+                    out << read <<","<< write << std::endl ;
+                }
+                if (RegValue<16)
+                {
+                    rv << "0x0" << std::hex << RegValue;
+                    std::string write = rv.str();
+                    out << read <<","<< write << std::endl ;
+                }
+            }
+    }
+    in.close();
+    out.close();
+}
+
+void BatchReadFWRegister(void* pHandleApcDI, DEVSELINFO& devSelInfo)
+{
+    for (int page = 1; page <= 6; page++)
+    {
+        char readfileName[256] = { 0 };
+        char writefileName[256] = { 0 };
+        char tmp[255];
+        int RegAddress, Data;
+        int flag = 0;
+        flag |= FG_Address_1Byte;
+        flag |= FG_Value_1Byte;
+        switch (page) {
+        case 1:
+            sprintf(readfileName, "./batch/FW_list_pg1.txt");
+            sprintf(writefileName, "./batch/FW_read_pg1.txt");
+            APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa0, 0x00, flag);
+            break;
+        case 2:
+            sprintf(readfileName, "./batch/FW_list_pg2.txt");
+            sprintf(writefileName, "./batch/FW_read_pg2.txt");
+            APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa0, 0x10, flag);
+            break;
+        case 3:
+            sprintf(readfileName, "./batch/FW_list_pg3.txt");
+            sprintf(writefileName, "./batch/FW_read_pg3.txt");
+            APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa0, 0x20, flag);
+            break;
+        case 4:
+            sprintf(readfileName, "./batch/FW_list_pg4.txt");
+            sprintf(writefileName, "./batch/FW_read_pg4.txt");
+            APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa0, 0x30, flag);
+            break;
+        case 5:
+            sprintf(readfileName, "./batch/FW_list_pg5.txt");
+            sprintf(writefileName, "./batch/FW_read_pg5.txt");
+            APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa0, 0x40, flag);
+            break;
+        case 6:
+            sprintf(readfileName, "./batch/FW_list_pg6.txt");
+            sprintf(writefileName, "./batch/FW_read_pg6.txt");
+            APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa8, 0x00, flag);
+            break;
+        }
+        std::ifstream in(readfileName);
+        std::ofstream out(writefileName);
+        if (!in)
+        {
+            printf("[%s][%d]Cannot open read format file %s \n", __func__, __LINE__, readfileName);
+            return;
+        }
+        printf("[%s][%d]Successfully open read format file %s \n", __func__, __LINE__, readfileName);
+        while (in)
+        {
+            in.getline(tmp, 255);
+            if (in)
+            {
+                unsigned short RegValue;
+                sscanf(tmp, "%x, %x", &RegAddress, &Data);
+                if (page < 6)
+                {
+                    APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa1, RegAddress, flag);
+
+                    APC_GetFWRegister(pHandleApcDI, &devSelInfo, 0xa2, &RegValue, flag);
+                }
+                if (page == 6)
+                {
+                    APC_SetFWRegister(pHandleApcDI, &devSelInfo, 0xa9, RegAddress, flag);
+
+                    APC_GetFWRegister(pHandleApcDI, &devSelInfo, 0xaa, &RegValue, flag);
+                }
+                std::ostringstream ra, rv;
+                if (RegAddress >= 16)
+                {
+                    ra << "0x" << std::hex << RegAddress;
+                }
+                if (RegAddress < 16)
+                {
+                    ra << "0x0" << std::hex << RegAddress;
+                }
+                std::string read = ra.str();
+                if (RegValue >= 16)
+                {
+                    rv << "0x" << std::hex << RegValue;
+                    std::string write = rv.str();
+                    out << read << "," << write << std::endl;
+                }
+                if (RegValue < 16)
+                {
+                    rv << "0x0" << std::hex << RegValue;
+                    std::string write = rv.str();
+                    out << read << "," << write << std::endl;
+                }
+            }
+        }
+        in.close();
+        out.close();
+    }
+}
+
+void BatchReadASIC()
+{
+    void* pHandleApcDI;
+    int ret = APC_Init(&pHandleApcDI, false);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Init error\n");
+        return;
+    }
+    int deviceIndex = selectDeviceIndex(pHandleApcDI);
+    DEVSELINFO devSelInfo;
+    devSelInfo.index = deviceIndex;
+
+    BatchReadASICRegister(pHandleApcDI, devSelInfo);
+
+    APC_Release(&pHandleApcDI);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Release error\n");
+    }
+}
+
+void BatchReadASICSensorFW()
+{
+    void* pHandleApcDI;
+    int ret = APC_Init(&pHandleApcDI, false);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Init error\n");
+        return;
+    }
+    int deviceIndex = selectDeviceIndex(pHandleApcDI);
+    DEVSELINFO devSelInfo;
+    devSelInfo.index = deviceIndex;
+
+    BatchReadASICRegister(pHandleApcDI, devSelInfo);
+    BatchReadSensorRegister(pHandleApcDI, devSelInfo);
+    BatchReadFWRegister(pHandleApcDI, devSelInfo);
+
+    APC_Release(&pHandleApcDI);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Release error\n");
+    }
+}
+
+void printf_red(const char *s)
+{
+    printf(KRED_L, s);
+}
+
+void printf_green(const char *s)
+{
+    printf(KGRN_L, s);
+}
+
+void printf_yellow(const char *s)
+{
+    printf(KYEL_L, s);
+}
+
+void printf_blue(const char *s)
+{
+    printf(KBLU_L, s);
+}
+
+void printf_pink(const char *s)
+{
+    printf(KMAG_L, s);
+}
+
+void printf_cyan(const char *s)
+{
+    printf(KCYN_L, s);
+}
+//--
+
+void InitOpenCloseReleaseLoop() {
+    int loop = 0, ret = 0, is_enable_EP3 = 0;
+    unsigned short reg_val = 0;
+
+    int color_index = -1, depth_index = -1, fps = 30;
+    int depth_type = APC_DEPTH_DATA_11_BITS;
+    int deviceIndex = 0;
+    int ir_value = 0;
+
+    CallbackParam callParam;
+    callParam.print_log = false;
+    callParam.save_file = false;
+
+    int run = 0;
+    printf("\nPlease input how many times to run open/close device test : \n");
+    scanf("%d", &run);
+
+    int frame_number = 0;
+    printf("\nPlease input how many received frames to close device each run : \n");
+    scanf("%d", &frame_number);
+
+    //// set preview info +++
+    ret = APC_Init(&mPreviewParam.handleApcDI, false);
+    if (ret != APC_OK) {
+        CT_DEBUG("APC_Init error\n");
+        goto finish;
+    }
+    deviceIndex = selectDeviceIndex(mPreviewParam.handleApcDI);
+
+    mPreviewParam.devSelInfo.index = deviceIndex;
+    selectColorDepth(mPreviewParam.handleApcDI, mPreviewParam.devSelInfo, &color_index, &depth_index, &fps);
+
+    if (depth_index > -1) {
+        m_zdTableIndex = depth_index;
+        int mNear = 0, mFar = 1000;
+        GetZDTable();
+        GetDepthZValue(mFar, mNear);
+        memset(m_ColorPalette, NULL, sizeof(m_ColorPalette));
+        generatePaletteColor(m_ColorPalette, 1 << 14, 4, mNear, mFar, true);
+    }
+    //// set preview info ---
+
+    selectDepthType(mPreviewParam.handleApcDI, mPreviewParam.devSelInfo, &depth_type);
+    setIR(&ir_value);
+
+    printf("color index : %d, depth index : %d, fps : %d, depth type : %d, ir : %d\n", color_index, depth_index, fps, depth_type, ir_value);
+
+    APC_CloseDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo);
+    APC_Release(&mPreviewParam.handleApcDI);
+
+    while (loop < run) {
+        last_color_sn = 0;
+        last_depth_sn = 0;
+
+        ret = APC_Init(&mPreviewParam.handleApcDI, false);
+        if (ret != APC_OK) {
+            CT_DEBUG("APC_Init error\n");
+            return;
+        }
+
+        printf_red("(01) init_device"); printf("(%d)\n", ret);
+
+        ret = APC_SetIRMode(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, 0x3f);
+        ret = APC_SetCurrentIRValue(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, ir_value);
+        ret = enableInterleaveModeIfNeeded(depth_type);
+        ret = APC_SetDepthDataType(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, depth_type);
+        if (ret != APC_OK) {
+            CT_DEBUG("APC_SetDepthDataType error\n");
+            goto finish;
+        }
+        ret = APC_OpenDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo, color_index, depth_index, ApcDIDepthSwitch::Depth1, fps, ColorDepthCallback, &callParam);
+        if (ret != APC_OK) {
+            CT_DEBUG("APC_OpenDevice error\n");
+            goto finish;
+        }
+        printf_red("(02) open_device"); printf("(%d)\n", ret);
+
+        //get image
+        printf_blue("(03) frame number each run = "); printf("(%d)\n", frame_number);
+
+        while (last_color_sn < frame_number || last_depth_sn < frame_number) {
+            //printf("last_color_sn:%d, last_depth_sn:%d\n", last_color_sn, last_depth_sn);
+            Sleep(10);
+        }
+
+        printf_red("(04) get image done\n");
+        APC_CloseDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo);
+        printf_red("(05) close device\n");
+        APC_Release(&mPreviewParam.handleApcDI);
+        printf_red("(06) release device\n");
+
+        loop++;
+        printf_blue("(07) loop = "); printf("(%d)\n", loop);
+    }
+finish:
+    APC_CloseDevice(mPreviewParam.handleApcDI, &mPreviewParam.devSelInfo);
+    APC_Release(&mPreviewParam.handleApcDI);
+    printf("(99) exit test !!\n");
 }

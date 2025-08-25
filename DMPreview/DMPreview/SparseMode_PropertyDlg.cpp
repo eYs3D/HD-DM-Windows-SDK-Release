@@ -18,7 +18,7 @@ SparseMode_PropertyDlg::SparseMode_PropertyDlg( void*&                  hApcDI,
                                       DEVSELINFO&             devSelInfo,
                                       const DEVINFORMATIONEX& devinfoEx,
                                       CWnd*                   pParent )
-	: CDialog(IDD_SPARSE_MODE, pParent), m_hApcDI(hApcDI), m_DevSelInfo(devSelInfo), m_xDevinfoEx(devinfoEx)
+	: CDialog(IDD_SPARSE_MODE, pParent), m_hApcDI(hApcDI), m_DevSelInfo(devSelInfo), m_xDevinfoEx(devinfoEx), m_CanEnable(false)
 {
 }
 
@@ -30,6 +30,7 @@ BOOL SparseMode_PropertyDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
     InitUI();
+    updateDepthReleatedSettings();
 	return TRUE;
 }
 
@@ -316,6 +317,17 @@ void SparseMode_PropertyDlg::UpdateSparseModeDefault()
     UpdateSparseModeReg(CONFIG_SPARSE_THD, Default_SPARSE_THD_Value);
 }
 
+void SparseMode_PropertyDlg::ApplySparseModeCurrentSetting()
+{
+    UpdateSparseModeReg(CONFIG_DEPTH_LRCHECK_DIFF, m_SliderCtrl_DEPTH_LRCHECK_DIFF->GetPos());
+    UpdateSparseModeReg(CONFIG_SGBM_SAD_THD, m_SliderCtrl_SGBM_SAD_THD->GetPos());
+    UpdateSparseModeReg(CONFIG_SGBM_SAD_RATIO, m_SliderCtrl_SGBM_SAD_RATIO->GetPos());
+    UpdateSparseModeReg(CONFIG_TEXT_LMT, m_SliderCtrl_TEXT_LMT->GetPos());
+    UpdateSparseModeReg(CONFIG_TEXT_PGAIN, m_SliderCtrl_TEXT_PGAIN->GetPos());
+    UpdateSparseModeReg(CONFIG_TEXT_NGAIN, m_SliderCtrl_TEXT_NGAIN->GetPos());
+    UpdateSparseModeReg(CONFIG_SPARSE_THD, m_SliderCtrl_SPARSE_THD->GetPos());
+}
+
 void SparseMode_PropertyDlg::UpdateSparseModeReg(int SparseMode, int value)
 {
     USHORT RegValue = 0;
@@ -368,7 +380,7 @@ void SparseMode_PropertyDlg::UpdateSparseModeReg(int SparseMode, int value)
     else if ((SparseMode == CONFIG_TEXT_LMT))
     {
         ADDRESS = TEXT_LMT_ADDRESS;
-        NotValidDataRange = 0xc0; //bit[6:0]
+        NotValidDataRange = 0x80; //bit[6:0]
 
         TRACE("ADDRESS = TEXT_LMT_ADDRESS\n");
         ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
@@ -427,7 +439,17 @@ void SparseMode_PropertyDlg::UpdateSparseModeReg(int SparseMode, int value)
     TRACE("GetHWRegister ret:%d, ADDRESS:%04x RegValueCheck: %04x\n", ret, ADDRESS, RegValueCheck);
 }
 
-void SparseMode_PropertyDlg::UpdateSparseModeConfig(bool enable)
+void SparseMode_PropertyDlg::SetSparseMode(bool canEnable)
+{
+    m_CanEnable = canEnable;
+    if (m_CanEnable)
+    {
+        updateDepthReleatedSettings();
+    }
+    EnableSparseMode();
+}
+
+void SparseMode_PropertyDlg::updateDepthReleatedSettings()
 {
     USHORT RegValue = 0;
     USHORT ADDRESS = 0;
@@ -438,10 +460,40 @@ void SparseMode_PropertyDlg::UpdateSparseModeConfig(bool enable)
     TRACE("ADDRESS = DEPTH_LRCHECK_BYPASS_ADDRESS\n");
     ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
     TRACE("GetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
-    if(enable)
+    m_DEPTH_LRCHECK_BYPASS_BIT = RegValue & (1 << 7);
+
+
+    ADDRESS = DEPTH_SAD_ENB_ADDRESS;
+    TRACE("ADDRESS = DEPTH_SAD_ENB_ADDRESS\n");
+    ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
+    TRACE("GetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
+    m_DEPTH_SAD_ENB_BIT = RegValue & (1 << 2);
+}
+
+void SparseMode_PropertyDlg::EnableSparseMode()
+{
+    if (!m_CanEnable)
+        return;
+
+    bool enable = ((CButton*)GetDlgItem(IDC_CHK_ENABLE_SPARSE_MODE))->GetCheck();
+
+    USHORT RegValue = 0;
+    USHORT ADDRESS = 0;
+    int ret = 0;
+    USHORT RegValueCheck = 0;
+
+    ADDRESS = DEPTH_LRCHECK_BYPASS_ADDRESS;
+    TRACE("ADDRESS = DEPTH_LRCHECK_BYPASS_ADDRESS\n");
+    ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
+    TRACE("GetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
+    if (enable)
+    {
         RegValue = RegValue & ~(1 << 7); //bit[7] off
-    else
+    }
+    else if (m_DEPTH_LRCHECK_BYPASS_BIT)
+    {
         RegValue = RegValue | (1 << 7); //bit[7] on
+    }
     TRACE("after bit ctrl RegValue: %04x, \n", RegValue);
     ret = APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, RegValue, FG_Address_2Byte | FG_Value_1Byte);
     TRACE("SetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
@@ -453,9 +505,13 @@ void SparseMode_PropertyDlg::UpdateSparseModeConfig(bool enable)
     ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, &RegValue, FG_Address_2Byte | FG_Value_1Byte);
     TRACE("GetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
     if (enable)
+    {
         RegValue = RegValue | (1 << 2); //bit[2] on
-    else
+    }
+    else if (!m_DEPTH_SAD_ENB_BIT)
+    {
         RegValue = RegValue & ~(1 << 2); //bit[2] off
+    }
     TRACE("after bit ctrl RegValue: %04x, \n", RegValue);
     ret = APC_SetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, RegValue, FG_Address_2Byte | FG_Value_1Byte);
     TRACE("SetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
@@ -489,6 +545,11 @@ void SparseMode_PropertyDlg::UpdateSparseModeConfig(bool enable)
     TRACE("SetHWRegister ret:%d, ADDRESS:%04x RegValue: %04x\n", ret, ADDRESS, RegValue);
     ret = APC_GetHWRegister(m_hApcDI, &m_DevSelInfo, ADDRESS, &RegValueCheck, FG_Address_2Byte | FG_Value_1Byte);
     TRACE("GetHWRegister ret:%d, ADDRESS:%04x RegValueCheck: %04x\n", ret, ADDRESS, RegValueCheck);
+
+    if (enable)
+    {
+        ApplySparseModeCurrentSetting();
+    }
 }
 
 void SparseMode_PropertyDlg::OnBnClickedSparseModeReset()
@@ -520,12 +581,8 @@ void SparseMode_PropertyDlg::EnableSliderCtrl(bool enable)
 void SparseMode_PropertyDlg::OnBnClickedEnableSparseMode()
 {
     const BOOL checked = ((CButton*)GetDlgItem(IDC_CHK_ENABLE_SPARSE_MODE))->GetCheck();
-    if (!checked)
-        return;
-    ((CButton*)GetDlgItem(IDC_CHK_ENABLE_SPARSE_MODE))->EnableWindow(false);
-    UpdateSparseModeConfig(checked);
-    OnBnClickedSparseModeReset();
     EnableSliderCtrl(checked);
+    EnableSparseMode();
 }
 
 void SparseMode_PropertyDlg::OnBnClickedSparseModeSaveConfig()

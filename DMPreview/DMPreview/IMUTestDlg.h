@@ -51,6 +51,11 @@ const char WRITE_ACC_FS[8] = { 0x01, 0x23, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 const char READ_GYR_FS[8] = { 0x01, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 const char WRITE_GYR_FS[8] = { 0x01, 0x25, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
+const std::vector<std::string> ACC_FS_LSM6DSR = {"2G", "4G", "8G", "16G"};
+const std::vector<std::string> GYR_FS_LSM6DSR = {"125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps"};
+const std::vector<std::string> ACC_FS_BMI088 = {"3G", "6G", "12G", "24G"};
+const std::vector<std::string> GYR_FS_BMI088 = {"125dps", "250dps", "500dps", "1000dps", "2000dps"};
+
 struct SetFeatureDATA_Item {
 	const char* pData;
 	int nDataLength;
@@ -180,12 +185,14 @@ private:
 
     void ReadSerialNumber( char* pSerialNumber );
     void WriteSerialNumber( const char* pSerialNumber );
+    bool m_bIsLSM6DSR = true; // used for IVY2 only
     void GetRTC(char* pHour, char* pMinute, char* pSecond);
     void SetRTC(char hour, char minute, char second);
     void GetAccFs(char* pData);
     void SetAccFs(char data);
     void GetGyrFs(char* pData);
     void SetGyrFs(char data);
+    void InitAccGyrControl(const std::vector<std::string>& accList, const std::vector<std::string>& gyrList);
 
 	double m_QuaternionBeginInverse[4] = { 0 };
 	bool m_bNeedInitQuaternion = true;

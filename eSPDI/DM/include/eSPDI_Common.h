@@ -112,13 +112,16 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_8063_K      0x0165
 #define APC_PID_HYPATIA     0x0160  // XY8071
 #define APC_PID_HYPATIA2    0x0173
+#define APC_PID_8072        0x0180
 #define APC_PID_SANDRA      0x0167
 #define APC_PID_NORA        0x0168
 #define APC_PID_HELEN       0x0171
-#define APC_PID_GRAPE       0x0300
+#define APC_PID_GRAPE       0x0202
 #define APC_PID_IVY         0x0177
 #define APC_PID_IVY2        0x0191
+#define APC_PID_IVY3        0x0192
 #define APC_PID_IVY2_S      0x0195
+#define APC_PID_IVY4        0x0198
 #define APC_PID_80362       0x0181
 #define APC_PID_8077        0x0182
 #define APC_PID_8081        0x0183
@@ -127,6 +130,8 @@ typedef struct tagAPC_STREAM_INFO {
 #define APC_PID_FRANK       0x0187
 #define APC_PID_STACY       0x0188
 #define APC_PID_STACYJUNIOR 0x0189
+#define APC_PID_TARYN       0x0199
+#define APC_PID_HYPATIA4    0x0204
 
 #define BIT_SET(a,b) ((a) |= (1<<(b)))
 #define BIT_CLEAR(a,b) ((a) &= ~(1<<(b)))
@@ -333,6 +338,11 @@ typedef struct eSPCtrl_RectLogData
             WORD	nLineBuffers;
             float 	ReProjectMat[16];
             float 	ParameterRatio[2]; // Ratio for distortion K6
+            float	LR_cam_K_temperature[2];
+            float	LR_cam_thermal_variation_rate_of_focal[2];
+            float depth_comp_pars[2]; /** pars for compensating disparity value,
+                                        * Formula: new_disp_vaule = disp_value * depth_comp_pars[0] + depth_comp_pars[1]
+                                        **/
 			long 	Date; // Calibration Date
 			char	type; // Calibartion type
 			char	version[4]; // Calibration Version
@@ -483,6 +493,10 @@ struct APCImageType
 		default: return APCImageType::IMAGE_UNKNOWN;
 		}
 	}
+
+    static bool IsSupportedDisparityCompensateDevice(int pid, WORD dataType) {
+        return (pid == APC_PID_HYPATIA2 || pid == APC_PID_8072) && (APCImageType::DepthDataTypeToDepthImageType(dataType) == APCImageType::DEPTH_11BITS);
+    }
 };
 
 struct ApcDIDepthSwitch
@@ -707,6 +721,21 @@ int  APC_API APC_Init( void **ppHandleApcDI, bool bIsLogEnabled);
 	      If you call APC_Init, the bEnableAutoRestart is set as disabled.
 */
 int  APC_API APC_Init2( void **ppHandleApcDI, bool bIsLogEnabled, bool bAutoRestart);
+
+/*! \fn int APC_Init3(
+		void **ppHandleApcDI,
+		bool bIsLogEnabled,
+		bool bEnableAutoRestart)
+	\brief entry point of eYs3D camera SDK. This API allocates resource and find all the eSPI camera devices connected to the system.
+	\param ppHandleApcDI	a pointer of pointer to receive ApcDI SDK instance
+	\param bIsLogEnabled	set to true to generate log file, named log.txt in current folder
+	\param bEnableAutoRestart	set true to auto-restart the device if the device was detached and attached again.
+	\param bMonitorUSBEvent	set true to monitor usb event for APC_RegisterDeviceEvents
+	\return success: none negative integer to indicate numbers of devices found in the system.
+	\note Calls APC_Init or APC_Init2 to initilize the ApcDI SDK. APC_Init2 adds the auto-restart function to the initilization options.
+	      If you call APC_Init, the bEnableAutoRestart is set as disabled.
+*/
+int  APC_API APC_Init3( void **ppHandleApcDI, bool bIsLogEnabled, bool bEnableAutoRestart, bool bMonitorUSBEvent);
 
 /*! \fn void (*APC_DeviceEventFn)(UINT pid, UINT vid, BOOL bAttached, void* pData)
 \brief Callback function to receive any USB capture device attachment or detachment events
@@ -1019,6 +1048,39 @@ int APC_API APC_SetSlaveHWRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, 
 	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
 int APC_API APC_SetHWRegister     ( void *pHandleApcDI, PDEVSELINFO pDevSelInfo, unsigned short address, unsigned short nValue,  int flag);
+
+/*! \fn int APC_GetMultiBytesHWRegister(
+		void *pHandleApcDI,
+		PDEVSELINFO pDevSelInfo,
+		UCHAR *data,
+		int address,
+		int size)
+	\brief get hardware register with multibytes
+	\param pHandleApcDI	CApcDI handler
+	\param pDevSelInfo	pointer of device select index
+    \param data     buffer to keep firmware read back
+	\param address  flash address start to read
+	\param size     buffer length
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_GetMultiBytesHWRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, UCHAR *data, int address, int size);
+
+/*! \fn int APC_SetMultiBytesHWRegister(
+		void *pHandleApcDI,
+		PDEVSELINFO pDevSelInfo,
+		UCHAR *data,
+		int address,
+		int size)
+	\brief set hardware register with multibytes
+	\param pHandleApcDI	CApcDI handler
+	\param pDevSelInfo	pointer of device select index
+    \param data     buffer to keep firmware want to write
+	\param address  flash address start to write
+	\param size     buffer length
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_SetMultiBytesHWRegister(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, UCHAR *data, int address, int size);
+
 // register APIs -
 
 // File ID +
@@ -1233,12 +1295,28 @@ int APC_API APC_GetUnpAreaStartSec(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 */
 int APC_API APC_IsBPX4bitsClear(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
 
-/*! \fn int APC_UnprotectFlash(
-        void *pHandleApcDI,
-        PDEVSELINFO pDevSelInfo
-    \return success: APC_OK, others: see eSPDI_ErrCode.h
+/*! \fn int APC_GetDeviceInfoEx(
+		void *pHandleApcDI,
+		PDEVSELINFO pDevSelInfo,
+		DEVINFORMATIONEX* pdevinfo)
+	\brief get target device info
+	\param void *pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\param PDEVSELINFO pDevSelInfo	pointer of device select index
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
 */
 int APC_API APC_UnprotectFlash(void *pHandleApcDI, PDEVSELINFO pDevSelInfo);
+
+/*! \fn int APC_GetDeviceInfoEx(
+		void *pHandleApcDI,
+		PDEVSELINFO pDevSelInfo,
+		DEVINFORMATIONEX* pdevinfo)
+	\brief get target device info
+	\param void *pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\param PDEVSELINFO pDevSelInfo	pointer of device select index
+	\param , const char* cipher	cipher to get root authority for device unprotection
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_UnprotectFlashByCipher(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, const char* cipher);
 
 /*! \fn int APC_OpenDevice(
 		void* pHandleApcDI,
@@ -1389,6 +1467,15 @@ int APC_API APC_GetIRMinValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD 
 */
 int APC_API APC_SetIRMaxValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType);
 
+/*! \fn int APC_SetIRMaxValueUnleashed(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType)
+	\brief set maximum IR value the module support without any limitation
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\param pDevSelInfo	pointer of device select index
+	\param wType	pointer strors maximum IR value
+	\return success: APC_OK, others: see eSPDI_ErrCode.h
+*/
+int APC_API APC_SetIRMaxValueUnleashed(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD wType);
+
 /*! \fn int APC_GetIRMaxValue(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, WORD *pwType)
 	\brief get maximum IR value the module support
 	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
@@ -1465,6 +1552,7 @@ typedef enum
     APC_SENSOR_TYPE_OC0SA10,
     APC_SENSOR_TYPE_VD56G3,
     APC_SENSOR_TYPE_VD66GY,
+    APC_SENSOR_TYPE_H68,
     APC_SENSOR_TYPE_UNKOWN = 0xffff
 } SENSOR_TYPE_NAME; 
 

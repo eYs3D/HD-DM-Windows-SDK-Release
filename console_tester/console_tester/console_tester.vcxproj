@@ -23,7 +23,18 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{442851b4-ee27-4380-afd7-b9ff153ae10f}</ProjectGuid>
     <RootNamespace>consoletester</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(WindowsTargetPlatformVersion)'==''">
+    <!-- Default the installed latest Win10 SDK -->
+    <WindowsSdkInstallFolder_10 Condition="'$(WindowsSdkInstallFolder_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0@InstallationFolder)</WindowsSdkInstallFolder_10>
+    <WindowsSdkInstallFolder_10 Condition="'$(WindowsSdkInstallFolder_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0@InstallationFolder)</WindowsSdkInstallFolder_10>
+    <WindowsTargetPlatformVersion_10 Condition="'$(WindowsTargetPlatformVersion_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0@ProductVersion)</WindowsTargetPlatformVersion_10>
+    <WindowsTargetPlatformVersion_10 Condition="'$(WindowsTargetPlatformVersion_10)' == ''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0@ProductVersion)</WindowsTargetPlatformVersion_10>
+    <!-- Sometimes the version in the registry has to .0 suffix, and sometimes it doesn't. Check and add it -->
+    <WindowsTargetPlatformVersion_10 Condition="'$(WindowsTargetPlatformVersion_10)' != '' and !$(WindowsTargetPlatformVersion_10.EndsWith('.0'))">$(WindowsTargetPlatformVersion_10).0</WindowsTargetPlatformVersion_10>
+    <WindowsTargetPlatformVersion>$(WindowsTargetPlatformVersion_10)</WindowsTargetPlatformVersion>
+    <!-- Default back to 10.0.10240.0 if the ARM version of the Win10 SDK is not installed -->
+    <WindowsTargetPlatformVersion Condition="'$(Platform)'=='ARM' and !Exists('$(WindowsSdkInstallFolder_10)\Include\$(WindowsTargetPlatformVersion_10)\shared\ksarm.h')">10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -115,7 +126,9 @@
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+mkdir $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch
+copy $(SolutionDir)console_tester\batch $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -151,7 +164,9 @@ copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(Solut
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+mkdir $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch
+copy $(SolutionDir)console_tester\batch $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -179,7 +194,9 @@ copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(Solut
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+mkdir $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch
+copy $(SolutionDir)console_tester\batch $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -209,7 +226,9 @@ copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(Solut
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.dll $(SolutionDir)console_tester\console_tester\bin\$(Platform)
-copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)</Command>
+copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(SolutionDir)console_tester\console_tester\bin\$(Platform)
+mkdir $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch
+copy $(SolutionDir)console_tester\batch $(SolutionDir)console_tester\console_tester\bin\$(Platform)\batch</Command>
     </PreBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -217,21 +236,21 @@ copy $(SolutionDir)..\eSPDI\DM\$(Platform)\$(Configuration)\eSPDI_DM.lib $(Solut
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\DMPreview\Quaternion1.c" />
-    <ClCompile Include="..\utility\hidapi\hid.c" />
-    <ClCompile Include="..\utility\IMUData.cpp" />
     <ClCompile Include="ColorPaletteGenerator.cpp" />
+    <ClCompile Include="hid.c" />
+    <ClCompile Include="IMUData.cpp" />
     <ClCompile Include="IMUReader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Quaternion1.c" />
     <ClCompile Include="testFunc.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\DMPreview\Quaternion1.h" />
-    <ClInclude Include="..\utility\hidapi\hidapi.h" />
-    <ClInclude Include="..\utility\IMUData.h" />
     <ClInclude Include="ColorPaletteGenerator.h" />
+    <ClInclude Include="hidapi.h" />
+    <ClInclude Include="IMUData.h" />
     <ClInclude Include="IMUReader.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Quaternion1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

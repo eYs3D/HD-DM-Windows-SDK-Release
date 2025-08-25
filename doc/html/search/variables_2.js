@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['file_5fid_5fheader_265',['file_ID_header',['../struct_para_l_u_t.html#aabaf3b84d3e765ed4d223c51f9cc4910',1,'ParaLUT']]],
-  ['file_5fid_5fversion_266',['file_ID_version',['../struct_para_l_u_t.html#af936aa2560c36abeff1363fa7f3e9eb0',1,'ParaLUT']]],
-  ['fov_267',['FOV',['../struct_para_l_u_t.html#a1499970ea4fc35f577865deaefa21346',1,'ParaLUT']]]
+  ['date_0',['Date',['../structe_s_p_ctrl___rect_log_data.html#aa8ab77fc9c2d3e14a7e720db98aa3829',1,'eSPCtrl_RectLogData']]]
 ];

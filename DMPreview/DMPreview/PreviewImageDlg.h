@@ -27,7 +27,7 @@ class AEAWB_PropertyDlg;
 class SparseMode_PropertyDlg;
 class DistanceAccuracyDlg;
 class DepthFilterDlg;
-class Self_CalibrationDlg;
+class SelfCalibration2Dlg;
 struct DepthfilterParam;
 
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
@@ -47,8 +47,8 @@ public:
     inline void SetSparseModeDlg(SparseMode_PropertyDlg* pSparseModeDlg) { m_SparseModeDlg = pSparseModeDlg; }
     inline void SetAccuracyDlg( DistanceAccuracyDlg* pAccuracyDlg ) { m_pAccuracyDlg = pAccuracyDlg; }
     inline void SetDepthFilterDlg( DepthFilterDlg* pDepthFilterDlg ) { m_pDepthFilterDlg = pDepthFilterDlg; }
-    inline void SetSelfCalibrationDlg(Self_CalibrationDlg* pSelfCalibrationDlg) { m_pSelfCalibrationDlg = pSelfCalibrationDlg; }
     inline void DepthIndexAccuracy( const int iDepthIndex ) { m_i8038DepthIndex = iDepthIndex; }
+    inline void SetSelfCalibration2Dlg(SelfCalibration2Dlg* pSelfCalibration2Dlg) { m_pSelfCalibration2Dlg = pSelfCalibration2Dlg; }
 
     void SetFilterParam( DepthfilterParam& xDfParam );
     void EnableAccuracy( const BOOL bEnableAccuracy );
@@ -62,6 +62,7 @@ public:
 	BOOL IsInterLeaveMode();
 	CVideoDeviceDlg * m_pdlgVideoDeviceDlg;
 	ModeConfig::MODE_CONFIG GetCurrentMode();
+	PointCloudInfo* GetPointCloudInfo();
 private:
 
     int GetDepthStreamIndex(int depthIndex) const;
@@ -90,10 +91,6 @@ private:
     int EnableDenoise(bool enable);
     int InitEysov(LONG& outWidth, LONG& outHeight);
     void PreparePreviewDlg();
-#if 0 // REFINE_DATABASE_CODE
-    int GetTableIndex();
-    WORD GetVideoModeFWValue();
-#endif
     void InitPreviewDlgPos();
     void CloseDeviceAndStopPreview(CDialog* pCallerDlg);
     static void ImgCallback(APCImageType::Value imgType, int imgId, unsigned char* imgBuf, int imgSize,
@@ -236,6 +233,7 @@ private:
 #ifndef ESPDI_EG
     CDepthFusionHelper* m_depthFusionHelper;
 	FrameGrabber* m_frameGrabber;
+	std::vector<unsigned char> m_bufGreenColor;
 #endif
 	RegisterSettings* m_registerSettings;
 	char m_LogImgfile[128];
@@ -251,10 +249,10 @@ private:
     SparseMode_PropertyDlg* m_SparseModeDlg;
 
 	bool m_bPrevLowLigh;
-
+    bool m_bIsLRD_Mode;
     DistanceAccuracyDlg* m_pAccuracyDlg;
     DepthFilterDlg* m_pDepthFilterDlg;
-    Self_CalibrationDlg* m_pSelfCalibrationDlg;
+    SelfCalibration2Dlg* m_pSelfCalibration2Dlg;
 
     const USB_PORT_TYPE m_eUSB_Port_Type;
     std::unique_ptr< WaitDlg > m_pWaitDlg;

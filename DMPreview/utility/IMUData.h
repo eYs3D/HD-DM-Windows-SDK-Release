@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include "stdafx.h"
 class IMUData
 {
 private:	
@@ -98,6 +99,6 @@ public:
 	float _compassZ_TBC;	// RAW:[N/A]		// DMP:[53-56]
 	char _accuracy_FLAG;	// RAW:[N/A]		// DMP:[57]
 	float _quaternion[4];   // 0:[7-10] 1:[11-14] 2:[15-18] 3:[19-22]
-
+	BYTE  _updateReason;    // RAW:[22], used by IVY2 only
 };
 

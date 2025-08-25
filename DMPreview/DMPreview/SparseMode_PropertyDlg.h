@@ -67,8 +67,10 @@ public:
     int Default_TEXT_NGAIN_Value = 7;
     int Default_SPARSE_THD_Value = 8;
 
-    void UpdateSparseModeConfig(bool enable);
+    void EnableSparseMode();
+    void SetSparseMode(bool canEnable);
     void UpdateSparseModeDefault();
+    void ApplySparseModeCurrentSetting();
 
     afx_msg void OnBnClickedEnableSparseMode();
 
@@ -76,6 +78,9 @@ private:
 	void*&            m_hApcDI;
 	DEVSELINFO&       m_DevSelInfo;
     const DEVINFORMATIONEX& m_xDevinfoEx;
+    bool m_CanEnable;
+    bool m_DEPTH_LRCHECK_BYPASS_BIT;
+    bool m_DEPTH_SAD_ENB_BIT;
     CSliderCtrl*      m_SliderCtrl_DEPTH_LRCHECK_DIFF;
     CSliderCtrl*      m_SliderCtrl_SGBM_SAD_THD;
     CSliderCtrl*      m_SliderCtrl_SGBM_SAD_RATIO;
@@ -111,4 +116,5 @@ private:
     void UpdateSparseModeReg(int SparseMode, int value);
     void EnableSliderCtrl(bool enable);
     BOOL ReadConfig();
+    void updateDepthReleatedSettings();
 };

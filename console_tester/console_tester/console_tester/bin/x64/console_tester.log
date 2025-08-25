@@ -1,9 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(376,5): warning MSB8004: Intermediate 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Intermediate 目錄。
-C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output 目錄結尾不是結尾斜線。這個建置執行個體將會加入此斜線，因為這樣才能正確評估 Output 目錄。
-  複製了         1 個檔案。
-  複製了         1 個檔案。
-  Quaternion1.c
-c1 : fatal error C1083: 無法開啟來源檔案: '..\DMPreview\Quaternion1.c': No such file or directory
-  hid.c
-c1 : fatal error C1083: 無法開啟來源檔案: '..\utility\hidapi\hid.c': No such file or directory
-  正在產生程式碼...

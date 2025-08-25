@@ -187,6 +187,7 @@
 #define IDC_ED_TF_HISTORY               1162
 #define IDC_ED_TEMPORAL_NOISE           1162
 #define IDC_EDIT_RTC_HOUR               1162
+#define IDC_EDIT_MODE                   1162
 #define IDC_EDIT_ZFAR2                  1163
 #define IDC_SELF_K_Basic_Times          1163
 #define IDC_EDIT_RTC_MINUTE             1163
@@ -194,6 +195,7 @@
 #define IDC_EDIT_RTC_SECOND             1164
 #define IDC_STATIC_Z_FAR_TEXT2          1165
 #define IDC_SNAPSHOT_BTN                1166
+#define IDC_EDIT_OUT_AND_INFO           1166
 #define IDC_SNAPSHOT_BTN2               1167
 #define IDC_EDIT_Self_K_Advance_Write_Strategy_btn 1167
 #define IDC_EDIT_Self_K_Advance_Strategy_write_btn 1167
@@ -249,7 +251,7 @@
 #define IDD_AUTO_MODULE_SYNC            1308
 #define IDD_AUTO_MODULE_SYNC_DIALOG     1308
 #define IDC_STATIC_LOW_LIGHT_COMPENSATION 1309
-#define IDD_SELF_K_DIALOG               1309
+#define IDD_SELF_K2_DIALOG              1309
 #define IDD_Self_CalibrationDlg         1309
 #define IDD_SELF_CALIBRATION_DIALOG     1309
 #define IDD_SPARSE_MODE                 1310
@@ -355,11 +357,13 @@
 #define IDC_BUTTON1                     1381
 #define IDC_IMU_3D_RESET                1381
 #define IDC_BUTTON_ADJUST_FOCAL_LENGTH  1381
+#define IDC_BTN_RUN                     1381
 #define IDC_EDIT3                       1382
 #define IDC_ED_ANGLE_Y                  1382
 #define IDC_COMBO1                      1383
 #define IDC_CB_DEPTHLIST                1383
 #define IDC_COMBO_ACC_FS                1383
+#define IDC_COMBO_DEVICE_LIST           1383
 #define IDC_IMU_3D                      1384
 #define IDC_IMU_VIEWER                  1385
 #define IDC_COMBO_GYR_FS                1385
@@ -380,67 +384,7 @@
 #define IDC_TEMPERATURE_GET             1400
 #define IDC_EDIT_TEMPERATURE            1401
 #define IDC_EDIT_FORCE_OVERRIDE         1402
-#define IDC_SELF_K_RUN_CHK              1402
-#define IDC_SELF_K_Basic_Rub_Chk        1402
 #define IDC_GRAB_FRAMES_BTN             1403
-#define IDC_EDIT_SELF_K_                1403
-#define IDC_EDIT_Self_K_Schedule        1403
-#define IDC_SELF_K_Basic_Schedule       1403
-#define IDC_SELF_K_A                    1404
-#define IDC_SELF_K_Advance              1404
-#define IDC_SELF_K_Basic_Advance_Chk    1404
-#define IDC_EDIT_Self_K_do_quality_monitoring 1405
-#define IDC_EDIT_Self_K_advance_quality_monitor 1405
-#define IDC_EDIT_Self_K_dvance_quality_monitor 1405
-#define IDC_EDIT_Self_K_Advance_Strategy_do_qulity_monitor 1405
-#define IDC_EDIT_Self_K_Schedule3       1406
-#define IDC_EDIT_Self_K_low_quality_threshold_to_trigger_warning 1406
-#define IDC_EDIT_Self_K_Advance_threshold_for_bad_quality 1406
-#define IDC_EDIT_Self_K_Advance_Strategy_threshold_for_bad_quality 1406
-#define IDC_EDIT_Self_K_period_of_quality_check 1407
-#define IDC_EDIT_Self_K_Advance_period_of_quality_check 1407
-#define IDC_EDIT_Self_K_Advance_Strategy_sleep_time_for_quality_check 1407
-#define IDC_EDIT_Self_K_Schedule5       1408
-#define IDC_EDIT_Self_K_b_automatically_triger_parameter_estimation_for_recovery 1408
-#define IDC_EDIT_Self_K_Advance_auto_calibration 1408
-#define IDC_EDIT_Self_K_Advance_Strategy_auto_calibration 1408
-#define IDC_EDIT_Self_K_Schedule6       1409
-#define IDC_EDIT_Self_K_target_quality_threshold_for_recovery 1409
-#define IDC_EDIT_Self_K_Advance_target_quality 1409
-#define IDC_EDIT_Self_K_Advance_Strategy_target_quality 1409
-#define IDC_EDIT_Self_K_Schedule7       1410
-#define IDC_EDIT_Self_K_recovery_mode   1410
-#define IDC_EDIT_Self_K_Advance_calibration_mode 1410
-#define IDC_EDIT_Self_K_Advance_Strategy_calibration_mode 1410
-#define IDC_EDIT_Self_K_Schedule8       1411
-#define IDC_EDIT_Self_K_accuracy_level  1411
-#define IDC_EDIT_Self_K_Advance_accuracy_level 1411
-#define IDC_EDIT_Self_K_Advance_Strategy_accuracy_level 1411
-#define IDC_EDIT_Self_K_Schedule9       1412
-#define IDC_EDIT_Self_K_n_max_recovery_trials 1412
-#define IDC_EDIT_Self_K_Advance_max_error_trials 1412
-#define IDC_EDIT_Self_K_Advance_Strategy_max_error_trials 1412
-#define IDC_EDIT_Self_K_Schedule10      1413
-#define IDC_EDIT_Self_K_tare_target     1413
-#define IDC_EDIT_Self_K_Advance_tare_target 1413
-#define IDC_EDIT_Self_K_Advance_Strategy_tare_target 1413
-#define IDC_EDIT_Self_K_Schedule11      1414
-#define IDC_EDIT_Self_K_quality_threshold_to_trigger_parameter_estimation_for_recovery 1414
-#define IDC_EDIT_Self_K_Advance_threshold_auto_calibrarting 1414
-#define IDC_EDIT_Self_K_Advance_Strategy_threshold_auto_calibrarting 1414
-#define IDC_EDIT_Self_K_do_quality_monitoring2 1415
-#define IDC_EDIT_Self_K_Advance_Monitor_monitor_state 1415
-#define IDC_EDIT_Self_K_do_quality_monitoring3 1416
-#define IDC_EDIT_Self_K_Advance_Monitor_before_state 1416
-#define IDC_EDIT_Self_K_do_quality_monitoring4 1417
-#define IDC_EDIT_Self_K_Advance_Monitor_after_state 1417
-#define IDC_EDIT_Self_K_do_quality_monitoring5 1418
-#define IDC_EDIT_Self_K_Advance_Monitor_before_score 1418
-#define IDC_EDIT_Self_K_do_quality_monitoring6 1419
-#define IDC_EDIT_Self_K_Advance_Monitor_after_score 1419
-#define IDC_EDIT_Self_K_Advance_Read_Strategy_btn 1420
-#define IDC_EDIT_Self_K_Advance_Strategy_read_btn 1420
-#define IDC_EDIT_Self_K_Advance_Operator_calculate_score_btn 1421
 #define IDC_SLIDER_DEPTH_LRCHECK_DIFF   1422
 #define IDC_STATIC_SGBM_SAD_THD         1423
 #define IDC_ST_SGBM_SAD_THD_MIN         1424
@@ -479,6 +423,10 @@
 #define IDC_STATIC_RTC                  1457
 #define IDC_STATIC_ACC_FS               1458
 #define IDC_STATIC_GYR_FS               1459
+#define IDC_RADIO_RUNTIME               1461
+#define IDC_RADIO_REPAIR                1462
+#define IDC_BTN_RESET                   1463
+#define IDC_BTN_WRITE                   1464
 
 // Next default values for new objects
 // 
@@ -486,7 +434,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        1309
 #define _APS_NEXT_COMMAND_VALUE         1301
-#define _APS_NEXT_CONTROL_VALUE         1461
+#define _APS_NEXT_CONTROL_VALUE         1466
 #define _APS_NEXT_SYMED_VALUE           1304
 #endif
 #endif

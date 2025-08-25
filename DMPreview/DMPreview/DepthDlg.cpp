@@ -527,6 +527,31 @@ BOOL CDepthDlg::OnInitDialog() {
 
 void CDepthDlg::GetZDTable()
 {
+    pPreviewImageDlg = (CPreviewImageDlg*)m_pParentWnd;
+    if (pPreviewImageDlg->IsDevicePid(APC_PID_HYPATIA2) || pPreviewImageDlg->IsDevicePid(APC_PID_8072))
+    {
+        if ( m_zdTable ) delete[] m_zdTable;
+
+        int disparity_len = pPreviewImageDlg->GetPointCloudInfo()->disparity_len;
+        if (disparity_len > 0)
+        {
+            m_zdTableSize = disparity_len * 2;
+
+            m_zdTable = new BYTE[m_zdTableSize];
+            memset(m_zdTable, NULL, m_zdTableSize);
+
+            std::vector<float> dToW(disparity_len);
+            memcpy(&dToW[0], pPreviewImageDlg->GetPointCloudInfo()->disparityToW, disparity_len * sizeof(float));
+
+            float foclaLength = pPreviewImageDlg->GetPointCloudInfo()->focalLength;
+
+            for (int j = 0; j < disparity_len; j++)
+            {
+                ((WORD*)m_zdTable)[j] = (WORD)(foclaLength / dToW[j]);
+            }
+            return;
+        }
+    }
 #ifndef ESPDI_EG
     int actualLength = 0;
 

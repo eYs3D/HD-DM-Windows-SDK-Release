@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['paralut_324',['PARALUT',['../e_s_p_d_i___common_8h.html#a6bca9a237041aef8940bce7bd47fbd3f',1,'eSPDI_Common.h']]]
+  ['espctrl_5frectlogdata_0',['eSPCtrl_RectLogData',['../e_s_p_d_i___common_8h.html#ac77871366e6cfef874965259839c7fa0',1,'eSPDI_Common.h']]]
 ];

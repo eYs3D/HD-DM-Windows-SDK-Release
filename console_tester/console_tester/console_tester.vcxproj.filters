@@ -27,13 +27,13 @@
     <ClCompile Include="IMUReader.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="..\utility\IMUData.cpp">
+    <ClCompile Include="hid.c">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="..\utility\hidapi\hid.c">
+    <ClCompile Include="IMUData.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="..\DMPreview\Quaternion1.c">
+    <ClCompile Include="Quaternion1.c">
       <Filter>來源檔案</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,13 +47,13 @@
     <ClInclude Include="IMUReader.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="..\utility\IMUData.h">
+    <ClInclude Include="hidapi.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="..\utility\hidapi\hidapi.h">
+    <ClInclude Include="IMUData.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="..\DMPreview\Quaternion1.h">
+    <ClInclude Include="Quaternion1.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

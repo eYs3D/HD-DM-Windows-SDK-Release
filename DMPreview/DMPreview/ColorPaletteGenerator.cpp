@@ -165,7 +165,7 @@ void ColorPaletteGenerator::HSV_to_RGB(float H, float S, float V, float &R, floa
 			R = nMin;
 			G = ((4.0 - H)*fDet + R);
 		}
-        else if (H <= 4.49) { //B>=R>=G, H=4+(R-G)/fDet
+        else if (H <= 4.5) { //B>=R>=G, H=4+(R-G)/fDet
 			B = nMax;
 			G = nMin;
 			R = ((H - 4.0)*fDet + G);

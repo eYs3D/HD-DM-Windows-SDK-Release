@@ -30,7 +30,7 @@ USHORT current_imu_pid;	// Rem 0910
 #define IMU_9AXIS_8060     0x5711
 #define IMU_6AXIS_8040_NEW 0x0154
 #define IMU_9AXIS_8062     0x0163
-#define IMU_6AXIS_8063     0x0166
+#define IMU_6AXIS_8083     0x0166
 
 /* IMU Etron VID */
 #define IMU_APC_VID_0x1E4E 0x1E4E	//9 Axis;//8062 / 8060;
@@ -82,10 +82,10 @@ IMUTestDlg::IMUTestDlg(const wchar_t* SN, void*& hApcDI, DEVSELINFO& devSelInfo,
 		m_bIsDeviceMappingIMU = true;
 		handle = s_vecIMU[NULL].hIMU;
 		current_imu_pid = s_vecIMU[NULL].PID; // Rem 0910 keep current PID to check setup
-		WriteSerialNumber((char*)SN);
+		/*WriteSerialNumber((char*)SN);
 		wchar_t szBuf[MAX_PATH] = { NULL };
 		ReadSerialNumber((char*)szBuf);
-		s_vecIMU[NULL].SN = szBuf;
+		s_vecIMU[NULL].SN = szBuf;*/
 		return;
 	}
 
@@ -145,7 +145,7 @@ void IMUTestDlg::InitIMU()
     UninitIMU();
 
     std::set< int > setIMU_VID = { IMU_APC_VID_0x0483, IMU_APC_VID_0x1E4E, IMU_APC_VID_0x3438 };
-    std::set< int > setIMU_PID = { IMU_6AXIS_8040, IMU_6AXIS_8040_NEW, IMU_9AXIS_8060, IMU_9AXIS_8062, IMU_6AXIS_8063 };
+    std::set< int > setIMU_PID = { IMU_6AXIS_8040, IMU_6AXIS_8040_NEW, IMU_9AXIS_8060, IMU_9AXIS_8062, IMU_6AXIS_8083 };
 
     if ( 0 == hid_init() )
     {
@@ -884,6 +884,23 @@ void IMUTestDlg::OnCbnSelchangeComboSetImuDataFormat()
 	}
 }
 
+void IMUTestDlg::InitAccGyrControl(const std::vector<string>& accList, const std::vector<string>& gyrList)
+{
+    CComboBox* pAccComboBox = (CComboBox*)GetDlgItem(IDC_COMBO_ACC_FS);
+    pAccComboBox->ResetContent();
+    for (int i = 0; i < accList.size(); i++)
+    {
+        pAccComboBox->AddString(CString(accList[i].c_str()));
+    }
+
+    CComboBox* pGyrComboBox = (CComboBox*)GetDlgItem(IDC_COMBO_GYR_FS);
+    pGyrComboBox->ResetContent();
+    for (int i = 0; i < gyrList.size(); i++)
+    {
+        pGyrComboBox->AddString(CString(gyrList[i].c_str()));
+    }
+}
+
 BOOL IMUTestDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
@@ -915,6 +932,20 @@ BOOL IMUTestDlg::OnInitDialog()
 
     if (m_pPreviewDlg->IsDevicePid(APC_PID_IVY2))
     {
+        WORD length = 0;
+        char fwVersion[256] = { 0 };
+        GetFwVersion(&fwVersion[0], &length);
+        if (strstr(fwVersion, "LSM6DSR") != nullptr) //LSM6DSR sensor
+        {
+            m_bIsLSM6DSR = true;
+            InitAccGyrControl(ACC_FS_LSM6DSR, GYR_FS_LSM6DSR);
+        }
+        else //BMI088 sensor
+        {
+            m_bIsLSM6DSR = false;
+            InitAccGyrControl(ACC_FS_BMI088, GYR_FS_BMI088);
+        }
+
         OnBnClickedButtonRtcRead();
         OnBnClickedButtonAccFsRead();
         OnBnClickedButtonGyrFsRead();
@@ -1266,7 +1297,11 @@ void IMUTestDlg::IMUDataCallback(IMUData imu)
 	}
 
 	m_text = textBuff;
-
+	if (m_pPreviewDlg->IsDevicePid(APC_PID_IVY2))
+	{
+		snprintf(textBuff, sizeof(textBuff), "Reason:%02x\n", imu._updateReason);
+		m_text += textBuff;
+	}
 	PostMessage(WM_UPDATE_TEXT_MSG, UPDATE_TEXT);
 }
 
@@ -1409,14 +1444,27 @@ void IMUTestDlg::OnBnClickedButtonAccFsRead()
     GetAccFs(&value);
 
     CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_ACC_FS);
-    pCbx->SetCurSel(value);
+    for (int i = 0; i < pCbx->GetCount(); i++)
+    {
+        CString strCBText;
+        pCbx->GetLBText(i, strCBText);
+        int tempValue = _wtoi(strCBText.Left(strCBText.GetLength() - 1));
+        if (tempValue == value)
+        {
+            pCbx->SetCurSel(i);
+            break;
+        }
+    }
 }
 
 void IMUTestDlg::OnBnClickedButtonAccFsWrite()
 {
     CComboBox* pCbx = (CComboBox*)GetDlgItem(IDC_COMBO_ACC_FS);
-    char value = pCbx->GetCurSel();
-    SetAccFs(value);
+    CString strCBText;
+    pCbx->GetLBText(pCbx->GetCurSel(), strCBText);
+    int value = _wtoi(strCBText.Left(strCBText.GetLength() - 1));
+
+    SetAccFs((char)value);
 }
 
 void IMUTestDlg::OnBnClickedButtonGyrFsRead()

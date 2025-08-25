@@ -200,7 +200,66 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 	float focalLength = rectLogData->ReProjectMat[11] * ratio_Mat;
 	float baseline = 1.0f / rectLogData->ReProjectMat[14];
 	float diff = rectLogData->ReProjectMat[15] * ratio_Mat;
+	// Camera Parameters needed by larger FOV PLY algorithm
+	float centerXP = rectLogData->NewCamMat1[2];
+	float centerYP = rectLogData->NewCamMat1[6];
+	float focalXP = rectLogData->NewCamMat1[0];
+	float focalYP = rectLogData->NewCamMat1[5];
 
+	unsigned char *colorBuf = &colorArrayResized[0];
+	unsigned char *dArrayBuf = &dArrayResized[0];
+
+	if (centerXP != 0.0f && centerYP != 0.0f && focalXP != 0.0f && focalYP != 0.0f)
+	{
+		float disparity = 0;
+		float z_tmp = 0;
+		float x, y, z;
+
+		bool isDisparity = (depthType == APCImageType::DEPTH_11BITS);
+
+		for (int i = 0; i < outputHeight; i++) {
+			int i_start = i * outputWidth;
+			for (int j = 0; j < outputWidth; j++) {
+				int idx = i_start + j;
+				int idx3 = idx * 3;
+
+				x = 0;
+				y = 0;
+				z = 0;
+
+				if (isDisparity) {
+					disparity = (float)(((unsigned short*)dArrayBuf)[idx]) * 0.125f;//ic output depth range is 0~2047 and need to scale to 0~255, so multiply 0.125
+				}
+				else {
+					disparity = (float)(((unsigned short*)dArrayBuf)[idx]);//it's Z actually
+				}
+
+				if (!(removeINF && disparity == 0.0f)) {
+					z_tmp = (isDisparity) ? baseline * focalXP / disparity : disparity;
+
+					if (!(clipping && (z_tmp > zFar || z_tmp < zNear))) {
+						x = (j - centerXP) / focalXP * z_tmp;
+						y = (i - centerYP) / focalYP * z_tmp;
+						z = z_tmp;
+
+						CloudPoint point;
+						point.r = *(colorBuf + 0);
+						point.g = *(colorBuf + 1);
+						point.b = *(colorBuf + 2);
+						point.x = x;
+						point.y = -y;
+						point.z = -z;
+
+						tempPointCloud.push_back(point);
+					}
+				}
+				colorBuf += 3;
+			}
+		}
+
+		output.assign(tempPointCloud.begin(), tempPointCloud.begin() + tempPointCloud.size());
+		return 0;
+	}
 
 	/*Generate table for disparity to W ( W = disparity / baseline)*/
 	float disparityToW[2048];
@@ -221,9 +280,6 @@ int PlyWriter::etronFrameTo3D(int depthWidth, int depthHeight, std::vector<unsig
 		case APCImageType::DEPTH_14BITS:
 			break;
 	}
-		
-	unsigned char *colorBuf = &colorArrayResized[0];
-	unsigned char *dArrayBuf = &dArrayResized[0];
 
 	for (int j = 0; j < outputHeight; j++) {
 		for (int i = 0; i < outputWidth; i++) {

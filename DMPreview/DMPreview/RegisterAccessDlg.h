@@ -8,6 +8,14 @@
 // CRegisterAccessDlg dialog
 class std::thread;
 
+struct DeviceInfo {
+	int index;
+	DEVINFORMATIONEX deviceInfo;
+	void* apcDI = 0;
+	void* callback = 0;
+	char serialNumber[100] = {0};
+};
+
 class CRegisterAccessDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CRegisterAccessDlg)
@@ -106,9 +114,12 @@ private:
 private:
     void*& m_hApcDI;
     DEVSELINFO& m_devSelInfo;
+    void* m_selfHApcDI;
+    DEVSELINFO m_selfDevSelInfo;
     PeriodicReadParams m_periodicReadParams;
     HANDLE m_hTimerQueue;
     HANDLE m_hTimer;
+    std::vector<DeviceInfo*> m_devInfo;
 
 private:
     void CreateAccurateTimer(int period, WAITORTIMERCALLBACK callbackFn);
@@ -124,6 +135,7 @@ private:
     int IsGyroCase() const;
     void GetAndShowGyroData(bool periodicVersion, int GyroCase);
     void UpdateGotFrameTime(std::chrono::time_point<std::chrono::system_clock> startTime);
+    void UpdateDeviceList();
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -136,6 +148,7 @@ public:
     afx_msg void OnBnClickedCheckPeriodicRead();
     afx_msg void OnBnClickedRegReadBtn();
     afx_msg void OnBnClickedRegWriteBtn();
+    afx_msg void OnCbnSelchangeComboDeviceList();
     afx_msg void OnDestroy();
     afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

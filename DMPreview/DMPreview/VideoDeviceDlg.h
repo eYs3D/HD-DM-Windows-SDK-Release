@@ -36,6 +36,7 @@ public:
 	void Update_IMU_Device_Mapping();
 	void IMU_Device_Reopen(void*& hApcDI, DEVSELINFO& devSelInfo);
 	bool m_bIMU_Device_Sync;
+	bool m_bEnable_SK2_Runtime;
 
     BOOL ReadUIConfig();
 
@@ -48,8 +49,7 @@ private:
     BOOL m_TabPage4RegisterSetting;
     BOOL m_TabPage4IMU;
     BOOL m_TabPage4Audio;
-    BOOL m_TabPage4SelfCalibration;
-
+    BOOL m_TabPage4SelfCalibration2;
 
 
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

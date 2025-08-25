@@ -125,6 +125,8 @@ void IMUData::parsePacket(unsigned char* buf, bool normalization)
 		_gyroScopeY = ((float)gyroScopeY / max)*MAX_DPS;
 		_gyroScopeZ = ((float)gyroScopeZ / max)*MAX_DPS;
 
+		_updateReason = compassX;
+
 		_compassX = compassX * BASE_uT;
 		_compassY = compassY * BASE_uT;
 		_compassZ = compassZ * BASE_uT;

@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文 (繁體，台灣) resources
+// Chinese (Traditional, Taiwan) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
@@ -82,8 +82,8 @@ CAPTION "? DMPreview"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "DMPreview, 1.5.5.5",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2023",IDC_STATIC,42,26,114,8
+    LTEXT           "DMPreview, 1.5.8.8",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2024",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
@@ -236,10 +236,11 @@ IDD_DIALOG_REGISTER_ACCESS DIALOGEX 0, 0, 280, 123
 STYLE DS_SETFONT | WS_CHILD | WS_SYSMENU
 FONT 10, "Tahoma", 400, 0, 0x0
 BEGIN
-    GROUPBOX        "",IDC_STATIC_REG_RW,0,0,280,121
-    CONTROL         " I2C",IDC_RADIO_I2C,"Button",BS_AUTORADIOBUTTON | WS_GROUP,5,10,70,10
-    CONTROL         "ASIC",IDC_RADIO_ASIC,"Button",BS_AUTORADIOBUTTON,82,10,70,10
-    CONTROL         "FW",IDC_RADIO_FW,"Button",BS_AUTORADIOBUTTON,159,10,70,10
+    GROUPBOX        "",IDC_STATIC_REG_RW,0,0,350,121
+    COMBOBOX        IDC_COMBO_DEVICE_LIST,5,8,200,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         " I2C",IDC_RADIO_I2C,"Button",BS_AUTORADIOBUTTON | WS_GROUP,230,10,30,10
+    CONTROL         "ASIC",IDC_RADIO_ASIC,"Button",BS_AUTORADIOBUTTON,270,10,30,10
+    CONTROL         "FW",IDC_RADIO_FW,"Button",BS_AUTORADIOBUTTON,310,10,30,10
     LTEXT           "Slave ID:",IDC_STATIC_SLAVE_ID,5,25,50,10
     EDITTEXT        IDC_EDIT_SLAVE_ID,57,23,52,12,ES_CENTER | ES_AUTOHSCROLL
     LTEXT           "(HEX)",IDC_STATIC_SLAVE_ID2,112,25,20,10
@@ -535,58 +536,17 @@ BEGIN
     COMBOBOX        IDC_DEVCOMBO,74,12,213,62,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_SELF_K_DIALOG DIALOGEX 0, 0, 419, 238
+IDD_SELF_K2_DIALOG DIALOGEX 0, 0, 419, 238
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    GROUPBOX        "Strategy",IDC_STATIC,5,17,190,195
-    GROUPBOX        "Monitor",IDC_STATIC,200,17,210,90
-    GROUPBOX        "Operator",IDC_STATIC,200,107,210,105
-    CONTROL         "Run Self-K",IDC_SELF_K_Basic_Rub_Chk,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,4,45,10
-    LTEXT           "Schedule(s):",IDC_STATIC,55,5,41,7
-    EDITTEXT        IDC_SELF_K_Basic_Schedule,100,2,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    PUSHBUTTON      "Factory reset",IDC_IDC_SELF_K_Basic_Resetall_Btn,138,2,50,12
-    CONTROL         "Advance",IDC_SELF_K_Basic_Advance_Chk,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,360,4,43,10
-    LTEXT           "Do Quality Monitor",IDC_STATIC,10,27,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_do_qulity_monitor,166,27,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Sleep Time for Quality Check",IDC_STATIC,10,42,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_sleep_time_for_quality_check,166,42,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Threshold for Bad Quality",IDC_STATIC,10,57,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_threshold_for_bad_quality,166,57,25,12,ES_CENTER | ES_AUTOHSCROLL
-    LTEXT           "Threshold for Automatically Calibarting",IDC_STATIC,10,72,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_threshold_auto_calibrarting,166,72,25,12,ES_CENTER | ES_AUTOHSCROLL
-    LTEXT           "Automatically Do Calibration or not",IDC_STATIC,10,87,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_auto_calibration,166,87,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Target Quality for Calibration ",IDC_STATIC,10,102,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_target_quality,166,102,25,12,ES_CENTER | ES_AUTOHSCROLL
-    LTEXT           "Calibration Mode",IDC_STATIC,10,117,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_calibration_mode,166,117,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Accuracy Level",IDC_STATIC,10,132,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_accuracy_level,166,132,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Max Error Trials",IDC_STATIC,10,147,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_max_error_trials,166,147,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Tare Target",IDC_STATIC,10,162,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Strategy_tare_target,166,162,25,12,ES_CENTER | ES_AUTOHSCROLL
-    PUSHBUTTON      "Read",IDC_EDIT_Self_K_Advance_Strategy_read_btn,10,187,45,12
-    PUSHBUTTON      "Write",IDC_EDIT_Self_K_Advance_Strategy_write_btn,60,187,45,12
-    PUSHBUTTON      "Reset",IDC_EDIT_Self_K_Advance_Strategy_reset_btn,110,187,45,12
-    LTEXT           "Monitor State",IDC_STATIC,203,27,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Monitor_monitor_state,380,27,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
-    LTEXT           "State Of Before Pars",IDC_STATIC,203,42,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Monitor_before_state,380,42,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
-    LTEXT           "State Of After Pars",IDC_STATIC,203,57,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Monitor_after_state,380,57,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
-    LTEXT           "Scroe Of Before Pars",IDC_STATIC,203,72,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Monitor_before_score,380,72,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
-    LTEXT           "Scroe Of After Pars",IDC_STATIC,203,87,150,10
-    EDITTEXT        IDC_EDIT_Self_K_Advance_Monitor_after_score,380,87,25,12,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
-    PUSHBUTTON      "Calculate Score",IDC_EDIT_Self_K_Advance_Operator_calculate_score_btn,203,117,130,12
-    PUSHBUTTON      "Do Calibration",IDC_EDIT_Self_K_Advance_Operator_do_calibration_btn,203,132,130,12
-    PUSHBUTTON      "Apply Before Pars (Reg)",IDC_EDIT_Self_K_Advance_Operator_apply_before_reg_btn,203,147,130,12
-    PUSHBUTTON      "Apply After Pars (Reg)",IDC_EDIT_Self_K_Advance_Operator_apply_after_reg_btn,203,162,130,12
-    PUSHBUTTON      "Write After Pars (Flash)",IDC_EDIT_Self_K_Advance_Operator_apply_after_flash_btn,203,177,130,12
-    PUSHBUTTON      "Reset all",IDC_EDIT_Self_K_Advance_Operator_reset_all_btn,203,192,130,12
-    LTEXT           "Self-K Version:1.0.10",IDC_STATIC_DEPTH_BIT_SEL,201,4,69,8
+    LTEXT           "Mode",IDC_STATIC,8,33,18,8
+    CONTROL         "Run-Time Correction",IDC_RADIO_RUNTIME,"Button",BS_AUTORADIOBUTTON,28,33,81,10
+    CONTROL         "Depth-Broken Repair",IDC_RADIO_REPAIR,"Button",BS_AUTORADIOBUTTON,109,33,83,10
+    PUSHBUTTON      "Run",IDC_BTN_RUN,7,65,50,14
+    PUSHBUTTON      "Reset",IDC_BTN_RESET,63,65,50,14,WS_DISABLED
+    PUSHBUTTON      "Write to Flash",IDC_BTN_WRITE,8,116,50,14,WS_DISABLED
+    LTEXT           "",IDC_EDIT_OUT_AND_INFO,193,8,214,223
 END
 
 IDD_SPARSE_MODE DIALOGEX 0, 0, 282, 158
@@ -640,8 +600,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,5,5,5
- PRODUCTVERSION 1,5,5,5
+ FILEVERSION 1,5,8,8
+ PRODUCTVERSION 1,5,8,8
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -658,12 +618,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "eYs3D Microelectronics"
             VALUE "FileDescription", "DMPreview program"
-            VALUE "FileVersion", "1.5.5.5"
+            VALUE "FileVersion", "1.5.8.8"
             VALUE "InternalName", "DMPreview.exe"
             VALUE "LegalCopyright", " (c) eYs3D.  All rights reserved."
             VALUE "OriginalFilename", "DMPreview.exe"
             VALUE "ProductName", "eSPDI SDK for Windows"
-            VALUE "ProductVersion", "1.5.5.5"
+            VALUE "ProductVersion", "1.5.8.8"
         END
     END
     BLOCK "VarFileInfo"
@@ -796,7 +756,7 @@ BEGIN
         BOTTOMMARGIN, 44
     END
 
-    IDD_SELF_K_DIALOG, DIALOG
+    IDD_SELF_K2_DIALOG, DIALOG
     BEGIN
         RIGHTMARGIN, 417
         BOTTOMMARGIN, 231
@@ -869,31 +829,6 @@ BEGIN
 0x0033, 
     IDC_COMBO_TOGGLE_MODE, 0x403, 2, 0
 0x0034, 
-    0
-END
-
-IDD_DIALOG_IMU DLGINIT
-BEGIN
-    IDC_COMBO_ACC_FS, 0x403, 3, 0
-0x4732, "\000"
-    IDC_COMBO_ACC_FS, 0x403, 3, 0
-0x4734, "\000"
-    IDC_COMBO_ACC_FS, 0x403, 3, 0
-0x4738, "\000"
-    IDC_COMBO_ACC_FS, 0x403, 4, 0
-0x3631, 0x0047,
-    IDC_COMBO_GYR_FS, 0x403, 7, 0
-0x3231, 0x6435, 0x7370, "\000"
-    IDC_COMBO_GYR_FS, 0x403, 7, 0
-0x3532, 0x6430, 0x7370, "\000"
-    IDC_COMBO_GYR_FS, 0x403, 7, 0
-0x3035, 0x6430, 0x7370, "\000"
-    IDC_COMBO_GYR_FS, 0x403, 8, 0
-0x3031, 0x3030, 0x7064, 0x0073,
-    IDC_COMBO_GYR_FS, 0x403, 8, 0
-0x3032, 0x3030, 0x7064, 0x0073,
-    IDC_COMBO_GYR_FS, 0x403, 8, 0
-0x3034, 0x3030, 0x7064, 0x0073,
     0
 END
 
@@ -978,7 +913,7 @@ BEGIN
     0
 END
 
-IDD_SELF_K_DIALOG AFX_DIALOG_LAYOUT
+IDD_SELF_K2_DIALOG AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
@@ -1010,7 +945,7 @@ BEGIN
     IDS_ERTON_DI_CLASS_NAME "ApcDITestDlg"
 END
 
-#endif    // 中文 (繁體，台灣) resources
+#endif    // Chinese (Traditional, Taiwan) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

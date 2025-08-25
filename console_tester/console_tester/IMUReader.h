@@ -8,8 +8,8 @@
 #include "..\..\eSPDI\DM\include\eSPDI_DM.h"
 #include "..\..\eSPDI\DM\include\eSPDI_Common.h"
 #include "..\..\eSPDI\DM\include\eSPDI_ErrCode.h"
-#include "..\utility\IMUData.h"
-#include "..\utility\hidapi\hidapi.h";
+#include "IMUData.h"
+#include "hidapi.h";
 
 #define IMU_ID_INDEX_START  25
 #define MAX_DEVICE_IMU		4
@@ -69,9 +69,12 @@ const char READ_ACC_FS[8] = { 0x01, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 const char WRITE_ACC_FS[8] = { 0x01, 0x23, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 const char READ_GYR_FS[8] = { 0x01, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 const char WRITE_GYR_FS[8] = { 0x01, 0x25, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
+const char RESET_BOOTLOADER[8] = { 0x00, 0x1E, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-const std::string ACC_FS[4] = {"2G", "4G", "8G", "16G"};
-const std::string GYR_FS[6] = {"125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps"};
+const std::vector<std::string> ACC_FS_LSM6DSR = {"2G", "4G", "8G", "16G"};
+const std::vector<std::string> GYR_FS_LSM6DSR = {"125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps"};
+const std::vector<std::string> ACC_FS_BMI088 = {"3G", "6G", "12G", "24G"};
+const std::vector<std::string> GYR_FS_BMI088 = {"125dps", "250dps", "500dps", "1000dps", "2000dps"};
 
 enum IMU_TYPE
 {
@@ -95,12 +98,14 @@ public:
 
     int startGetImuData(APC_IMUCallbackFn callbackFn);
     int stopGetImuData();
+    void GetFwVersion(char *pFwVersion, WORD* pSize);
     void GetRTC(char* pHour, char* pMinute, char* pSecond);
     void SetRTC(char hour, char minute, char second);
     void GetAccFs(char* pData);
     void SetAccFs(char data);
     void GetGyrFs(char* pData);
     void SetGyrFs(char data);
+    void ResetBootloader();
 
 private:
     struct IMU_INFO

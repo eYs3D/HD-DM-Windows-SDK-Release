@@ -18,7 +18,7 @@ IMUReader::IMUReader(void*& hApcDI, DEVSELINFO& devSelInfo, IMU_TYPE imuType) : 
         handle = s_vecIMU[NULL].hIMU;
         current_imu_pid = s_vecIMU[NULL].PID; // Rem 0910 keep current PID to check setup
 
-        int nActualSNLenByByte = 0;
+        /*int nActualSNLenByByte = 0;
         wchar_t szBuf[MAX_PATH] = { NULL };
         if (APC_GetSerialNumber(hApcDI, &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte) == APC_OK)
         {
@@ -27,7 +27,7 @@ IMUReader::IMUReader(void*& hApcDI, DEVSELINFO& devSelInfo, IMU_TYPE imuType) : 
             memset(szBuf, NULL, MAX_PATH);
             ReadSerialNumber((char*)szBuf);
             s_vecIMU[NULL].SN = szBuf;
-        }
+        }*/
         return;
     }
 
@@ -462,6 +462,34 @@ int IMUReader::IMUfunc(IMUReader * pThis)
     return 0;
 }
 
+void IMUReader::GetFwVersion(char *pFwVersion, WORD* pSize)
+{
+	SetFeatureDATA_Item setFeatureData[8] = {
+		{ &GET_FW_VERSION_0[0], (sizeof(GET_FW_VERSION_0) / sizeof(GET_FW_VERSION_0[0])) },
+		{ &GET_FW_VERSION_1[0], (sizeof(GET_FW_VERSION_1) / sizeof(GET_FW_VERSION_1[0])) },
+		{ &GET_FW_VERSION_2[0], (sizeof(GET_FW_VERSION_2) / sizeof(GET_FW_VERSION_2[0])) },
+		{ &GET_FW_VERSION_3[0], (sizeof(GET_FW_VERSION_3) / sizeof(GET_FW_VERSION_3[0])) },
+		{ &GET_FW_VERSION_4[0], (sizeof(GET_FW_VERSION_4) / sizeof(GET_FW_VERSION_4[0])) },
+		{ &GET_FW_VERSION_5[0], (sizeof(GET_FW_VERSION_5) / sizeof(GET_FW_VERSION_5[0])) },
+		{ &GET_FW_VERSION_6[0], (sizeof(GET_FW_VERSION_6) / sizeof(GET_FW_VERSION_6[0])) },
+		{ &GET_FW_VERSION_7[0], (sizeof(GET_FW_VERSION_7) / sizeof(GET_FW_VERSION_7[0])) }
+	};
+
+	char fwVersion[256] = { 0 };
+	char* pBuf = &fwVersion[0];
+	WORD count = 0;
+
+	for (int i = 0; i < 8; i++) {
+		SendFeatureReport(setFeatureData[i].pData, setFeatureData[i].nDataLength);
+		GetFeatureReport(pBuf, 8);
+		pBuf += 8;
+		count += 8;
+	}
+
+	memcpy(pFwVersion, &fwVersion[0], count);
+	*pSize = count;
+}
+
 void IMUReader::GetRTC(char* pHour, char* pMinute, char* pSecond)
 {
     char rtc[8] = { 0 };
@@ -532,5 +560,11 @@ void IMUReader::SetGyrFs(char data)
     gyrfs[3] = data;
 
     SetFeatureDATA_Item setFeatureData = { &gyrfs[0], (sizeof(WRITE_GYR_FS) / sizeof(WRITE_GYR_FS[0])) };
+    SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
+}
+
+void IMUReader::ResetBootloader()
+{
+    SetFeatureDATA_Item setFeatureData = { &RESET_BOOTLOADER[0], (sizeof(RESET_BOOTLOADER) / sizeof(RESET_BOOTLOADER[0])) };
     SendFeatureReport(setFeatureData.pData, setFeatureData.nDataLength);
 }

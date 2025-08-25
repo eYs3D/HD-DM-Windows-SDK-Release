@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['espctrl_5frectlogdata_323',['eSPCtrl_RectLogData',['../e_s_p_d_i___common_8h.html#ac77871366e6cfef874965259839c7fa0',1,'eSPDI_Common.h']]]
+  ['devinformation_0',['DEVINFORMATION',['../e_s_p_d_i___common_8h.html#aec1499571b53a2345b0df6b52f2a3fa3',1,'eSPDI_Common.h']]]
 ];

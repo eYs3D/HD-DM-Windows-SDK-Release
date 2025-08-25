@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['nchipid_290',['nChipID',['../structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n.html#a4f15aa2b83c91b04b341ae25566a27c6',1,'tagDEVINFORMATION::nChipID()'],['../class_d_e_v_i_n_f_o_r_m_a_t_i_o_n_e_x.html#a4f15aa2b83c91b04b341ae25566a27c6',1,'DEVINFORMATIONEX::nChipID()']]],
-  ['ndevtype_291',['nDevType',['../structtag_d_e_v_i_n_f_o_r_m_a_t_i_o_n.html#a7450d8ca7f32d1f9624059952990fb8e',1,'tagDEVINFORMATION::nDevType()'],['../class_d_e_v_i_n_f_o_r_m_a_t_i_o_n_e_x.html#a7450d8ca7f32d1f9624059952990fb8e',1,'DEVINFORMATIONEX::nDevType()']]]
+  ['max_5fcol_0',['max_col',['../struct_para_l_u_t.html#a4ac9f927aa73a8b3becc8a40111e5fa6',1,'ParaLUT']]],
+  ['max_5frow_1',['max_row',['../struct_para_l_u_t.html#a6a68e74795bc73da594ec91938d41ca5',1,'ParaLUT']]],
+  ['min_5fcol_2',['min_col',['../struct_para_l_u_t.html#a625cb4eedd5f45008430b52726d4c4e2',1,'ParaLUT']]],
+  ['min_5frow_3',['min_row',['../struct_para_l_u_t.html#ab472b1af6ea3fbb07cff9288fa7a0cd2',1,'ParaLUT']]]
 ];

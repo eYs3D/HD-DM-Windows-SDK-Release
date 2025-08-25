@@ -229,7 +229,7 @@ void AEAWB_PropertyDlg::UpdateUI_AE(BOOL enable)
 
 
     const int pid = ( int )m_pComboBox->GetItemData( m_pComboBox->GetCurSel() );
-    if (pid == APC_PID_IVY || pid == APC_PID_IVY2)
+    if (pid == APC_PID_IVY || pid == APC_PID_IVY2 || pid == APC_PID_IVY3)
     {
         GetDlgItem(IDC_GAIN_CONTROL)->ShowWindow(SW_SHOW);
         GetDlgItem(IDC_TEXT_ANALOG_GAIN)->ShowWindow(SW_SHOW);

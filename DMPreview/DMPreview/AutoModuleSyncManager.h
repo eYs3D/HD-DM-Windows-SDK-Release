@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <map>
+#include <functional>
 
 class AutoModuleSyncManager
 {
@@ -68,6 +69,7 @@ private:
 			   APC_PID_8059 == pid || 
 			   APC_PID_8062 == pid ||
 			   APC_PID_80362 == pid||
+			   APC_PID_TARYN == pid||
 			   APC_PID_8077 == pid;
 	}
 

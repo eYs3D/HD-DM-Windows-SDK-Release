@@ -750,13 +750,21 @@ int RegisterSettings::DM_Quality_Register_Setting(void* hApcDI, PDEVSELINFO pDev
     {
         modelName = L"HYPATIA2";
     }
+    else if (devinfo.wPID == APC_PID_8072) // YX8072
+    {
+        modelName = L"YX8072";
+    }
     else if (devinfo.wPID == APC_PID_NORA) // NORA
     {
         modelName = L"NORA";
     }
-    else if (devinfo.wPID == APC_PID_IVY || devinfo.wPID == APC_PID_IVY2) // IVY
+    else if (devinfo.wPID == APC_PID_IVY) // IVY
     {
         modelName = L"IVY";
+    }
+    else if (devinfo.wPID == APC_PID_IVY2) // IVY2
+    {
+        modelName = L"IVY2";
     }
     else if (devinfo.wPID == APC_PID_8063) // YX8063
     {

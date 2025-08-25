@@ -167,6 +167,8 @@ private:
   float m_fBaseline;
   float m_fFocalLength;
 
+  CPreviewImageDlg* pPreviewImageDlg;
+
   afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
   afx_msg void OnNcLButtonDblClk(UINT nHitTest, CPoint point);
   afx_msg void OnMouseLeave();

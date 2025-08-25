@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['video_5fstream_5fcols_317',['video_stream_cols',['../struct_para_l_u_t.html#adc42aa7ab5079f9962ddd8e0c4f0bba2',1,'ParaLUT']]],
-  ['video_5fstream_5frows_318',['video_stream_rows',['../struct_para_l_u_t.html#ad4090b07bacdeabce34d72ad72ce7587',1,'ParaLUT']]]
+  ['unit_5fsphere_5fradius_0',['unit_sphere_radius',['../struct_para_l_u_t.html#a04589f7df96a7f12adb957420e0e7122',1,'ParaLUT']]],
+  ['usb_5ftype_1',['usb_type',['../struct_para_l_u_t.html#af1f524ec1a2eb0f4b50e4dafd10823e8',1,'ParaLUT']]]
 ];

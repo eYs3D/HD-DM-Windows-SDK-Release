@@ -7,11 +7,9 @@
 #define DEVICE_TABLE_IDX_TABLE_NAME     2
 #define DEVICE_TABLE_IDX_IMU_TYPE       3
 
-#if 0 //REFINE_DATABASE_CODE
-#define PID_TABLE_COLUMN                14
-#else
-#define PID_TABLE_COLUMN                12
-#endif
+#define PID_TABLE_COLUMN                15
+#define PID_SUPPORT_TABLE_COLUMN_v1     12
+#define PID_SUPPORT_TABLE_COLUMN_v2     15
 
 #define PID_TABLE_IDX_MODE              0
 #define PID_TABLE_IDX_MODE_DESC         1
@@ -25,11 +23,9 @@
 #define PID_TABLE_IDX_USB_TYPE          9
 #define PID_TABLE_IDX_RECTIFY_MODE      10
 #define PID_TABLE_IDX_INTER_LEAVE_MODE  11
-
-#if 0  //REFINE_DATABASE_CODE
-#define PID_TABLE_IDX_TABLE_INDEX       12 // this index is for the zd and rectify table.
-#define PID_TABLE_IDX_FW_VIDEO_MODE     13
-#endif
+#define PID_TABLE_IDX_VIDEO_MODE_D11_OR_COLOR_ONLY  12
+#define PID_TABLE_IDX_VIDEO_MODE_Z14                13
+#define PID_TABLE_IDX_RECTIFY_FILE_INDE             14
 
 ModeConfig& g_ModeConfig = ModeConfig::GetModeConfig();
 
@@ -63,6 +59,17 @@ ModeConfig::IMU_TYPE ModeConfig::GetIMU_Type( const int iPID )
         return m_mapDeviceTable[ iPID ].IMU_Type;
     }
     return IMU_NONE;
+}
+
+bool ModeConfig::IsSupportedColumnNumber(int counts) {
+    switch (counts)
+    {
+    case PID_SUPPORT_TABLE_COLUMN_v1:
+    case PID_SUPPORT_TABLE_COLUMN_v2:
+        return true;
+    default:
+        return false;
+    }
 }
 
 void ModeConfig::ReadModeConfig()
@@ -122,13 +129,15 @@ void ModeConfig::ReadModeConfig()
         }
         while ( SQLITE_ROW == sqlite3_step( stmt ) )
         {
-            if ( PID_TABLE_COLUMN != sqlite3_column_count( stmt ) )
+            //if ( PID_TABLE_COLUMN != sqlite3_column_count( stmt ) )
+            int columnCounts = sqlite3_column_count( stmt );
+            if ( !IsSupportedColumnNumber(columnCounts) )
             {
                 continue;
             }
             MODE_CONFIG xModeConfig;
 
-            if ( SQLITE_INTEGER == sqlite3_column_type( stmt, PID_TABLE_IDX_MODE ) )
+              if ( SQLITE_INTEGER == sqlite3_column_type( stmt, PID_TABLE_IDX_MODE ) )
             {
                 xModeConfig.iMode = sqlite3_column_int(stmt, PID_TABLE_IDX_MODE );
             }
@@ -182,17 +191,18 @@ void ModeConfig::ReadModeConfig()
             {
                 xModeConfig.iInterLeaveModeFPS = sqlite3_column_int(stmt, PID_TABLE_IDX_INTER_LEAVE_MODE );
             }
-#if 0 //REFINE_DATABASE_CODE
-            if (SQLITE_INTEGER == sqlite3_column_type(stmt, PID_TABLE_IDX_TABLE_INDEX))
+            if ( columnCounts >= PID_SUPPORT_TABLE_COLUMN_v2 && SQLITE_INTEGER == sqlite3_column_type( stmt, PID_TABLE_IDX_VIDEO_MODE_D11_OR_COLOR_ONLY ) )
             {
-                xModeConfig.tableIndex = sqlite3_column_int(stmt, PID_TABLE_IDX_TABLE_INDEX);
+                xModeConfig.videoModeD11OrColorOnly = sqlite3_column_int(stmt, PID_TABLE_IDX_VIDEO_MODE_D11_OR_COLOR_ONLY );
             }
-            if (SQLITE_TEXT == sqlite3_column_type(stmt, PID_TABLE_IDX_FW_VIDEO_MODE))
+            if (columnCounts >= PID_SUPPORT_TABLE_COLUMN_v2 && SQLITE_INTEGER == sqlite3_column_type( stmt, PID_TABLE_IDX_VIDEO_MODE_Z14 ) )
             {
-                std::stringstream ssVideoMode((char*)sqlite3_column_text(stmt, PID_TABLE_IDX_FW_VIDEO_MODE));
-                for (std::string each; std::getline(ssVideoMode, each, ','); xModeConfig.vecVideoMode.push_back(atoi(each.c_str())));
+                xModeConfig.videoModeZ14 = sqlite3_column_int(stmt, PID_TABLE_IDX_VIDEO_MODE_Z14 );
             }
-#endif
+            if (columnCounts >= PID_SUPPORT_TABLE_COLUMN_v2 &&  SQLITE_INTEGER == sqlite3_column_type( stmt, PID_TABLE_IDX_RECTIFY_FILE_INDE ) )
+            {
+                xModeConfig.rectifyFileIndex = sqlite3_column_int(stmt, PID_TABLE_IDX_RECTIFY_FILE_INDE );
+            }
             Table.second.vecModeConfig.push_back( std::move( xModeConfig ) );
         }
         sqlite3_finalize( stmt );

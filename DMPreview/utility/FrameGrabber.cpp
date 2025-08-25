@@ -148,8 +148,8 @@ DWORD FrameGrabber::CheckFrameReadyThreadFn( void* pvoid )
             if ( pThis->m_depth.sn == last_sn || pThis->m_color.data.empty() )
             {
                 synchronized = FALSE;
-
                 if (   pThis->m_depth.data.empty() != TRUE // is the depth only mode ?
+                    && pThis->m_depth.sn > last_sn
                     && pThis->m_depth.m_height > 0
                     && pThis->m_depth.m_width  > 0
                     && pThis->m_color.data.empty() == TRUE
@@ -162,6 +162,7 @@ DWORD FrameGrabber::CheckFrameReadyThreadFn( void* pvoid )
                     depth = pThis->m_depth;
                     color.m_height = pThis->m_depth.m_height;
                     color.m_width = pThis->m_depth.m_width;
+                    last_sn = pThis->m_depth.sn;
                     if (color.data.size() == 0)
                     {
                         color.data.resize(color.m_width * color.m_height * 3, 0);

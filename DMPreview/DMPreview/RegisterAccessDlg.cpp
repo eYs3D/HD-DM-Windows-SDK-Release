@@ -22,11 +22,13 @@ CRegisterAccessDlg::CRegisterAccessDlg(void*& hApcDI, DEVSELINFO& devSelInfo, CW
 	: CDialog(IDD_DIALOG_REGISTER_ACCESS, pParent), 
     m_hApcDI(hApcDI), m_devSelInfo(devSelInfo), m_hTimerQueue(nullptr), m_hTimer(nullptr)
 {
-
+    APC_Init(&m_selfHApcDI, false);
+    m_selfDevSelInfo.index = m_devSelInfo.index;
 }
 
 CRegisterAccessDlg::~CRegisterAccessDlg()
 {
+    APC_Release(&m_selfHApcDI);
 }
 
 void CRegisterAccessDlg::DoDataExchange(CDataExchange* pDX)
@@ -34,9 +36,61 @@ void CRegisterAccessDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 }
 
+void CRegisterAccessDlg::UpdateDeviceList()
+{
+    int deviceCount = APC_FindDevice(m_selfHApcDI);
+    for (int i = 0; i < deviceCount; ++i) {
+        DeviceInfo* dev_info = (DeviceInfo*)malloc(sizeof(DeviceInfo));
+        dev_info->index = i;
+
+        DEVSELINFO devSelInfo;
+        devSelInfo.index = i;
+        DEVINFORMATIONEX deviceInfo;
+        APC_GetDeviceInfoEx(m_selfHApcDI, &devSelInfo, &deviceInfo);
+        memcpy(&dev_info->deviceInfo, &deviceInfo, sizeof(deviceInfo));
+        m_devInfo.push_back(dev_info);
+    }
+
+    CComboBox* pDeviceListCbx = (CComboBox*)GetDlgItem(IDC_COMBO_DEVICE_LIST);
+
+    for (int i = 0; i < m_devInfo.size(); i++) {
+        wchar_t szBuf[MAX_PATH] = { NULL };
+        int nActualSNLenByByte = 0;
+        void* pHandleApcDI;
+        int ret = APC_Init(&pHandleApcDI, false);
+        if (ret != APC_OK) {
+            AfxMessageBox(L"RegisterAccessDlg::CALL APC_Init FAIL");
+            return;
+        }
+
+        DEVSELINFO devSelInfo;
+        devSelInfo.index = i;
+        if (APC_OK == APC_GetSerialNumber(pHandleApcDI, &devSelInfo, (BYTE*)szBuf, MAX_PATH, &nActualSNLenByByte)) {
+            char *str = new char[nActualSNLenByByte + 1];
+            memset(str, 0, nActualSNLenByByte + 1);
+            wcstombs(str, szBuf, nActualSNLenByByte);
+
+            CString deviceStr;
+            deviceStr.Format(_T("%03x_%s, SN:%s"), m_devInfo[i]->deviceInfo.wPID, CString(m_devInfo[i]->deviceInfo.strDevName), CString(str));
+
+            pDeviceListCbx->SetItemData(pDeviceListCbx->AddString(deviceStr), i);
+
+            delete str;
+        }
+        APC_Release(&pHandleApcDI);
+    }
+
+    if (pDeviceListCbx->GetCount() > 0 && m_devSelInfo.index < pDeviceListCbx->GetCount())
+    {
+        pDeviceListCbx->SetCurSel(m_devSelInfo.index);
+    }
+}
+
 BOOL CRegisterAccessDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
+
+    UpdateDeviceList();
 
     ((CButton*)GetDlgItem(IDC_RADIO_I2C))->SetCheck(BST_CHECKED);
     ((CButton*)GetDlgItem(IDC_RADIO_SENSOR1))->SetCheck(BST_CHECKED);
@@ -64,6 +118,7 @@ BEGIN_MESSAGE_MAP(CRegisterAccessDlg, CDialog)
     ON_BN_CLICKED(IDC_CHECK_PERIODIC_READ, &CRegisterAccessDlg::OnBnClickedCheckPeriodicRead)
     ON_BN_CLICKED(IDC_REG_READ_BTN, &CRegisterAccessDlg::OnBnClickedRegReadBtn)
     ON_BN_CLICKED(IDC_REG_WRITE_BTN, &CRegisterAccessDlg::OnBnClickedRegWriteBtn)
+    ON_CBN_SELCHANGE(IDC_COMBO_DEVICE_LIST, &CRegisterAccessDlg::OnCbnSelchangeComboDeviceList)
     ON_WM_DESTROY()
     ON_WM_TIMER()
 END_MESSAGE_MAP()
@@ -148,17 +203,17 @@ void CRegisterAccessDlg::ReadRegisterData(UINT regType, unsigned short address, 
     {
     case IDC_RADIO_I2C:
     {
-        APC_GetSensorRegister(m_hApcDI, &m_devSelInfo, id, address, &value, flag, sensorMode);
+        APC_GetSensorRegister(m_selfHApcDI, &m_selfDevSelInfo, id, address, &value, flag, sensorMode);
         break;
     }
     case IDC_RADIO_ASIC:
     {
-        APC_GetHWRegister(m_hApcDI, &m_devSelInfo, address, &value, flag);
+        APC_GetHWRegister(m_selfHApcDI, &m_selfDevSelInfo, address, &value, flag);
         break;
     }
     case IDC_RADIO_FW:
     {
-        APC_GetFWRegister(m_hApcDI, &m_devSelInfo, address, &value, flag);
+        APC_GetFWRegister(m_selfHApcDI, &m_selfDevSelInfo, address, &value, flag);
         break;
     }
     default:
@@ -209,13 +264,13 @@ void CRegisterAccessDlg::GetAndShowGyroData(bool periodicVersion, int GyroCase)
     {
         unsigned short GyroLen;
 		
-        int nRet = APC_GetFlexibleGyroLength(m_hApcDI, &m_devSelInfo, &GyroLen);
+        int nRet = APC_GetFlexibleGyroLength(m_selfHApcDI, &m_selfDevSelInfo, &GyroLen);
         if (nRet != APC_OK)
         {
             MessageBox(L"Read Gyro Data Failed !");
             return;
         }
-        APC_GetFlexibleGyroData(m_hApcDI, &m_devSelInfo, GyroLen, buf);
+        APC_GetFlexibleGyroData(m_selfHApcDI, &m_selfDevSelInfo, GyroLen, buf);
         frameCount = *((unsigned short*)&buf[0]);
         xValue = *((unsigned short*)&buf[2]);
         yValue = *((unsigned short*)&buf[4]);
@@ -228,7 +283,7 @@ void CRegisterAccessDlg::GetAndShowGyroData(bool periodicVersion, int GyroCase)
 /*
 	unsigned char buf[256] = {0};
 	char dump[1024];
-	APC_GetFlexibleGyroData(m_hApcDI, &m_devSelInfo, 142, buf);
+	APC_GetFlexibleGyroData(m_selfHApcDI, &m_selfDevSelInfo, 142, buf);
 	for (int i = 0; i < 142; i++)
 		{
 		sprintf(dump+i*3, "%02x ",buf[i]);
@@ -438,17 +493,17 @@ void CRegisterAccessDlg::WriteRegisterData(UINT regType, unsigned short address,
     {
     case IDC_RADIO_I2C:
     {
-        APC_SetSensorRegister(m_hApcDI, &m_devSelInfo, id, address, value, flag, sensorMode);
+        APC_SetSensorRegister(m_selfHApcDI, &m_selfDevSelInfo, id, address, value, flag, sensorMode);
         break;
     }
     case IDC_RADIO_ASIC:
     {
-        APC_SetHWRegister(m_hApcDI, &m_devSelInfo, address, value, flag);
+        APC_SetHWRegister(m_selfHApcDI, &m_selfDevSelInfo, address, value, flag);
         break;
     }
     case IDC_RADIO_FW:
     {
-        APC_SetFWRegister(m_hApcDI, &m_devSelInfo, address, value, flag);
+        APC_SetFWRegister(m_selfHApcDI, &m_selfDevSelInfo, address, value, flag);
         break;
     }
     default:
@@ -532,6 +587,15 @@ void CRegisterAccessDlg::OnBnClickedRegWriteBtn()
     {
         WriteRegisterData(regType, iter->second.first, iter->second.second, nId, flag, sensorMode);
     }
+}
+
+void CRegisterAccessDlg::OnCbnSelchangeComboDeviceList()
+{
+    CComboBox* pDeviceListCbx = (CComboBox*)GetDlgItem(IDC_COMBO_DEVICE_LIST);
+    APC_Release(&m_selfHApcDI);
+    APC_Init(&m_selfHApcDI, false);
+    int index = pDeviceListCbx->GetCurSel();
+    m_selfDevSelInfo.index = pDeviceListCbx->GetItemData(pDeviceListCbx->GetCurSel());
 }
 
 void CRegisterAccessDlg::OnDestroy()

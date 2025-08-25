@@ -1,4 +1,4 @@
-
+#include <functional>
 #include "stdafx.h"
 #include "APC_Test.h"
 #include "DepthDlg.h"

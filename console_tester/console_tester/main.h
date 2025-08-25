@@ -38,6 +38,10 @@ void CopyFromG1ToG2();
 void SetAnalogAndDigitalGainExample();
 void IMUCallbackDemo();
 void IMUAPIDemo();
+void ResetBootloader();
+void BatchReadASIC();
+void BatchReadASICSensorFW();
+void InitOpenCloseReleaseLoop();
 
 int selectDeviceIndex(void* pHandleApcDI);
 int selectColorDepth(void* pHandleApcDI, DEVSELINFO devSelInfo, int* color_index, int* depth_index, int* fps);
@@ -70,4 +74,9 @@ struct CloudPoint {
 	float x;
 	float y;
 	float z;
+};
+
+struct CallbackParam {
+    bool print_log;
+    bool save_file;
 };

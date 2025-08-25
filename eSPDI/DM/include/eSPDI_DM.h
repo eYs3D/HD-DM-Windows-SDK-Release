@@ -52,6 +52,35 @@
 extern "C" {
 #endif
 
+/*! \fn int APC_GetFWFSLength(
+		void *pHandleApcDI,
+		PDEVSELINFO pDevSelInfo,
+		int iFWFSIndex,
+		int& iFWFSLength)
+	\brief get length for specific file id
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\param pDevSelInfo	pointer of device select index
+	\param iFWFSIndex	actual file id
+	\param iFWFSLength	length of file id
+	\return success:APC_OK, others:see eSPDI_ErrCode.h
+*/
+int APC_API APC_GetFWFSLength(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int iFWFSIndex, int& iFWFSLength);
+
+/*! \fn int APC_GetFileData(
+		void *pHandleApcDI,
+		PDEVSELINFO pDevSelInfo,
+		int nID,
+		int DataSize,
+        BYTE *lpData)
+	\brief get file data for specific file id
+	\param pHandleApcDI	 the pointer to the initilized ApcDI SDK instance
+	\param pDevSelInfo	 pointer of device select index
+	\param nID	         actual file id
+	\param lpData	     the pointer to file data buffer
+	\return success:APC_OK, others:see eSPDI_ErrCode.h
+*/
+int APC_API APC_GetFileData(void *pHandleApcDI, PDEVSELINFO pDevSelInfo, int nID, int DataSize, BYTE *lpData);
+
 /*! \fn int APC_GetSlaveYOffset(
 		void *pHandleApcDI,
 		PDEVSELINFO pDevSelInfo,
@@ -362,6 +391,21 @@ struct PointCloudInfo
     float disparityToW[ 2048 ];
     int   disparity_len;
     WORD  wDepthType;
+    //float centerXP;
+    //float centerYP;
+    //float focalXP;
+    //float focalYP;
+    //float baseline;
+    float fx1;
+    float fy1;
+    float fx2;
+    float fy2;
+    float cx1;
+    float cy1;
+    float cx2;
+    float cy2;
+    float Tx;
+
 //multi-lens data
     float focalLength_K;
     float baseline_K;

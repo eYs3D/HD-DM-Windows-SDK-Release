@@ -1,4 +1,4 @@
-
+#include <functional>
 #include "stdafx.h"
 #include "APC_Test.h"
 #include "ColorDlg.h"
@@ -142,6 +142,22 @@ bool CColorDlg::GetImage(std::vector<unsigned char>& imgBuf, int& width, int& he
     serialNumber = m_serialNumberShowImage;
 
     return (!imgBuf.empty() && width > 0 && height > 0);
+}
+
+bool CColorDlg::GetRawImage(std::vector<unsigned char>& rawBuf, int& width, int& height, int& serialNumber)
+{
+    width = m_nColorResWidth;
+    height = m_nColorResHeight;
+
+    std::lock_guard< std::mutex > lock(m_imgBufMutex);
+
+    if (rawBuf.size() != m_vecRawImageBuf.size()) rawBuf.resize(m_vecRawImageBuf.size());
+
+    memcpy( &rawBuf[ 0 ], &m_vecRawImageBuf[ 0 ], m_vecRawImageBuf.size() );
+
+    serialNumber = m_serialNumberShowImage;
+
+    return (!rawBuf.empty() && width > 0 && height > 0);
 }
 
 void CColorDlg::EnableRotate( const BOOL bRotate )
