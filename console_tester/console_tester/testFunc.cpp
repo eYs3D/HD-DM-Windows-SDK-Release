@@ -702,8 +702,7 @@ int selectDeviceIndex(void* pHandleApcDI)
         DEVSELINFO devSelInfo;
         devSelInfo.index = i;
         int nRet = APC_GetDeviceInfoEx(pHandleApcDI, &devSelInfo, &devinfo);
-
-        printf("[%d] PID:%d, strDevName:%s\n", i, devinfo.wPID, devinfo.strDevName);
+        printf("[%d] PID:%d, strDevName:%s chipId:%x APC_DEVICE_TYPE:%d\n", i, devinfo.wPID, devinfo.strDevName, devinfo.nChipID, devinfo.nDevType);
     }
     printf("===========================================================\n");
     int device_index = 0;

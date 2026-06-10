@@ -321,6 +321,7 @@ private:
     virtual void OnOK() {};
     virtual void OnCancel() {};
     bool checkDepth();
+    bool isThermalSensorSupported();
     void StartSelfK2();
 
 public:

@@ -50,6 +50,10 @@ int get_temperature_param(SelfCalibration2Dlg* selfCalibration2Dlg, E_THERMAL_SE
         nSensorMode = 0;
         selfCalibration2Dlg->m_isSensorSlave = true;
         break;
+    default:
+        // Device does not support thermal sensor - return error
+        cout << "Device PID " << hex << selfCalibration2Dlg->m_xDevinfoEx.wPID << " does not support thermal sensor for self-calibration2" << endl;
+        return -1;
     }
     return 0;
 }
@@ -366,13 +370,18 @@ int get_temperature(SelfCalibration2Dlg* selfCalibration2Dlg, E_THERMAL_SENSOR_M
 }
 
 void get_temperature_thread(SelfCalibration2Dlg* selfCalibration2Dlg) {
+    E_THERMAL_SENSOR_MODEL sensorModel = E_THERMAL_SENSOR_MODEL::ONSEMI_AR0135;
+    int sensorAddress = 0;
+    int sensorMode = 0;
+
+    // Check if device supports thermal sensor
+    int paramResult = get_temperature_param(selfCalibration2Dlg, sensorModel, sensorAddress, sensorMode);
+    if (paramResult < 0) {
+        TRACE("get_temperature_thread terminated: Device does not support thermal sensor\n");
+        return;
+    }
+
     while (!gStopGettingTemperature) {
-        E_THERMAL_SENSOR_MODEL sensorModel = E_THERMAL_SENSOR_MODEL::ONSEMI_AR0135;
-        int sensorAddress = 0;
-        int sensorMode = 0;
-
-        get_temperature_param(selfCalibration2Dlg, sensorModel, sensorAddress, sensorMode);
-
         int ret = get_temperature(selfCalibration2Dlg, sensorModel, sensorAddress, sensorMode, gTemperature);
         if (ret < 0) {
             TRACE("get_temperature failed\n");
@@ -415,10 +424,47 @@ SelfCalibration2Dlg::~SelfCalibration2Dlg()
     gStopGettingTemperature = true;
 }
 
+bool SelfCalibration2Dlg::isThermalSensorSupported()
+{
+    switch (m_xDevinfoEx.wPID)
+    {
+    case APC_PID_80362:
+    case APC_PID_IRIS:
+    case APC_PID_IVY2:
+        return true;
+    default:
+        return false;
+    }
+}
+
 BOOL SelfCalibration2Dlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
     CheckRadioButton(IDC_RADIO_RUNTIME, IDC_RADIO_REPAIR, IDC_RADIO_RUNTIME);
+
+    // YX80362 does not support Run-time Correction; hide it and default to Depth-broken Repair
+    if (m_xDevinfoEx.wPID == APC_PID_80362)
+    {
+        CheckRadioButton(IDC_RADIO_RUNTIME, IDC_RADIO_REPAIR, IDC_RADIO_REPAIR);
+        GetDlgItem(IDC_RADIO_RUNTIME)->ShowWindow(SW_HIDE);
+    }
+
+    // Disable self-calibration2 controls if device doesn't support thermal sensor
+    if (!isThermalSensorSupported())
+    {
+        GetDlgItem(IDC_BTN_RUN)->EnableWindow(FALSE);
+        GetDlgItem(IDC_RADIO_RUNTIME)->EnableWindow(FALSE);
+        GetDlgItem(IDC_RADIO_REPAIR)->EnableWindow(FALSE);
+        GetDlgItem(IDC_BTN_RESET)->EnableWindow(FALSE);
+        GetDlgItem(IDC_BTN_WRITE)->EnableWindow(FALSE);
+        
+        CString warningText;
+        warningText.Format(L"Self-Calibration2 not supported: Device PID 0x%04X does not have thermal sensor", m_xDevinfoEx.wPID);
+        SetDlgItemText(IDC_EDIT_OUT_AND_INFO, warningText);
+        
+        TRACE("Self-Calibration2 disabled: Device PID 0x%04X does not support thermal sensor\n", m_xDevinfoEx.wPID);
+    }
+    
     return TRUE;
 }
 
@@ -543,6 +589,13 @@ void SelfCalibration2Dlg::ApplyInputImage(APCImageType::Value imgType, int imgId
 
 void SelfCalibration2Dlg::StartSelfK2()
 {
+    // Check thermal sensor support before starting
+    if (!isThermalSensorSupported())
+    {
+        TRACE("StartSelfK2 blocked: Device does not support thermal sensor\n");
+        return;
+    }
+
     std::lock_guard< std::mutex > lock(m_CompensatorMutex);
 
     SetDlgItemText(IDC_BTN_RUN, L"Stop");
@@ -632,10 +685,19 @@ void SelfCalibration2Dlg::StopSelfK2()
         m_Run = false;
     }
     SetDlgItemText(IDC_BTN_RUN, L"Run");
-    ((CButton*)GetDlgItem(IDC_RADIO_RUNTIME))->SetCheck(TRUE);
-    ((CButton*)GetDlgItem(IDC_RADIO_REPAIR))->SetCheck(FALSE);
-    GetDlgItem(IDC_RADIO_RUNTIME)->EnableWindow(TRUE);
-    GetDlgItem(IDC_RADIO_REPAIR)->EnableWindow(TRUE);
+    if (m_xDevinfoEx.wPID == APC_PID_80362)
+    {
+        CheckRadioButton(IDC_RADIO_RUNTIME, IDC_RADIO_REPAIR, IDC_RADIO_REPAIR);
+        GetDlgItem(IDC_RADIO_RUNTIME)->ShowWindow(SW_HIDE);
+        GetDlgItem(IDC_RADIO_REPAIR)->EnableWindow(TRUE);
+    }
+    else
+    {
+        ((CButton*)GetDlgItem(IDC_RADIO_RUNTIME))->SetCheck(TRUE);
+        ((CButton*)GetDlgItem(IDC_RADIO_REPAIR))->SetCheck(FALSE);
+        GetDlgItem(IDC_RADIO_RUNTIME)->EnableWindow(TRUE);
+        GetDlgItem(IDC_RADIO_REPAIR)->EnableWindow(TRUE);
+    }
     GetDlgItem(IDC_BTN_RESET)->EnableWindow(FALSE);
     m_OutAndInfo.str("");
     PostMessage(WM_UPDATE_TEXT_MSG, UPDATE_TEXT);
@@ -650,6 +712,12 @@ void SelfCalibration2Dlg::StopSelfK2()
 void SelfCalibration2Dlg::OnBnClickedBtnRun()
 {
     if (!m_Run) {
+        // Check thermal sensor support before allowing start
+        if (!isThermalSensorSupported())
+        {
+            return;
+        }
+        
         if (checkDepth()){
             StartSelfK2();
         }

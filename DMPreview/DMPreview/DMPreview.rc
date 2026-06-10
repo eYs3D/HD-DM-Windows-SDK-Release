@@ -82,7 +82,7 @@ CAPTION "? DMPreview"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
-    LTEXT           "DMPreview, 1.5.8.8",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "DMPreview, 1.5.8.10",IDC_STATIC,42,14,114,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2024",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
@@ -600,8 +600,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,5,8,8
- PRODUCTVERSION 1,5,8,8
+ FILEVERSION 1,5,8,10
+ PRODUCTVERSION 1,5,8,10
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -618,12 +618,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "eYs3D Microelectronics"
             VALUE "FileDescription", "DMPreview program"
-            VALUE "FileVersion", "1.5.8.8"
+            VALUE "FileVersion", "1.5.8.10"
             VALUE "InternalName", "DMPreview.exe"
             VALUE "LegalCopyright", " (c) eYs3D.  All rights reserved."
             VALUE "OriginalFilename", "DMPreview.exe"
             VALUE "ProductName", "eSPDI SDK for Windows"
-            VALUE "ProductVersion", "1.5.8.8"
+            VALUE "ProductVersion", "1.5.8.10"
         END
     END
     BLOCK "VarFileInfo"

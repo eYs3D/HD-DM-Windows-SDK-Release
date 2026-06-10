@@ -828,7 +828,7 @@ void CPreviewImageDlg::OnTimer(UINT_PTR nIDEvent)
                 {
                     m_SparseModeDlg->SetSparseMode(true);
                 }
-                if (m_pdlgVideoDeviceDlg->m_bEnable_SK2_Runtime && m_pSelfCalibration2Dlg) m_pSelfCalibration2Dlg->OnBnClickedBtnRun();
+                if (m_pdlgVideoDeviceDlg->m_bEnable_SK2_Runtime && m_pSelfCalibration2Dlg && !IsDevicePid(APC_PID_80362)) m_pSelfCalibration2Dlg->OnBnClickedBtnRun();
             }
         }
         break;
@@ -2107,6 +2107,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
     }
     for ( int i = 0; i < 2; i++ )
     {
+        bool is_depth_only = false;
         if ( m_previewParams.m_rectifyLogData[ i ] )
         {
             if ( IsDevicePid( APC_PID_8040S ) && ( ( CButton* )GetDlgItem( IDC_CHECK_K_COLOR_STREAM ) )->GetCheck() == BST_UNCHECKED )
@@ -2122,6 +2123,7 @@ void CPreviewImageDlg::UpdatePreviewParams()
             {
                 ptRes.x = m_pStreamDepthInfo[m_previewParams.m_depthOption].nWidth;
                 ptRes.y = m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight;
+                is_depth_only = true;
             }
 
             float ratio_Mat = (float)ptRes.y / m_previewParams.m_rectifyLogData[i]->OutImgHeight;
@@ -2142,14 +2144,59 @@ void CPreviewImageDlg::UpdatePreviewParams()
             //m_xPointCloudInfo.focalYP = m_previewParams.m_rectifyLogData[i]->NewCamMat1[5];
             //m_xPointCloudInfo.baseline = baseline;
 
-            m_xPointCloudInfo.fx1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[0];
-            m_xPointCloudInfo.fy1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[5];
-            m_xPointCloudInfo.fx2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[0];
-            m_xPointCloudInfo.fy2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[5];
-            m_xPointCloudInfo.cx1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[2];
-            m_xPointCloudInfo.cy1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[6];
-            m_xPointCloudInfo.cx2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[2];
-            m_xPointCloudInfo.cy2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[6];
+            float scaleRatio_x = 1.0f;
+            float scaleRatio_y = 1.0f;
+            
+            int depthWidth = m_pStreamDepthInfo[m_previewParams.m_depthOption].nWidth;
+            int depthHeight = m_pStreamDepthInfo[m_previewParams.m_depthOption].nHeight;
+            
+            if (is_depth_only == true &&
+                m_previewParams.m_rectifyLogData[i]->RECT_ScaleEnable &&
+                m_previewParams.m_rectifyLogData[i]->RECT_ScaleWidth > 0 &&
+                m_previewParams.m_rectifyLogData[i]->RECT_ScaleHeight > 0 &&
+                depthWidth > 0 && depthHeight > 0)
+            {
+                scaleRatio_x = (float)m_previewParams.m_rectifyLogData[i]->RECT_ScaleWidth / 
+                              (float)depthWidth;
+                scaleRatio_y = (float)m_previewParams.m_rectifyLogData[i]->RECT_ScaleHeight / 
+                              (float)depthHeight;
+                              
+                TRACE("PointCloud RECT_Scale adjustment: scaleRatio_x=%.3f, scaleRatio_y=%.3f (RECT_ScaleWidth=%d, depthWidth=%d)\n", 
+                      scaleRatio_x, scaleRatio_y, 
+                      m_previewParams.m_rectifyLogData[i]->RECT_ScaleWidth,
+                      depthWidth);
+            }
+            
+            float original_fx1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[0];
+            float original_fx2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[0];
+            
+            m_xPointCloudInfo.fx1 = original_fx1 * scaleRatio_x;
+            m_xPointCloudInfo.fy1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[5] * scaleRatio_y;
+            m_xPointCloudInfo.fx2 = original_fx2 * scaleRatio_x;
+            m_xPointCloudInfo.fy2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[5] * scaleRatio_y;
+            
+            // Adjust principal points for centering when scale dimensions differ from depth dimensions
+            float centerOffsetX = (m_previewParams.m_rectifyLogData[i]->RECT_ScaleWidth - depthWidth) / 2.0f;
+            float centerOffsetY = (m_previewParams.m_rectifyLogData[i]->RECT_ScaleHeight - depthHeight) / 2.0f;
+            
+            m_xPointCloudInfo.cx1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[2] * scaleRatio_x + centerOffsetX;
+            m_xPointCloudInfo.cy1 = m_previewParams.m_rectifyLogData[i]->NewCamMat1[6] * scaleRatio_y + centerOffsetY;
+            m_xPointCloudInfo.cx2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[2] * scaleRatio_x + centerOffsetX;
+            m_xPointCloudInfo.cy2 = m_previewParams.m_rectifyLogData[i]->NewCamMat2[6] * scaleRatio_y + centerOffsetY;
+            
+            if (centerOffsetX != 0 || centerOffsetY != 0)
+            {
+                TRACE("PointCloud centering adjustment: offsetX=%.1f, offsetY=%.1f (scale: %dx%d, depth: %dx%d)\n",
+                      centerOffsetX, centerOffsetY,
+                      m_previewParams.m_rectifyLogData[i]->RECT_ScaleWidth, m_previewParams.m_rectifyLogData[i]->RECT_ScaleHeight,
+                      depthWidth, depthHeight);
+            }
+            
+            if (scaleRatio_x != 1.0f || scaleRatio_y != 1.0f)
+            {
+                TRACE("PointCloud focal length adjustment: fx1: %.3f -> %.3f, fx2: %.3f -> %.3f\n",
+                      original_fx1, m_xPointCloudInfo.fx1, original_fx2, m_xPointCloudInfo.fx2);
+            }
 
             m_xPointCloudInfo.Tx = -1 * baseline;
 
@@ -2621,6 +2668,10 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
 
         xPointCloudInfo.focalLength_K = 0;
 
+        TRACE("PointCloud generation: Color=%dx%d, Depth=%dx%d, fx1=%.3f, fx2=%.3f\n", 
+              widthColor, heightColor, widthDepth, heightDepth, 
+              xPointCloudInfo.fx1, xPointCloudInfo.fx2);
+              
         APC_GetPointCloud( pThis->m_hApcDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
     }
     else
@@ -2632,6 +2683,10 @@ void CPreviewImageDlg::FrameGrabberCallback( BOOL isDepthOnly,
         }
 
 		//PlyWriter::etronFrameTo3D(widthDepth, heightDepth, bufDepth, widthColor, heightColor, bufColor, rectifyLogData, depthImageType, pointCloud, true, zNear, zFar, true, true, downsampleRatio);
+        TRACE("PointCloud generation: Color=%dx%d, Depth=%dx%d, fx1=%.3f, fx2=%.3f\n", 
+              widthColor, heightColor, widthDepth, heightDepth, 
+              pThis->m_xPointCloudInfo.fx1, pThis->m_xPointCloudInfo.fx2);
+              
         APC_GetPointCloud( pThis->m_hApcDI, &pThis->m_DevSelInfo, &bufColor[0], widthColor, heightColor, &bufDepth[0], widthDepth, heightDepth, &pThis->m_xPointCloudInfo, &pThis->m_pointCloudRGB[0], &pThis->m_pointCloudDepth[0], zNear, zFar );
 	}
 	//PlyWriter::etronFrameTo3D(widthOutput, heightOutput, bufDepth, bufColor, rectifyLogData.ReProjectMat, depthImageType, pointCloud, clipping, zNear, zFar, removeINF);

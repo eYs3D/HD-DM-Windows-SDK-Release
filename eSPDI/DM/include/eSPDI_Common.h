@@ -535,7 +535,7 @@ typedef enum {
     AXES1,			/**< AXIS1 */
     PUMA,			/**< PUMA */
     PLUM,
-    GRAPE_FPGA
+    GRAPE
 
 }APC_DEVICE_TYPE;
 
